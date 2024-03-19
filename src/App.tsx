@@ -21,13 +21,14 @@ import FormularioCamiones from "./pages/formd/FormularioCamiones";
 // @ts-ignore
 import FormularioSalida from "./pages/formsalida/FormularioSalida";
 
-import Logs from "./pages/logs/Logs";
+
 
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 
 import TablaIngreso from "./pages/tablaingreso/TablaIngreso";
+import Logs from "./pages/logs/Logs";
 
 
 
