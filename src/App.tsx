@@ -28,7 +28,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 
 import TablaIngreso from "./pages/tablaingreso/TablaIngreso";
-import Logs from "./pages/logs/Logs";
+
+import Historial from "./pages/historial/Historial";
 
 
 
@@ -95,7 +96,7 @@ function App() {
         },
         {
           path:"/Logs",
-          element:<Logs />
+          element:<Historial />
         },
         {
           path:"/FormularioSalida/:IDR",
