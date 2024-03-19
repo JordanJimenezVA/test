@@ -1,0 +1,20 @@
+.chartBox {
+    color: black;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 35px;
+    .cantidad{
+        font-size: 40px;
+        font-weight: bold;
+    }
+    .title {
+        display: flex;
+        font-size: 20px;
+        align-items: center;
+        gap: 10px;
+    }
+    
+}

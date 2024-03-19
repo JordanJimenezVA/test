@@ -1,0 +1,42 @@
+.h1d {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: black;
+}
+
+.list {
+    color: black;
+    padding: 30px;;
+    .listItem {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 30px;
+
+        .user {
+            display: flex;
+            gap: 20px;
+
+            .userTexts {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+
+                .username {
+                    font-size: 18px;
+                    font-weight: 500;
+                }
+
+                .type {
+                    font-size: 15px;
+
+                }
+            }
+
+            .action {
+                font-weight: 500;
+            }
+        }
+    }
+}

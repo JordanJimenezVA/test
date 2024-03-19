@@ -1,0 +1,113 @@
+.contenedor {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+
+  .h1formd {
+    text-align: center;
+  }
+
+  .formulariopx {
+
+    display: flex;
+    justify-content: space-between;
+    .campus  {
+      width: 100%;
+      margin-bottom: 15px;
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input, select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 15px;
+      }
+
+
+    }
+    .campo  {
+      flex: 0 0 48%;
+      margin-bottom: 15px;
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input, select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 15px;
+      }
+
+
+    }
+
+    .columna2 {
+      flex: 0 0 48%;
+      margin-bottom: 15px;
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      input, select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 15px;
+      }
+    }
+  }
+  button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #2059d3;
+    color: white;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #2980f1;
+    }
+  }
+  .react-autosuggest__suggestions-container {
+    position: relative;
+  }
+  
+  .react-autosuggest__suggestions-list {
+    color: black;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    max-height: 200px; /* Ajusta la altura máxima según tus necesidades */
+    overflow-y: auto;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .react-autosuggest__suggestion {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .react-autosuggest__suggestion--highlighted {
+    background-color: lightblue;
+  }
+}
