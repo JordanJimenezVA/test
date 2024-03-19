@@ -12,10 +12,13 @@ import Footer from "./components/footer/Footer";
 import Menu from "./components/menu/Menu";
 import Login from "./pages/login/Login";
 
+// @ts-ignore
 import FormularioPersonalInterno from "./pages/formd/FormularioPersonalInterno";
+// @ts-ignore
 import FormularioPersonalExterno from "./pages/formd/FormularioPersonalExterno";
+// @ts-ignore
 import FormularioCamiones from "./pages/formd/FormularioCamiones";
-
+// @ts-ignore
 import FormularioSalida from "./pages/formsalida/FormularioSalida";
 
 import Logs from "./pages/logs/Logs";
