@@ -79,7 +79,7 @@ const Camiones = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['camiones'],
     queryFn: () =>
-    fetch('http://localhost:8800/Camiones').then((res) =>
+    fetch('https://4e02-2800-300-6331-b290-b1fe-5541-74a7-b314.ngrok-free.app/Camiones').then((res) =>
         res.json(),
       ),
   })
