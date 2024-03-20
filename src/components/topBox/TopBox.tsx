@@ -1,4 +1,4 @@
-import "./topBox.scss";
+import "./topbox.scss";
 import { topDealUsers } from "../../data.ts";
 
 const topBox = () => {
