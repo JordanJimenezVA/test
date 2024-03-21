@@ -79,7 +79,7 @@ const Camiones = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['camiones'],
     queryFn: () =>
-    fetch('https://4e02-2800-300-6331-b290-b1fe-5541-74a7-b314.ngrok-free.app/Camiones').then((res) =>
+    fetch('http://localhost:8800/Camiones').then((res) =>
         res.json(),
       ),
   })
@@ -93,7 +93,7 @@ const Camiones = () => {
       {isLoading ? (
         "Loading..."
       ) : (
-        < DataTableCA slug="camiones" columns={columns} rows={data}/>
+        <DataTableCA slug="camiones" columns={columns} rows={data}/>
       )}
       {open && <AddCA slug="camiones" columns={columns} setOpen={setOpen} />}
     </div>

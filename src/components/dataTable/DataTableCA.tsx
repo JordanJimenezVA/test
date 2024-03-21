@@ -4,10 +4,12 @@ import { Link } from "react-router-dom";
 
 
 type Props = {
+    
     columns: GridColDef[],
     rows: object[]
     slug: string;
 }
+
 
 const DataTableCA = (props: Props) => {
 
@@ -33,7 +35,7 @@ const actionColumn: GridColDef = {
 
     }
 }
-
+console.log('rows:', props.rows);
 return (
     <div className="dataTable">
         <DataGrid className="dataGrid"
