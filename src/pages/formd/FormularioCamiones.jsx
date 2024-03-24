@@ -24,7 +24,7 @@ function FormularioPersonalCamiones() {
 
   const getSuggestions = async (value) => {
     try {
-      const response = await fetch(`http://localhost:8800/FormularioCamiones/suggestions?query=${value}`);
+      const response = await fetch(`https://nodejs-back-production.up.railway.app/FormularioCamiones/suggestions?query=${value}`);
       const data = await response.json();
       if (data.results && data.results.length > 0) {
         const ruts = data.results[0].map(obj => obj.RUTCA);
@@ -39,7 +39,7 @@ function FormularioPersonalCamiones() {
 
   const onSuggestionSelected = async (_, { suggestion }) => {
     try {
-      const response = await Axios.get(`http://localhost:8800/FormularioCamiones/suggestion/${suggestion}`);
+      const response = await Axios.get(`https://nodejs-back-production.up.railway.app/FormularioCamiones/suggestion/${suggestion}`);
       const data = response.data;
       setRutCA(data.RUTCA || "" ),
       setChoferCA(data.CHOFERCA || "" ),
@@ -65,7 +65,7 @@ function FormularioPersonalCamiones() {
   };
 
   const ingresoformdCA = () => {
-    Axios.post("http://localhost:8800/FormularioCamiones", {
+    Axios.post("https://nodejs-back-production.up.railway.app/FormularioCamiones", {
       ChoferCA: ChoferCA,
       ApellidoChoferCA: ApellidoChoferCA,
       RutCA: RutCA,

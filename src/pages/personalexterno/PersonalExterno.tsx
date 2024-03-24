@@ -76,7 +76,7 @@ const PersonalExterno = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['personalexterno'],
     queryFn: () =>
-    fetch('http://localhost:8800/Personal%20Externo').then((res) =>
+    fetch('https://nodejs-back-production.up.railway.app/Personal%20Externo').then((res) =>
         res.json(),
       ),
   })

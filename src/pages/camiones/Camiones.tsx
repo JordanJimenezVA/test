@@ -79,7 +79,7 @@ const Camiones = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['camiones'],
     queryFn: () =>
-    fetch('http://localhost:8800/Camiones').then((res) =>
+    fetch('https://nodejs-back-production.up.railway.app/Camiones').then((res) =>
         res.json(),
       ),
   })

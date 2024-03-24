@@ -73,7 +73,7 @@ const TablaIngreso = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['registros'],
     queryFn: () =>
-    fetch('http://localhost:8800/TablaIngreso').then((res) =>
+    fetch('https://nodejs-back-production.up.railway.app/TablaIngreso').then((res) =>
         res.json(),
       ),
   })

@@ -16,7 +16,7 @@ export default function Login() {
   axios.defaults.withCredentials = true;
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios.post('http://localhost:8800/Login', { rutU: values.rut, passwordU: values.password })
+    axios.post('https://nodejs-back-production.up.railway.app/Login', { rutU: values.rut, passwordU: values.password })
     .then(res => {
       if(res.data.Status === "Success"){
         navigate('/')

@@ -17,7 +17,7 @@ function PersonalInterno() {
 
   const getSuggestions = async (value) => {
     try {
-      const response = await fetch(`http://localhost:8800/FormularioPersonalInterno/suggestions?query=${value}`);
+      const response = await fetch(`https://nodejs-back-production.up.railway.app/FormularioPersonalInterno/suggestions?query=${value}`);
       const data = await response.json();
       if (data.results && data.results.length > 0) {
         const ruts = data.results[0].map(obj => obj.RUTPI);
@@ -32,7 +32,7 @@ function PersonalInterno() {
 
   const onSuggestionSelected = async (_, { suggestion }) => {
     try {
-      const response = await Axios.get(`http://localhost:8800/FormularioPersonalInterno/suggestion/${suggestion}`);
+      const response = await Axios.get(`https://nodejs-back-production.up.railway.app/FormularioPersonalInterno/suggestion/${suggestion}`);
       const data = response.data;
  
       setNombrePI(data.NOMBREPI);
@@ -54,7 +54,7 @@ function PersonalInterno() {
   };
 
   const ingresoformdPI = () => {
-    Axios.post("http://localhost:8800/FormularioPersonalInterno", {
+    Axios.post("https://nodejs-back-production.up.railway.app/FormularioPersonalInterno", {
       rutPI: RutPI,
       NombrePI: NombrePI,
       ApellidoPI: ApellidoPI,

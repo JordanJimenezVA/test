@@ -22,7 +22,7 @@ function FormularioSalida() {
   }, [IDR]);
 
   const getRegistros = (IDR) => {
-    Axios.get(`http://localhost:8800/FormularioSalida/${IDR}`)
+    Axios.get(`https://nodejs-back-production.up.railway.app/FormularioSalida/${IDR}`)
       .then((res) => {
         const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO } = res.data[0];
         setFormValues({
@@ -67,7 +67,7 @@ function FormularioSalida() {
   };
 
   const salidaCA = () => {
-    Axios.post(`http://localhost:8800/FormularioSalida/${IDR}`, {
+    Axios.post(`https://nodejs-back-production.up.railway.app/FormularioSalida/${IDR}`, {
       ...formValues
     }).then(() => {
       limpiarCampos();

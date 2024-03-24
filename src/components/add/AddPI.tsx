@@ -18,7 +18,7 @@ const AddPI = (props: Props) => {
 
   const mutation = useMutation({
     mutationFn: (data) => {
-      return fetch(`http://localhost:8800/Personal%20Interno`, {
+      return fetch(`https://nodejs-back-production.up.railway.app/Personal%20Interno`, {
         method: "post",
         headers: {
           "Content-Type": "application/json",
