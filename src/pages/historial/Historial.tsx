@@ -92,7 +92,7 @@ const Historial = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['logs'],
     queryFn: () =>
-      fetch('http://nodejs-back-production.up.railway.app/Logs').then((res) =>
+      fetch('https://nodejs-back-production.up.railway.app/Logs').then((res) =>
         res.json(),
       ),
   })
