@@ -16,24 +16,36 @@ function PersonalInterno() {
   const [RolPI, setRolPI] = useState("Administrativo");
 
   const getSuggestions = async (value) => {
-    const response = await fetch(`http://localhost:8800/FormularioPersonalInterno/suggestions?query=${value}`);
-    const data = await response.json();
-    return data.suggestions;
+    try {
+      const response = await fetch(`http://localhost:8800/FormularioPersonalInterno/suggestions?query=${value}`);
+      const data = await response.json();
+      if (data.results && data.results.length > 0) {
+        const ruts = data.results[0].map(obj => obj.RUTPI);
+        setSuggestions(ruts);
+      } else {
+        setSuggestions([]);
+      }
+    } catch (error) {
+      console.error('Error al obtener sugerencias:', error);
+    }
   };
-
 
   const onSuggestionSelected = async (_, { suggestion }) => {
-    const response = await Axios.get(`http://localhost:8800/FormularioPersonalInterno/suggestion/${suggestion}`);
-    const data = response.data;
-    console.log("Suggestion selected:", suggestion);
-    console.log("API Response:", data);
-    setNombrePI(data.NOMBREPI);
-    setApellidoPI(data.APELLIDOPI);
-    setVehiculoPI(data.VEHICULOPI);
-    setColorPI(data.COLORPI);
-    setPatentePI(data.PATENTEPI);
-    setRolPI(data.ROLPI);
+    try {
+      const response = await Axios.get(`http://localhost:8800/FormularioPersonalInterno/suggestion/${suggestion}`);
+      const data = response.data;
+ 
+      setNombrePI(data.NOMBREPI);
+      setApellidoPI(data.APELLIDOPI);
+      setVehiculoPI(data.VEHICULOPI);
+      setColorPI(data.COLORPI);
+      setPatentePI(data.PATENTEPI);
+      setRolPI(data.ROLPI);
+    } catch (error) {
+      console.error('Error al obtener sugerencias:', error);
+    }
   };
+
 
   const inputProps = {
     placeholder: "Ingrese RUT",
@@ -91,24 +103,12 @@ function PersonalInterno() {
           <label>Rut</label>
           <Autosuggest
             suggestions={suggestions}
-            onSuggestionsFetchRequested={async ({ value }) => {
-              const suggestions = await getSuggestions(value);
-              setSuggestions(suggestions);
-            }}
-            onSuggestionsClearRequested={() => {
-              setSuggestions([]);
-            }}
+            onSuggestionsFetchRequested={({ value }) => getSuggestions(value)}
+            onSuggestionsClearRequested={() => setSuggestions([])}
             getSuggestionValue={(suggestion) => suggestion}
             renderSuggestion={(suggestion) => <div>{suggestion}</div>}
             inputProps={inputProps}
             onSuggestionSelected={onSuggestionSelected}
-            theme={{
-              container: 'react-autosuggest__container',
-              suggestionsContainer: 'react-autosuggest__suggestions-container',
-              suggestionsList: 'react-autosuggest__suggestions-list',
-              suggestion: 'react-autosuggest__suggestion',
-              suggestionHighlighted: 'react-autosuggest__suggestion--highlighted',
-            }}
           />
           <label>Nombre</label>
           <input type="text" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} placeholder='Ingrese Nombre' className='form-control' id={NombrePI} name={NombrePI} />

@@ -22,34 +22,40 @@ function FormularioPersonalCamiones() {
   const [GuiaDespachoCA, setGuiaDespachoCA] = useState("");
   const [Empresas, setEmpresas] = useState([]);
 
-
   const getSuggestions = async (value) => {
-    const query = value ? value.trim() : "";
-    const response = await fetch(`http://localhost:8800/FormularioCamiones/suggestions?query=${value}`);
-    const data = await response.json();
-    return data.suggestions;
+    try {
+      const response = await fetch(`http://localhost:8800/FormularioCamiones/suggestions?query=${value}`);
+      const data = await response.json();
+      if (data.results && data.results.length > 0) {
+        const ruts = data.results[0].map(obj => obj.RUTCA);
+        setSuggestions(ruts);
+      } else {
+        setSuggestions([]);
+      }
+    } catch (error) {
+      console.error('Error al obtener sugerencias:', error);
+    }
   };
 
-
   const onSuggestionSelected = async (_, { suggestion }) => {
-    // Realiza una llamada a la API para obtener los datos del Rut seleccionado
-    const response = await Axios.get(`http://localhost:8800/FormularioCamiones/suggestion/${suggestion}`);
-    const data = response.data || {};
-    console.log("Suggestion selected:", suggestion);
-    console.log("API Response:", data);
-    setRutCA(data.RUTCA || "" )
-    setChoferCA(data.CHOFERCA || "" ),
-    setApellidoChoferCA(data.APELLIDOCHOFERCA || "" ),
-    setRutCA(data.RUTCA || "" ),
-    setPeonetaCA(data.PEONETACA || "" ),
-    setPatenteCA(data.PATENTECA || "" ),
-    setMarcaCA(data.MARCACA || "" ),
-    setTipoCA(data.TIPOCA || "" ),
-    setModeloCA(data.MODELOCA || "" ),
-    setColorCA(data.COLORCA || "" ),
-    setEmpresaCA(data.EMPRESACA || "" ),
-    setObservacionesCA(data.OBSERVACIONESCA || "" ),
-    setGuiaDespachoCA(data.GUIADESPACHOCA || "" )
+    try {
+      const response = await Axios.get(`http://localhost:8800/FormularioCamiones/suggestion/${suggestion}`);
+      const data = response.data;
+      setRutCA(data.RUTCA || "" ),
+      setChoferCA(data.CHOFERCA || "" ),
+      setApellidoChoferCA(data.APELLIDOCHOFERCA || "" ),
+      setPeonetaCA(data.PEONETACA || "" ),
+      setPatenteCA(data.PATENTECA || "" ),
+      setMarcaCA(data.MARCACA || "" ),
+      setTipoCA(data.TIPOCA || "" ),
+      setModeloCA(data.MODELOCA || "" ),
+      setColorCA(data.COLORCA || "" ),
+      setEmpresaCA(data.EMPRESACA || "" ),
+      setObservacionesCA(data.OBSERVACIONESCA || "" ),
+      setGuiaDespachoCA(data.GUIADESPACHOCA || "" )
+    } catch (error) {
+      console.error('Error al obtener sugerencias:', error);
+    }
   };
 
   const inputProps = {
@@ -57,27 +63,6 @@ function FormularioPersonalCamiones() {
     value: RutCA,
     onChange: (_, { newValue }) => setRutCA(newValue),
   };
-
-  // useEffect(() => {
-  //   getEmpresas();
-  // }, []);
-
-
-  // const getEmpresas = () => {
-  //   Axios.get("http://localhost:8800/empresas")
-  //     .then((res) => {
-  //       setEmpresas(res.data);
-  //       console.log(res.data)
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error al obtener empresas:", error);
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Oops...",
-  //         text: "Error al obtener empresas, intente nuevamente más tarde",
-  //       });
-  //     });
-  // };
 
   const ingresoformdCA = () => {
     Axios.post("http://localhost:8800/FormularioCamiones", {
@@ -93,8 +78,7 @@ function FormularioPersonalCamiones() {
       EmpresaCA: EmpresaCA,
       ObservacionesCA: ObservacionesCA,
       GuiaDespachoCA: GuiaDespachoCA
-    }).then(() => {
-      // console.log(RutPI+RolPI+NombrePI+ApellidoPI)
+    }).then(() => { 
       limpiarcamposCA();
       Swal.fire({
         title: 'Ingreso Exitoso!',
@@ -137,13 +121,8 @@ function FormularioPersonalCamiones() {
           <label>Rut Chofer</label>
           <Autosuggest
             suggestions={suggestions}
-            onSuggestionsFetchRequested={async ({ value }) => {
-              const suggestions = await getSuggestions(value);
-              setSuggestions(suggestions);
-            }}
-            onSuggestionsClearRequested={() => {
-              setSuggestions([]);
-            }}
+            onSuggestionsFetchRequested={({ value }) => getSuggestions(value)}
+            onSuggestionsClearRequested={() => setSuggestions([])}
             getSuggestionValue={(suggestion) => suggestion}
             renderSuggestion={(suggestion) => <div>{suggestion}</div>}
             inputProps={inputProps}

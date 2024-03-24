@@ -19,27 +19,37 @@ function FormularioPersonalExterno() {
 
 
   const getSuggestions = async (value) => {
-    const response = await fetch(`http://localhost:8800/FormularioPersonalExterno/suggestions?query=${value}`);
-    const data = await response.json();
-    return data.suggestions;
+    try {
+      const response = await fetch(`http://localhost:8800/FormularioPersonalExterno/suggestions?query=${value}`);
+      const data = await response.json();
+      if (data.results && data.results.length > 0) {
+        const ruts = data.results[0].map(obj => obj.RUTPE);
+        setSuggestions(ruts);
+      } else {
+        setSuggestions([]);
+      }
+    } catch (error) {
+      console.error('Error al obtener sugerencias:', error);
+    }
   };
-
+  
 
   const onSuggestionSelected = async (_, { suggestion }) => {
-    // Realiza una llamada a la API para obtener los datos del Rut seleccionado
-    const response = await Axios.get(`http://localhost:8800/FormularioPersonalExterno/suggestion/${suggestion}`);
-    const data = response.data;
-    console.log("Suggestion selected:", suggestion);
-    console.log("API Response:", data);
-    setNombrePE(data.NOMBREPE);
-    setApellidoPE(data.APELLIDOPE);
-    setVehiculoPE(data.VEHICULOPE);
-    setColorPE(data.COLORPE);
-    setPatentePE(data.PATENTEPE);
-    setEmpresaPE(data.EMPRESAPE);
-    setRolPE(data.ROLPE);
+    try {
+      const response = await Axios.get(`http://localhost:8800/FormularioPersonalExterno/suggestion/${suggestion}`);
+      const data = response.data;
+      setNombrePE(data.NOMBREPE);
+      setApellidoPE(data.APELLIDOPE);
+      setVehiculoPE(data.VEHICULOPE);
+      setColorPE(data.COLORPE);
+      setPatentePE(data.PATENTEPE);
+      setEmpresaPE(data.EMPRESAPE);
+      setRolPE(data.ROLPE);
+    } catch (error) {
+      console.error('Error al obtener sugerencias:', error);
+    }
   };
-
+  
   const inputProps = {
     placeholder: "Ingrese RUT",
     value: RutPE,
@@ -65,30 +75,14 @@ function FormularioPersonalExterno() {
         timer: 1500
       })
     }).catch(function (error) {
-      let errorMessage = "Ocurrió un error al intentar marcar el ingreso.";
-      if (error.response) {
-        if (error.response.status === 200) {
-          // El servidor respondió con un código 200 pero con un mensaje de error en el cuerpo
-          errorMessage = error.response.data.message || "Error desconocido";
-        } else {
-          // El servidor respondió con un código de error diferente a 200
-          errorMessage = `Error del servidor: ${error.response.status} - ${error.response.statusText}`;
-        }
-      } else if (error.request) {
-        // La petición fue realizada pero no se recibió respuesta
-        errorMessage = "No se recibió respuesta del servidor.";
-      } else {
-        // Error en la configuración de la petición
-        errorMessage = "Error en la configuración de la petición.";
-      }
-
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: errorMessage
+        text: JSON.parse(JSON.stringify(error)).message === "Network Error" ? "Intente mas tarde" : JSON.parse(JSON.stringify(error))
       });
     });
   }
+  
 
   const limpiarcamposPE = () => {
     setRutPE("");
@@ -111,13 +105,8 @@ function FormularioPersonalExterno() {
           <label>Rut</label>
           <Autosuggest
             suggestions={suggestions}
-            onSuggestionsFetchRequested={async ({ value }) => {
-              const suggestions = await getSuggestions(value);
-              setSuggestions(suggestions);
-            }}
-            onSuggestionsClearRequested={() => {
-              setSuggestions([]);
-            }}
+            onSuggestionsFetchRequested={({ value }) => getSuggestions(value)}
+            onSuggestionsClearRequested={() => setSuggestions([])}
             getSuggestionValue={(suggestion) => suggestion}
             renderSuggestion={(suggestion) => <div>{suggestion}</div>}
             inputProps={inputProps}

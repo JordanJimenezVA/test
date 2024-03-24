@@ -35,7 +35,7 @@ const actionColumn: GridColDef = {
 
     }
 }
-console.log('rows:', props.rows);
+
 return (
     <div className="dataTable">
         <DataGrid className="dataGrid"

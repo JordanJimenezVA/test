@@ -78,7 +78,7 @@ const TablaIngreso = () => {
       ),
   })
   // const [open,setOpen] = useState(false)
-  console.log(data)
+
   return (
     <div className="Camiones">
       <div className="info">
