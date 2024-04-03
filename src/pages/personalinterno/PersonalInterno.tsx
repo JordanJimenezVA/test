@@ -38,7 +38,7 @@ const PersonalInterno = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['personalinterno'],
     queryFn: () =>
-    fetch('https://nodejs-back-production.up.railway.app/Personal%20Interno').then((res) =>
+    fetch(`/Personal%20Interno`).then((res) =>
         res.json(),
       ),
   })

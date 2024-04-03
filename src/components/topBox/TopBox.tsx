@@ -1,7 +1,33 @@
 import "./topbox.scss";
-import { topDealUsers } from "../../data.ts";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-const topBox = () => {
+interface Log {
+  IDL: number;
+  PERSONAL: string;
+  APELLIDO: string;
+  PATENTE: string;
+  ESTADO: string;
+  ROL: string;
+}
+
+const TopBox = () => {
+  const [logs, setLogs] = useState<Log[]>([]);
+  const host_server = import.meta.env.VITE_SERVER_HOST;
+  const { data } = useQuery({
+    queryKey: ['logs'],
+    queryFn: () =>
+      fetch(`${host_server}/TopBox`).then((res) =>
+        res.json(),
+      )
+  });
+
+  useEffect(() => {
+    if (data && Array.isArray(data) && data.length > 0) {
+      setLogs(data[0]); // Utilizar el primer array de datos
+    }
+  }, [data]);
+
   return (
     <div className="topBox">
       <div className="h1d">
@@ -9,20 +35,22 @@ const topBox = () => {
       </div>
 
       <div className="list">
-        {topDealUsers.map(user => (
-          <div className="listItem" key={user.id}>
+        {Array.isArray(logs) && logs.slice(0, 7).map(log => (
+          <div className="listItem" key={log.IDL}>
             <div className="user">
               <div className="userTexts">
-                <span className="username">{user.username}</span>
-                <span className="type">{user.type}</span>
+                <span className="username">{log.PERSONAL} {log.APELLIDO}</span>
+                <span className="type">{log.ROL}</span>
               </div>
             </div>
-            <span className="action">{user.action}</span>
+            <span className={`action ${log.ESTADO === 'Salida' ? 'redText' : 'greenText'}`}>
+              {log.ESTADO}
+            </span>
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }
 
-export default topBox
+export default TopBox;

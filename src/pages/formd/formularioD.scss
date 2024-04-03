@@ -2,7 +2,7 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-
+ 
   .h1formd {
     text-align: center;
   }
@@ -24,6 +24,7 @@
         width: 100%;
         padding: 8px;
         border: 1px solid #ccc;
+        color: black;
         border-radius: 4px;
         margin-bottom: 15px;
       }
@@ -40,6 +41,7 @@
       }
 
       input, select {
+        color: black;
         width: 100%;
         padding: 8px;
         border: 1px solid #ccc;
@@ -53,13 +55,15 @@
     .columna2 {
       flex: 0 0 48%;
       margin-bottom: 15px;
-
+      
       label {
         display: block;
         margin-bottom: 5px;
+        
       }
 
       input, select {
+        color: black;
         width: 100%;
         padding: 8px;
         border: 1px solid #ccc;
@@ -69,14 +73,15 @@
     }
   }
   button {
-    width: 100%;
+    // width: 100%;
+    width: 200px;
     padding: 10px;
     border: none;
     border-radius: 4px;
     background-color: #2059d3;
     color: white;
     cursor: pointer;
-
+    
     &:hover {
       background-color: #2980f1;
     }

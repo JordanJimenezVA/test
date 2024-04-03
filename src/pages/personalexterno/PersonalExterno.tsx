@@ -4,6 +4,7 @@ import DataTablePE from "../../components/dataTable/DataTablePE"
 import AddPE from "../../components/add/AddPE"
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
+const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
   { field: 'IDPE', headerName: 'ID', width: 45, type: 'number'},
@@ -76,7 +77,7 @@ const PersonalExterno = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['personalexterno'],
     queryFn: () =>
-    fetch('https://nodejs-back-production.up.railway.app/Personal%20Externo').then((res) =>
+    fetch(`${host_server}/Personal%20Externo`).then((res) =>
         res.json(),
       ),
   })

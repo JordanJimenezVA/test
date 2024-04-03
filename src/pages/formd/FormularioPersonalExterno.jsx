@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import Axios, { } from "axios";
 import Autosuggest from "react-autosuggest";
 
+
 function FormularioPersonalExterno() {
   const [suggestions, setSuggestions] = useState([]);
   const [IDPE, setidPE] = useState(0);
@@ -15,12 +16,12 @@ function FormularioPersonalExterno() {
   const [PatentePE, setPatentePE] = useState("");
   const [EmpresaPE, setEmpresaPE] = useState("");
   const [RolPE, setRolPE] = useState("Jardines");
-
+  const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
   const getSuggestions = async (value) => {
     try {
-      const response = await fetch(`https://nodejs-back-production.up.railway.app/FormularioPersonalExterno/suggestions?query=${value}`);
+      const response = await fetch(`${host_server}/FormularioPersonalExterno/suggestions?query=${value}`);
       const data = await response.json();
       if (data.results && data.results.length > 0) {
         const ruts = data.results[0].map(obj => obj.RUTPE);
@@ -29,14 +30,14 @@ function FormularioPersonalExterno() {
         setSuggestions([]);
       }
     } catch (error) {
-      console.error('Error al obtener sugerencias:', error);
+      // console.error('Error al obtener sugerencias:', error);
     }
   };
-  
+
 
   const onSuggestionSelected = async (_, { suggestion }) => {
     try {
-      const response = await Axios.get(`https://nodejs-back-production.up.railway.app/FormularioPersonalExterno/suggestion/${suggestion}`);
+      const response = await Axios.get(`${host_server}/FormularioPersonalExterno/suggestion/${suggestion}`);
       const data = response.data;
       setNombrePE(data.NOMBREPE);
       setApellidoPE(data.APELLIDOPE);
@@ -49,7 +50,7 @@ function FormularioPersonalExterno() {
       console.error('Error al obtener sugerencias:', error);
     }
   };
-  
+
   const inputProps = {
     placeholder: "Ingrese RUT",
     value: RutPE,
@@ -57,7 +58,7 @@ function FormularioPersonalExterno() {
   };
 
   const ingresoformdPE = () => {
-    Axios.post("https://nodejs-back-production.up.railway.app/FormularioPersonalExterno", {
+    Axios.post(`${host_server}/FormularioPersonalExterno`, {
       rutPE: RutPE,
       NombrePE: NombrePE,
       ApellidoPE: ApellidoPE,
@@ -82,7 +83,7 @@ function FormularioPersonalExterno() {
       });
     });
   }
-  
+
 
   const limpiarcamposPE = () => {
     setRutPE("");
@@ -101,7 +102,7 @@ function FormularioPersonalExterno() {
     <div className="contenedor">
       <h1 className='h1formd'>Entrada Personal Externo</h1>
       <div className="formulariopx">
-        <div className="campus">
+        <div className="campo">
           <label>Rut</label>
           <Autosuggest
             suggestions={suggestions}
@@ -119,6 +120,9 @@ function FormularioPersonalExterno() {
           <input type="text" onChange={(event) => { setApellidoPE(event.target.value); }} value={ApellidoPE} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPE} name={ApellidoPE} />
           <label>Vehiculo</label>
           <input type="text" onChange={(event) => { setVehiculoPE(event.target.value); }} value={VehiculoPE} placeholder='Ingrese Vehiculo' className='form-control' id={VehiculoPE} name={VehiculoPE} />
+          </div>
+
+          <div className='columna2'>
           <label>Color</label>
           <input type="text" onChange={(event) => { setColorPE(event.target.value); }} value={ColorPE} placeholder='Ingrese Color' className='form-control' id={ColorPE} name={ColorPE} />
           <label>Patente</label>
@@ -133,8 +137,9 @@ function FormularioPersonalExterno() {
             <option value="Reciclaje">Reciclaje</option>
             <option value="Otros">Otros</option>
           </select>
-        </div>
+        
 
+        </div>
 
       </div>
       <button className='btn btn-success' onClick={ingresoformdPE}>Marcar Ingreso</button>

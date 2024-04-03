@@ -1,5 +1,5 @@
-@import "./variables.scss";
 @import "./responsive.scss";
+@import "./variables.scss";
 
 
 * {
@@ -10,7 +10,7 @@
 
 a {
   text-decoration: none;
-  color: inherit;
+  // color: inherit;
 }
 
 .main {
@@ -21,13 +21,21 @@ a {
 .container {
   display: flex;
   height: 799px;
+  padding-left: 0rem;
 
+  @media (min-width: 1900px) {
+    max-width: 1900px;
+  }
 }
 
 .menuContainer {
-  width: 250px;
+  width: 300px;
   padding: 5px 20px;
   border-right: 2px solid $soft-bg;
+
+  @include lg {
+    width: max-content;
+  }
 
 }
 

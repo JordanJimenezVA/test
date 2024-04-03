@@ -1,11 +1,12 @@
 import "./navbar.scss"
+import "../../styles/responsive.scss";
 
 export const Navbar = () => {
   return (
     <div className="navbar">
       <div className="logo">
         <img src="logo.svg" alt="" />
-        <span>Admin</span>
+        <span>Monitoreo</span>
       </div>
       <div className="icons">
         <div className="user">

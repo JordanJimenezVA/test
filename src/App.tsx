@@ -8,7 +8,6 @@ import PersonalExterno from "./pages/personalexterno/PersonalExterno";
 import Camiones from "./pages/camiones/Camiones";
 
 import Navbar from "./components/navbar/Navbar";
-import Footer from "./components/footer/Footer";
 import Menu from "./components/menu/Menu";
 import Login from "./pages/login/Login";
 
@@ -23,14 +22,12 @@ import FormularioSalida from "./pages/formsalida/FormularioSalida";
 
 
 
-
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 
 import TablaIngreso from "./pages/tablaingreso/TablaIngreso";
 
 import Historial from "./pages/historial/Historial";
-
 
 
 const queryClient = new QueryClient();
@@ -51,7 +48,6 @@ function App() {
           </QueryClientProvider>
           </div>
         </div>
-        <Footer />
 
       </div>
     )
@@ -107,7 +103,7 @@ function App() {
     {
       path:"/Login",
       element:<Login/>,
-    },
+    }
   ]);
 
   return (

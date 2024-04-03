@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import "./login.scss"
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
 export default function Login() {
@@ -16,7 +16,7 @@ export default function Login() {
   axios.defaults.withCredentials = true;
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios.post('https://nodejs-back-production.up.railway.app/Login', { rutU: values.rut, passwordU: values.password })
+    axios.post(`${host_server}/Login`, { rutU: values.rut, passwordU: values.password })
     .then(res => {
       if(res.data.Status === "Success"){
         navigate('/')

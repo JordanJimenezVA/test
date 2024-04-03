@@ -4,7 +4,7 @@ import "./tablaIngreso.scss"
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 import DataTableAll from "../../components/dataTable/DataTableAll";
-
+const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
   { field: 'IDR', headerName: 'ID', width: 40, type: 'number'},
@@ -73,7 +73,7 @@ const TablaIngreso = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['registros'],
     queryFn: () =>
-    fetch('https://nodejs-back-production.up.railway.app/TablaIngreso').then((res) =>
+    fetch(`${host_server}/TablaIngreso`).then((res) =>
         res.json(),
       ),
   })

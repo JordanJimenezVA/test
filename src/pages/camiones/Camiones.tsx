@@ -4,7 +4,7 @@ import DataTableCA from "../../components/dataTable/DataTableCA"
 import AddCA from "../../components/add/AddCA"
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
-
+const host_server = import.meta.env.VITE_SERVER_HOST;
 const columns: GridColDef[] = [
   { field: 'IDCA', headerName: 'ID', width: 50, type: 'number'},
   {
@@ -79,7 +79,7 @@ const Camiones = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['camiones'],
     queryFn: () =>
-    fetch('https://nodejs-back-production.up.railway.app/Camiones').then((res) =>
+    fetch(`${host_server}/Camiones`).then((res) =>
         res.json(),
       ),
   })

@@ -1,7 +1,7 @@
 import { GridColDef } from "@mui/x-data-grid";
 import "./addPI.scss";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
+const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
 type Props = {
@@ -18,7 +18,7 @@ const AddPI = (props: Props) => {
 
   const mutation = useMutation({
     mutationFn: (data) => {
-      return fetch(`https://nodejs-back-production.up.railway.app/Personal%20Interno`, {
+      return fetch(`${host_server}/Personal%20Interno`, {
         method: "post",
         headers: {
           "Content-Type": "application/json",

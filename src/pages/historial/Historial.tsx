@@ -4,7 +4,7 @@ import "./logs.scss"
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 import AddL from "../../components/add/AddL";
-
+const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
   { field: 'IDL', headerName: 'ID', width: 40, type: 'number' },
@@ -92,7 +92,7 @@ const Historial = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['logs'],
     queryFn: () =>
-      fetch('https://nodejs-back-production.up.railway.app/Logs').then((res) =>
+      fetch(`${host_server}/Logs`).then((res) =>
         res.json(),
       ),
   })

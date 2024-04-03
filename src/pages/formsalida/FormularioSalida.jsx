@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import Axios from "axios";
 import { useParams } from 'react-router-dom';
-
+const host_server = import.meta.env.VITE_SERVER_HOST;
 function FormularioSalida() {
   const { IDR } = useParams();
 
@@ -22,7 +22,7 @@ function FormularioSalida() {
   }, [IDR]);
 
   const getRegistros = (IDR) => {
-    Axios.get(`https://nodejs-back-production.up.railway.app/FormularioSalida/${IDR}`)
+    Axios.get(`${host_server}/FormularioSalida/${IDR}`)
       .then((res) => {
         const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO } = res.data[0];
         setFormValues({
@@ -67,7 +67,7 @@ function FormularioSalida() {
   };
 
   const salidaCA = () => {
-    Axios.post(`https://nodejs-back-production.up.railway.app/FormularioSalida/${IDR}`, {
+    Axios.post(`${host_server}/FormularioSalida/${IDR}`, {
       ...formValues
     }).then(() => {
       limpiarCampos();

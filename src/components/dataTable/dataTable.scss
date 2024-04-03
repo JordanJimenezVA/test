@@ -1,9 +1,26 @@
+@import "../../styles/responsive.scss";
 .dataTable{
+    @include sm{
+        width: 1000px;
+    }
+    @include lg{
+        width: 1000px;
+    }
+    @include md{
+        width: 1000px;
+    }
+    @include xl{
+        width: 1000px;
+    }
+    @include xxl{
+        width: 1000px;
+    }
     .dataGrid{
         background-color: white;
         padding: 20px;
         font-size: 17px;
         font-weight: 600;
+
         .MuiDataGrid-toolbarContainer{
             flex-direction: row-reverse;
         }
