@@ -43,7 +43,7 @@ const TopBox = () => {
                 <span className="type">{log.ROL}</span>
               </div>
             </div>
-            <span className={`action ${log.ESTADO === 'Salida' ? 'redText' : 'greenText'}`}>
+            <span className={`action ${log.ESTADO === 'SALIDA' ? 'redText' : 'greenText'}`}>
               {log.ESTADO}
             </span>
           </div>

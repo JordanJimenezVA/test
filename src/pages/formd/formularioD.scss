@@ -32,7 +32,7 @@
 
     }
     .campo  {
-      flex: 0 0 48%;
+      flex: 0 0 33%;
       margin-bottom: 15px;
 
       label {
@@ -53,10 +53,10 @@
     }
 
     .columna2 {
-      flex: 0 0 48%;
+      flex: 0 0 33%;
       margin-bottom: 15px;
-      
-      label {
+      gap: 5px;
+      label { 
         display: block;
         margin-bottom: 5px;
         
@@ -71,6 +71,29 @@
         margin-bottom: 15px;
       }
     }
+  }
+  .campo2{
+    flex: 0 0 33%;
+    margin-bottom: 15px;
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input, select {
+      color: black;
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 15px;
+    }
+  }
+  .div-btn-container-CA{
+    width: 100%;
+    display: flex;
+    justify-content: center
   }
   button {
     // width: 100%;

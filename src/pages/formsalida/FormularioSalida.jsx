@@ -15,6 +15,7 @@ function FormularioSalida() {
     ROL: '',
     OBSERVACIONES: '',
     GUIADESPACHO: '',
+    // SELLO: '',
   });
 
   useEffect(() => {
@@ -32,7 +33,8 @@ function FormularioSalida() {
           PATENTE,
           ROL,
           OBSERVACIONES,
-          GUIADESPACHO
+          GUIADESPACHO,
+          // SELLO
         });
       })
       .catch((error) => {
@@ -63,6 +65,7 @@ function FormularioSalida() {
       ROL: '',
       OBSERVACIONES: '',
       GUIADESPACHO: '',
+      // SELLO: '',
     });
   };
 
@@ -106,6 +109,10 @@ function FormularioSalida() {
           <input type="text" name="OBSERVACIONES" value={formValues.OBSERVACIONES} onChange={handleChange} placeholder='Ingrese Observaciones' className='form-control' />
           <label>GUIA DESPACHO/FACTURA</label>
           <input type="text" name="GUIADESPACHO" value={formValues.GUIADESPACHO} onChange={handleChange} placeholder='Ingrese Guia Despacho/Factura' className='form-control' />
+{/*           
+          <label>SELLO</label>
+          <input type="text" name="SELLO" value={formValues.SELLO} onChange={handleChange} placeholder='Ingrese SELLO' className='form-control' />
+         */}
         </div>
         <button className='btn btn-success' onClick={salidaCA}>Marcar Salida</button>
       </div>

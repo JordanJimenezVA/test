@@ -1,4 +1,4 @@
-import './formularioD.scss'
+import './formularioPersonal.scss'
 import { useState } from "react";
 import Swal from 'sweetalert2';
 import Axios from "axios";
@@ -13,7 +13,7 @@ function PersonalInterno() {
   const [VehiculoPI, setVehiculoPI] = useState("");
   const [ColorPI, setColorPI] = useState("");
   const [PatentePI, setPatentePI] = useState("");
-  const [RolPI, setRolPI] = useState("Administrativo");
+  const [RolPI, setRolPI] = useState("");
 
   const getSuggestions = async (value) => {
     try {
@@ -99,7 +99,7 @@ function PersonalInterno() {
     <div className="contenedor">
       <h1 className='h1formd'>Entrada Personal Interno</h1>
       <div className="formulariopx">
-        <div className="campo">
+        <div className="campopersonal">
           <label>Rut</label>
           <Autosuggest
             suggestions={suggestions}
@@ -114,24 +114,31 @@ function PersonalInterno() {
           <input type="text" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} placeholder='Ingrese Nombre' className='form-control' id={NombrePI} name={NombrePI} />
           <label>Apellido</label>
           <input type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPI} name={ApellidoPI} />
-          <label>Vehiculo</label>
-          <input type="text" onChange={(event) => { setVehiculoPI(event.target.value); }} value={VehiculoPI} placeholder='Ingrese Vehiculo' className='form-control' id={VehiculoPI} name={VehiculoPI} />
-          </div>
-          <div className='columna2'>
-          <label>Color</label>
-          <input type="text" onChange={(event) => { setColorPI(event.target.value); }} value={ColorPI} placeholder='Ingrese Color' className='form-control' id={ColorPI} name={ColorPI} />
-          <label>Patente</label>
-          <input type="text" onChange={(event) => { setPatentePI(event.target.value); }} value={PatentePI} placeholder='Ingrese Patente' className='form-control' id={PatentePI} name={PatentePI} />
+
           <label>Rol</label>
           <select onChange={(event) => { setRolPI(event.target.value); }} value={RolPI} className='form-control' id={RolPI} name={RolPI}>
+            <option value=""></option>
             <option value="Administrativo">Administrativo</option>
             <option value="Bodega">Bodega</option>
           </select>
+          </div>
+          <div className='columnaPersonal'>
+          <label>Vehiculo</label>
+          <input type="text" onChange={(event) => { setVehiculoPI(event.target.value); }} value={VehiculoPI} placeholder='Ingrese Vehiculo' className='form-control' id={VehiculoPI} name={VehiculoPI} />
+          <label>Patente</label>
+          <input type="text" onChange={(event) => { setPatentePI(event.target.value); }} value={PatentePI} placeholder='Ingrese Patente' className='form-control' id={PatentePI} name={PatentePI} />
+
+          <label>Color</label>
+          <input type="text" onChange={(event) => { setColorPI(event.target.value); }} value={ColorPI} placeholder='Ingrese Color' className='form-control' id={ColorPI} name={ColorPI} />
+         
+
         </div>
 
 
       </div>
+      <div className='div-btn-container'>
       <button className='btn btn-success' onClick={ingresoformdPI}>Marcar Ingreso</button>
+      </div>
     </div>
 
   )

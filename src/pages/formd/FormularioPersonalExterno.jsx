@@ -1,4 +1,4 @@
-import './formularioD.scss'
+import './formularioPersonal.scss'
 import { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import Axios, { } from "axios";
@@ -15,7 +15,7 @@ function FormularioPersonalExterno() {
   const [ColorPE, setColorPE] = useState("");
   const [PatentePE, setPatentePE] = useState("");
   const [EmpresaPE, setEmpresaPE] = useState("");
-  const [RolPE, setRolPE] = useState("Jardines");
+  const [RolPE, setRolPE] = useState("");
   const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
@@ -102,7 +102,7 @@ function FormularioPersonalExterno() {
     <div className="contenedor">
       <h1 className='h1formd'>Entrada Personal Externo</h1>
       <div className="formulariopx">
-        <div className="campo">
+        <div className="campopersonal">
           <label>Rut</label>
           <Autosuggest
             suggestions={suggestions}
@@ -118,31 +118,38 @@ function FormularioPersonalExterno() {
           <input type="text" onChange={(event) => { setNombrePE(event.target.value); }} value={NombrePE} placeholder='Ingrese Nombre' className='form-control' id={NombrePE} name={NombrePE} />
           <label>Apellido</label>
           <input type="text" onChange={(event) => { setApellidoPE(event.target.value); }} value={ApellidoPE} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPE} name={ApellidoPE} />
-          <label>Vehiculo</label>
-          <input type="text" onChange={(event) => { setVehiculoPE(event.target.value); }} value={VehiculoPE} placeholder='Ingrese Vehiculo' className='form-control' id={VehiculoPE} name={VehiculoPE} />
-          </div>
-
-          <div className='columna2'>
-          <label>Color</label>
-          <input type="text" onChange={(event) => { setColorPE(event.target.value); }} value={ColorPE} placeholder='Ingrese Color' className='form-control' id={ColorPE} name={ColorPE} />
-          <label>Patente</label>
-          <input type="text" onChange={(event) => { setPatentePE(event.target.value); }} value={PatentePE} placeholder='Ingrese Patente' className='form-control' id={PatentePE} name={PatentePE} />
           <label>Empresa</label>
           <input type="text" onChange={(event) => { setEmpresaPE(event.target.value); }} value={EmpresaPE} placeholder='Ingrese Empresa' className='form-control' id={EmpresaPE} name={EmpresaPE} />
           <label>Rol</label>
           <select onChange={(event) => { setRolPE(event.target.value); }} value={RolPE} className='form-control' id={RolPE} name={RolPE}>
+            <option value=""></option>
             <option value="Jardines">Jardines</option>
             <option value="Fumigación">Fumigación</option>
             <option value="Camiones">Camiones</option>
             <option value="Reciclaje">Reciclaje</option>
             <option value="Otros">Otros</option>
           </select>
+          </div>
+
+          <div className='columnaPersonal'>
+          <label>Vehiculo</label>
+          <input type="text" onChange={(event) => { setVehiculoPE(event.target.value); }} value={VehiculoPE} placeholder='Ingrese Vehiculo' className='form-control' id={VehiculoPE} name={VehiculoPE} />
+          <label>Patente</label>
+          <input type="text" onChange={(event) => { setPatentePE(event.target.value); }} value={PatentePE} placeholder='Ingrese Patente' className='form-control' id={PatentePE} name={PatentePE} />
+
+          <label>Color</label>
+          <input type="text" onChange={(event) => { setColorPE(event.target.value); }} value={ColorPE} placeholder='Ingrese Color' className='form-control' id={ColorPE} name={ColorPE} />
+          
+
+
         
 
         </div>
 
       </div>
+      <div className='div-btn-container'>
       <button className='btn btn-success' onClick={ingresoformdPE}>Marcar Ingreso</button>
+      </div>
     </div>
 
   )

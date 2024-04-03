@@ -9,6 +9,17 @@ const host_server = import.meta.env.VITE_SERVER_HOST;
 const columns: GridColDef[] = [
   { field: 'IDR', headerName: 'ID', width: 40, type: 'number'},
   {
+    field: 'FECHAINGRESO',
+    headerName: 'Fecha Ingreso',
+    width: 140,
+    editable: false,
+    type: 'DATE',
+    valueFormatter: (params) => {
+        const date = new Date(params.value as string);
+        return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+      },
+  },
+  {
     field: 'PERSONAL',
     headerName: 'Nombre',
     width: 140,
@@ -58,15 +69,11 @@ const columns: GridColDef[] = [
     type: 'string',
   },
   {
-    field: 'FECHAINGRESO',
-    headerName: 'Fecha Ingreso',
-    width: 180,
+    field: 'SELLO',
+    headerName: 'Sello',
+    width: 210,
     editable: false,
-    type: 'DATE',
-    valueFormatter: (params) => {
-        const date = new Date(params.value as string);
-        return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
-      },
+    type: 'string',
   }
 ];
 const TablaIngreso = () => {

@@ -35,4 +35,22 @@
         }
     }
     }
+    .btn-salida-datatable{
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #af2b2b;
+        color: white;
+        cursor: pointer;
+    }
+    .btn-salida-datatable:hover{
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #df5252;
+        color: white;
+        cursor: pointer;
+    }
 }

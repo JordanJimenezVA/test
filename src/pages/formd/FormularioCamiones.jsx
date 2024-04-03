@@ -80,7 +80,7 @@ function FormularioPersonalCamiones() {
       EmpresaCA: EmpresaCA,
       ObservacionesCA: ObservacionesCA,
       GuiaDespachoCA: GuiaDespachoCA,
-      // SelloCA: SelloCA
+      SelloCA: SelloCA
     }).then(() => {
       limpiarcamposCA();
       Swal.fire({
@@ -132,26 +132,28 @@ function FormularioPersonalCamiones() {
             inputProps={inputProps}
             onSuggestionSelected={onSuggestionSelected}
           />
-          {/* <input type="text" onChange={(event) => { setRutCA(event.target.value); }} value={RutCA} placeholder='Ingrese Rut Chofer' className='form-control' id={RutCA} name={RutCA} /> */}
           <label>Nombre Chofer</label>
           <input type="text" onChange={(event) => { setChoferCA(event.target.value); }} value={ChoferCA} placeholder='Ingrese Chofer' className='form-control' id={ChoferCA} name={ChoferCA} />
           <label>Apellido Chofer</label>
           <input type="text" onChange={(event) => { setApellidoChoferCA(event.target.value); }} value={ApellidoChoferCA} placeholder='Ingrese Chofer' className='form-control' id={ApellidoChoferCA} name={ApellidoChoferCA} />
           <label>Nombre Peoneta's</label>
           <input type="text" onChange={(event) => { setPeonetaCA(event.target.value); }} value={PeonetaCA} placeholder='Ingrese Peoneta(s)' className='form-control' id={PeonetaCA} name={PeonetaCA} />
-          <label>Guia Despacho/Factura</label>
-          <input type="text" onChange={(event) => { setGuiaDespachoCA(event.target.value); }} value={GuiaDespachoCA} placeholder='Ingrese Guia Despacho/Factura' className='form-control' id={GuiaDespachoCA} name={GuiaDespachoCA} />
-          <label>Observaciones</label>
-          <input type="text" onChange={(event) => { setObservacionesCA(event.target.value); }} value={ObservacionesCA} placeholder='Ingrese Observaciones' className='form-control' id={ObservacionesCA} name={ObservacionesCA} />
+          </div>
 
-          <label>Sello</label>
-          <input type="text" onChange={(event) => { setSelloCA(event.target.value); }} value={SelloCA} placeholder='Ingrese Sello' className='form-control' id={SelloCA} name={SelloCA} />
-
-        </div>
 
         <div className="columna2">
-          <label>Tipo</label>
+          {/* <label>Tipo</label>
           <input type="text" onChange={(event) => { setTipoCA(event.target.value); }} value={TipoCA} placeholder='Ingrese Tipo' className='form-control' id={TipoCA} name={TipoCA} />
+          */}
+          <label>Tipo</label>
+          <select onChange={(event) => { setTipoCA(event.target.value); }} value={TipoCA} className='form-control' id={TipoCA} name={TipoCA}>
+            <option value=""></option>
+            <option value="Fumigación">Remolque Abierto</option>
+            <option value="Camiones">Remolque Cerrado</option>
+            <option value="Reciclaje">Remolque Refrigerado</option>
+            <option value="Otros">Otros</option>
+          </select>
+          
           <label>Modelo</label>
           <input type="text" onChange={(event) => { setModeloCA(event.target.value); }} value={ModeloCA} placeholder='Ingrese Modelo' className='form-control' id={ModeloCA} name={ModeloCA} />
           <label>Color</label>
@@ -169,9 +171,19 @@ function FormularioPersonalCamiones() {
 
         </div>
 
+        <div className="campo2">
+          <label>Guia Despacho/Factura</label>
+          <input type="text" onChange={(event) => { setGuiaDespachoCA(event.target.value); }} value={GuiaDespachoCA} placeholder='Ingrese Guia Despacho/Factura' className='form-control' id={GuiaDespachoCA} name={GuiaDespachoCA} />
+          <label>Observaciones</label>
+          <input type="text" onChange={(event) => { setObservacionesCA(event.target.value); }} value={ObservacionesCA} placeholder='Ingrese Observaciones' className='form-control' id={ObservacionesCA} name={ObservacionesCA} />
+          <label>Sello</label>
+          <input type="text" onChange={(event) => { setSelloCA(event.target.value); }} value={SelloCA} placeholder='Ingrese Sello' className='form-control' id={SelloCA} name={SelloCA} />
 
+        </div>
       </div>
+      <div className='div-btn-container-CA'>
       <button className='btn btn-success' onClick={ingresoformdCA}>Marcar Ingreso</button>
+      </div>
     </div>
 
   )

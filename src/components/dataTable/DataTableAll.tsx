@@ -27,9 +27,9 @@ const DataTableAll = (props: Props) => {
     }
     const actionColumn: GridColDef = {
         field: 'acciones',
-        headerName: 'Acciones',
+        headerName: 'Marcar Salida',
         sortable: false,
-        width: 150,
+        width: 130,
         renderCell: (params) => {
             const row = params.row as Row; // Castear params.row como Row
             return <div className="action">
@@ -37,17 +37,17 @@ const DataTableAll = (props: Props) => {
                     {/* <img src="view.svg" alt="" /> */}
                 </Link>
                 <div className="marcar-salida" onClick={() => handleMarcarSalida(row.IDR)}>
-                    <img src="/view2.svg" alt="" />
+                    {/* <img src="/view2.svg" alt="" /> */}
+                    <button type="button" className="btn-salida-datatable">SALIDA</button>
                 </div>
             </div>
         }
     }
-
     return (
         <div className="dataTable">
             <DataGrid className="dataGrid"
                 rows={rows}
-                columns={[...props.columns, actionColumn]}
+                columns={[props.columns[0], actionColumn, ...props.columns.slice(2)]}
 
                 getRowId={(row) => `${row.IDR}`}
                 initialState={{

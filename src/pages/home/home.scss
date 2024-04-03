@@ -6,21 +6,26 @@
     gap: 10px;
     grid-template-columns: repeat(4, 1fr);
     grid-auto-rows: minmax(155px, auto);
+    // @include xl {
+    //     grid-template-columns: repeat(3, 1fr);
+    // }
+    // @include xl {
+    //     grid-template-columns: repeat(3, 1fr);
 
-    @include xl {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
+    // }
     @include xl {
         grid-template-columns: repeat(2, 2fr);
+
     }
 
     @include md {
         grid-template-columns: repeat(1, 1fr);
+
     }
     @include sm {
         grid-auto-rows: minmax(120px, auto);
         display: contents;
+
     }
 
     .box {
@@ -33,27 +38,36 @@
     .box1 {
         grid-column: span 2;
         grid-row: span 4;
-
-
+        @include xl {
+            grid-column: span 2;
+            grid-row: span 2;
+            order: 1;
+        }
+        
     }
 
     .box2 {
         grid-column: span 1;
         grid-row: span 2;
+
     }
 
     .box3 {
         grid-column: span 1;
         grid-row: span 2;
+
     }
 
     .box4 {
         grid-column: span 1;
         grid-row: span 2;
+
     }
 
     .box5 {
         grid-column: span 1;
         grid-row: span 2;
+
     }
+
 }
