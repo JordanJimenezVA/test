@@ -5,7 +5,7 @@ import { chartBoxConversion, chartBoxProduct, chartBoxRevenue, chartBoxUser } fr
 import { useEffect, useState } from "react";
 
 const Home = () => {
-  const [chartData, setChartData] = useState<any[]>([]); // Estado para almacenar los datos de la tabla
+  const [, setChartData] = useState<any[]>([]); // Estado para almacenar los datos de la tabla
   const [chartDataEx, setChartDataEx] = useState<number>(0); // Estado para almacenar la cantidad total de personal externo
   const [chartDataCa, setChartDataCa] = useState<number>(0); // Estado para almacenar la cantidad total de personal externo
   const host_server = import.meta.env.VITE_SERVER_HOST;
