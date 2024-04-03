@@ -4,7 +4,7 @@ import "./personalinterno.scss"
 import {  useState } from "react";
 import AddPI from "../../components/add/AddPI";
 import { useQuery } from "@tanstack/react-query";
-
+const host_server = import.meta.env.VITE_SERVER_HOST;
 const columns: GridColDef[] = [
   { field: 'IDPI', headerName: 'ID', width: 90, type: 'number' },
   { field: 'RUTPI', headerName: 'Rut', type: 'string', width: 150, editable: false },
@@ -38,7 +38,7 @@ const PersonalInterno = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['personalinterno'],
     queryFn: () =>
-    fetch(`/Personal%20Interno`).then((res) =>
+    fetch(`${host_server}/Personal%20Interno`).then((res) =>
         res.json(),
       ),
   })
