@@ -7,7 +7,7 @@ import DataTableAll from "../../components/dataTable/DataTableAll";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
-  { field: 'IDR', headerName: 'ID', width: 40, type: 'number'},
+  { field: 'IDR', headerName: 'ID', width: 40, type: 'number' },
   {
     field: 'FECHAINGRESO',
     headerName: 'Fecha Ingreso',
@@ -15,23 +15,17 @@ const columns: GridColDef[] = [
     editable: false,
     type: 'DATE',
     valueFormatter: (params) => {
-        const date = new Date(params.value as string);
-        return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
-      },
+      const date = new Date(params.value as string);
+      return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+    },
   },
   {
     field: 'PERSONAL',
     headerName: 'Nombre',
-    width: 140,
+    width: 170,
     editable: false,
     type: 'string',
-  },
-  {
-    field: 'APELLIDO',
-    headerName: 'Apellido',
-    width: 140,
-    editable: false,
-    type: 'string',
+    valueGetter: (params) => `${params.row.PERSONAL} ${params.row.APELLIDO}`,
   },
   {
     field: 'RUT',
@@ -50,51 +44,46 @@ const columns: GridColDef[] = [
   {
     field: 'ROL',
     headerName: 'Rol',
-    width: 200,
+    width: 150,
     editable: false,
     type: 'string',
   },
   {
-    field: 'OBSERVACIONES',
-    headerName: 'Observaciones',
-    width: 200,
+    field: 'FECHAINGRESO',
+    headerName: 'Fecha Ingreso',
+    width: 180,
     editable: false,
-    type: 'string',
+    type: 'DATE',
+    valueFormatter: (params) => {
+      const date = params.value ? new Date(params.value as string) : null;
+      if (date && !isNaN(date.getTime())) {
+        return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+      } else {
+        return ''; 
+      }
+    },
   },
-  {
-    field: 'GUIADESPACHO',
-    headerName: 'Guia Despacho/Factura',
-    width: 210,
-    editable: false,
-    type: 'string',
-  },
-  {
-    field: 'SELLO',
-    headerName: 'Sello',
-    width: 210,
-    editable: false,
-    type: 'string',
-  }
 ];
 const TablaIngreso = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['registros'],
     queryFn: () =>
-    fetch(`${host_server}/TablaIngreso`).then((res) =>
+      fetch(`${host_server}/TablaIngreso`).then((res) =>
         res.json(),
+
       ),
-  })
-  // const [open,setOpen] = useState(false)
+
+  });
 
   return (
     <div className="Camiones">
       <div className="info">
-          <h1 className="h1d">LISTA DE PERSONAS/CAMIONES ADENTRO</h1>
+        <h1 className="h1d">LISTA DE PERSONAS/CAMIONES ADENTRO</h1>
       </div>
       {isLoading ? (
         "Loading..."
       ) : (
-        < DataTableAll slug="AllR" columns={columns} rows={data}/>
+        < DataTableAll slug="AllR" columns={columns} rows={data} />
       )}
       {/* {open && <AddR slug="AllR" columns={columns} setOpen={setOpen} />} */}
     </div>

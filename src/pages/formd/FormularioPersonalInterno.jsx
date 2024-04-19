@@ -1,9 +1,10 @@
 import './formularioPersonal.scss'
-import { useState } from "react";
+import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import Axios from "axios";
 import Autosuggest from 'react-autosuggest';
 const host_server = import.meta.env.VITE_SERVER_HOST;
+
 function PersonalInterno() {
   const [suggestions, setSuggestions] = useState([]);
   const [IDPI, setidPI] = useState(0);
@@ -14,6 +15,29 @@ function PersonalInterno() {
   const [ColorPI, setColorPI] = useState("");
   const [PatentePI, setPatentePI] = useState("");
   const [RolPI, setRolPI] = useState("");
+  const [rutValido, setRutValido] = React.useState(true);
+
+  const validarRut = (rut) => {
+    if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
+    let tmp = rut.split('-');
+    let digv = tmp[1];
+    rut = tmp[0];
+    if (digv == 'K') digv = 'k';
+    return (dv(rut) == digv);
+  }
+
+  const dv = (T) => {
+    let M = 0, S = 1;
+    for (; T; T = Math.floor(T / 10)) {
+      S = (S + T % 10 * (9 - M++ % 6)) % 11;
+    }
+    return S ? S - 1 : 'k';
+  }
+
+  const handleRutChange = (event, { newValue }) => {
+    setRutPI(newValue);
+    setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
+  }
 
   const getSuggestions = async (value) => {
     try {
@@ -34,7 +58,7 @@ function PersonalInterno() {
     try {
       const response = await Axios.get(`${host_server}/FormularioPersonalInterno/suggestion/${suggestion}`);
       const data = response.data;
- 
+
       setNombrePI(data.NOMBREPI);
       setApellidoPI(data.APELLIDOPI);
       setVehiculoPI(data.VEHICULOPI);
@@ -54,6 +78,14 @@ function PersonalInterno() {
   };
 
   const ingresoformdPI = () => {
+    if (!validarRut(RutPI)) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "RUT inválido. Por favor, ingrese un RUT válido.",
+      });
+      return;
+    }
     Axios.post(`${host_server}/FormularioPersonalInterno`, {
       rutPI: RutPI,
       NombrePI: NombrePI,
@@ -93,54 +125,136 @@ function PersonalInterno() {
     setRolPI("");
   }
 
+  const limpiarCampo = (setState) => {
+    setState("");
+  };
+
+
+
 
   return (
 
-    <div className="contenedor">
+    <form onSubmit={(e) => {
+      e.preventDefault(); // Evita que se recargue la página
+      ingresoformdPI();
+    }}>
       <h1 className='h1formd'>Entrada Personal Interno</h1>
-      <div className="formulariopx">
-        <div className="campopersonal">
-          <label>Rut</label>
-          <Autosuggest
-            suggestions={suggestions}
-            onSuggestionsFetchRequested={({ value }) => getSuggestions(value)}
-            onSuggestionsClearRequested={() => setSuggestions([])}
-            getSuggestionValue={(suggestion) => suggestion}
-            renderSuggestion={(suggestion) => <div>{suggestion}</div>}
-            inputProps={inputProps}
-            onSuggestionSelected={onSuggestionSelected}
-          />
-          <label>Nombre</label>
-          <input type="text" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} placeholder='Ingrese Nombre' className='form-control' id={NombrePI} name={NombrePI} />
-          <label>Apellido</label>
-          <input type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPI} name={ApellidoPI} />
-
-          <label>Rol</label>
-          <select onChange={(event) => { setRolPI(event.target.value); }} value={RolPI} className='form-control' id={RolPI} name={RolPI}>
-            <option value=""></option>
-            <option value="Administrativo">Administrativo</option>
-            <option value="Bodega">Bodega</option>
-          </select>
+      <div className="card shadow-none border my-4" data-component-card="data-component-card">
+        <div className="card-header border-bottom bg-body">
+          <div className="row g-3 justify-content-between align-items-center">
+            <div className="col-12 col-md">
+              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Personal Externo<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+            </div>
           </div>
-          <div className='columnaPersonal'>
-          <label>Vehiculo</label>
-          <input type="text" onChange={(event) => { setVehiculoPI(event.target.value); }} value={VehiculoPI} placeholder='Ingrese Vehiculo' className='form-control' id={VehiculoPI} name={VehiculoPI} />
-          <label>Patente</label>
-          <input type="text" onChange={(event) => { setPatentePI(event.target.value); }} value={PatentePI} placeholder='Ingrese Patente' className='form-control' id={PatentePI} name={PatentePI} />
-
-          <label>Color</label>
-          <input type="text" onChange={(event) => { setColorPI(event.target.value); }} value={ColorPI} placeholder='Ingrese Color' className='form-control' id={ColorPI} name={ColorPI} />
-         
-
         </div>
 
+        <div className="card-body ">
+
+          <div className="row g-3 needs-validation">
+
+            <div className="col-auto">
+
+
+              <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
+              <div className="input-group mb-3">
+
+                <Autosuggest
+                  suggestions={suggestions}
+                  onSuggestionsFetchRequested={({ value }) => getSuggestions(value)}
+                  onSuggestionsClearRequested={() => setSuggestions([])}
+                  getSuggestionValue={(suggestion) => suggestion}
+                  renderSuggestion={(suggestion) => <div>{suggestion}</div>}
+                  inputProps={{
+                    placeholder: "Ingrese RUT",
+                    value: RutPI,
+                    onChange: handleRutChange,
+                  }}
+                  onSuggestionSelected={onSuggestionSelected}
+                />
+                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRutPI)}>X</button>
+              </div>
+            </div>
+
+            <div className="col-md-3">
+              <label>Nombre</label>
+              <div className="input-group mb-3">
+                <input type="text" className="form-control" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} placeholder='Ingrese Nombre' id={NombrePI} name={NombrePI} ></input>
+                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setNombrePI)}>X</button>
+              </div>
+            </div>
+
+            <div className="col-md-3">
+              <label>Apellido</label>
+              <div className="input-group mb-3">
+                <input type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPI} name={ApellidoPI} />
+                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoPI)}>X</button>
+              </div>
+            </div>
+
+            <div className="col-md-3">
+              <label>Rol</label>
+              <div className="input-group mb-3">
+                <select onChange={(event) => { setRolPI(event.target.value); }} value={RolPI} className='form-select ' id={RolPI} name={RolPI}>
+                  <option value=""></option>
+                  <option value="Administrativo">Administrativo</option>
+                  <option value="Bodega">Bodega</option>
+                </select>
+                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRolPI)}>X</button>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+      <div className="card shadow-none border my-4" data-component-card="data-component-card">
+        <div className="card-header border-bottom bg-body">
+          <div className="row g-3 justify-content-between align-items-center">
+            <div className="col-12 col-md">
+              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos del Vehículo<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+            </div>
+          </div>
+        </div>
+
+        <div className="card-body ">
+
+          <div className="row g-3 needs-validation">
+            <div className="col-md-3">
+              <label>Vehiculo</label>
+              <div className="input-group mb-3">
+                <input type="text" onChange={(event) => { setVehiculoPI(event.target.value); }} value={VehiculoPI} placeholder='Ingrese Vehiculo' className='form-control' id={VehiculoPI} name={VehiculoPI} />
+                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setVehiculoPI)}>X</button>
+              </div>
+            </div>
+
+            <div className="col-md-3">
+              <label>Patente</label>
+              <div className="input-group mb-3">
+                <input type="text" onChange={(event) => { setPatentePI(event.target.value); }} value={PatentePI} placeholder='Ingrese Patente' className='form-control' id={PatentePI} name={PatentePI} />
+                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatentePI)}>X</button>
+              </div>
+            </div>
+
+            <div className="col-md-3">
+              <label>Color</label>
+              <div className="input-group mb-3">
+                <input type="text" onChange={(event) => { setColorPI(event.target.value); }} value={ColorPI} placeholder='Ingrese Color' className='form-control' id={ColorPI} name={ColorPI} />
+                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setColorPI)}>X</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <div className="div-btn-container">
+        <button className='btn btn-success' type='submit'>Marcar Ingreso</button>
+
 
       </div>
-      <div className='div-btn-container'>
-      <button className='btn btn-success' onClick={ingresoformdPI}>Marcar Ingreso</button>
-      </div>
-    </div>
-
+    </form>
   )
 }
 export default PersonalInterno;

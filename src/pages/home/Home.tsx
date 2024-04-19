@@ -35,9 +35,6 @@ const Home = () => {
   }, []);
   const total = chartData + chartDataEx + chartDataCa;
   
-  console.log(chartData)
-  console.log(chartDataEx)
-  console.log(chartDataCa)
   return (
     <div className="home">
       <div className="box box1">

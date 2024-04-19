@@ -1,6 +1,6 @@
 @import "./responsive.scss";
 @import "./variables.scss";
-
+@import "bootstrap/scss/bootstrap";
 
 * {
   margin: 0;
@@ -22,10 +22,15 @@ a {
   display: flex;
   height: 799px;
   padding-left: 0rem;
+  margin: 0px;
 
   @media (min-width: 1900px) {
     max-width: 1900px;
   }
+  @include xxl{
+    max-width: 1300px;
+  }
+
 }
 
 .menuContainer {
