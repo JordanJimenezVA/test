@@ -1,8 +1,5 @@
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
-
 import { useState } from "react";
-
 import { useNavigate } from 'react-router-dom';
 
 interface Row {
@@ -33,9 +30,7 @@ const DataTableAll = (props: Props) => {
         renderCell: (params) => {
             const row = params.row as Row; // Castear params.row como Row
             return <div className="action">
-                <Link to={`${props.slug}/${row.IDR}`}>
-                    {/* <img src="view.svg" alt="" /> */}
-                </Link>
+
                 <div className="marcar-salida" onClick={() => handleMarcarSalida(row.IDR)}>
                     {/* <img src="/view2.svg" alt="" /> */}
                     <button type="button" className="btn-salida-datatable">SALIDA</button>

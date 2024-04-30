@@ -1,10 +1,12 @@
-import { useState } from "react"
 import "./camiones.scss"
 import DataTableCA from "../../components/dataTable/DataTableCA"
-import AddCA from "../../components/add/AddCA"
+import { useState } from "react";
+import AddCA from "../../components/add/AddCA";
+import { useNavigate } from "react-router-dom";
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 const host_server = import.meta.env.VITE_SERVER_HOST;
+
 const columns: GridColDef[] = [
   { field: 'IDCA', headerName: 'ID', width: 50, type: 'number'},
   {
@@ -16,17 +18,11 @@ const columns: GridColDef[] = [
   },
   {
     field: 'CHOFERCA',
-    headerName: 'Nombre Chofer',
-    width: 150,
-    editable: false,
-    type: 'string',
-  },
-  {
-    field: 'APELLIDOCHOFERCA',
-    headerName: 'Apellido Chofer',
+    headerName: 'Nombre',
     width: 170,
     editable: false,
     type: 'string',
+    valueGetter: (params) => `${params.row.CHOFERCA} ${params.row.APELLIDOCHOFERCA}`,
   },
   {
     field: 'PATENTECA',
@@ -59,7 +55,7 @@ const columns: GridColDef[] = [
   {
     field: 'MODELOCA',
     headerName: 'Modelo',
-    width: 160,
+    width: 140,
     type: 'string',
   },
   {
@@ -73,29 +69,41 @@ const columns: GridColDef[] = [
     headerName: 'Empresa',
     width: 160,
     type: 'string',
+  },
+  {
+    field: 'ESTADOCA',
+    headerName: 'Estado',
+    width: 100,
+    type: 'string',
   }
 ];
 const Camiones = () => {
+  const [open, setOpen] = useState(false)
+  const navigate = useNavigate();
+
   const { isLoading, data } = useQuery({
     queryKey: ['camiones'],
     queryFn: () =>
-    fetch(`${host_server}/Camiones`).then((res) =>
+    fetch(`${host_server}/camiones`).then((res) =>
         res.json(),
       ),
   })
-  const [open,setOpen] = useState(false)
+
+  const handleIngresarCA = () => {
+    navigate(`/AgregarCamion`);
+  }
   return (
     <div className="Camiones">
       <div className="info">
           <h1 className="h1d">Camiones</h1>
-        <button onClick={()=> setOpen(true)}>Ingresar Camiones</button>
+          <button onClick={handleIngresarCA}>Ingresar Camiones</button>
       </div>
       {isLoading ? (
         "Loading..."
       ) : (
         <DataTableCA slug="camiones" columns={columns} rows={data}/>
       )}
-      {open && <AddCA slug="camiones" columns={columns} setOpen={setOpen} />}
+      {open && <AddCA slug="CAMIONES" columns={columns} setOpen={setOpen} />}
     </div>
   )
 }

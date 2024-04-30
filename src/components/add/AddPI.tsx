@@ -51,11 +51,11 @@ const AddPI = (props: Props) => {
                 <h1>Marcar Ingreso {props.slug} </h1>
                 <form onSubmit={handleSubmit}>
                     {props.columns
-                        .filter(item => item.field !== "idPI")
+                        .filter(item => item.field !== "IDPI")
                         .map(column => (
                             <div className="item">
                                 <label>{column.headerName}</label>
-                                {column.field === "rolPI" ? (
+                                {column.field === "ROLPI" ? (
                                     <select>
                                         <option value="opcion1">Administrativos</option>
                                         <option value="opcion2">Bodega</option>

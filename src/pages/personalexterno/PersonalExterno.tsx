@@ -1,7 +1,8 @@
-import { useState } from "react"
-import "./personalExterno.scss"
-import DataTablePE from "../../components/dataTable/DataTablePE"
-import AddPE from "../../components/add/AddPE"
+import { useState } from "react";
+import "./personalExterno.scss";
+import DataTablePE from "../../components/dataTable/DataTablePE";
+import AddPE from "../../components/add/AddPE";
+import { useNavigate } from "react-router-dom";
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 const host_server = import.meta.env.VITE_SERVER_HOST;
@@ -18,16 +19,10 @@ const columns: GridColDef[] = [
   {
     field: 'NOMBREPE',
     headerName: 'Nombre',
-    width: 150,
+    width: 170,
     editable: false,
     type: 'string',
-  },
-  {
-    field: 'APELLIDOPE',
-    headerName: 'Apellido',
-    width: 150,
-    editable: false,
-    type: 'string',
+    valueGetter: (params) => `${params.row.NOMBREPE} ${params.row.APELLIDOPE}`,
   },
   {
     field: 'VEHICULOPE',
@@ -67,13 +62,15 @@ const columns: GridColDef[] = [
   {
     field: 'ESTADOPE',
     headerName: 'Estado',
-    width: 150,
+    width: 100,
     editable: false,
     type: 'string',
   }
 ];
 
 const PersonalExterno = () => {
+  const [open, setOpen] = useState(false)
+  const navigate = useNavigate();
   const { isLoading, data } = useQuery({
     queryKey: ['personalexterno'],
     queryFn: () =>
@@ -81,12 +78,15 @@ const PersonalExterno = () => {
         res.json(),
       ),
   })
-  const [open,setOpen] = useState(false)
+
+  const handleIngresarPE = () => {
+    navigate(`/AgregarPersonalExterno`);
+  }
   return (
     <div className="PersonalExterno">
       <div className="info">
           <h1 className="h1d">Personal Externo</h1>
-        <button onClick={()=> setOpen(true)}>Ingresar Personal Externo</button>
+          <button onClick={handleIngresarPE}>Ingresar Personal Externo</button>
       </div>
       {isLoading ? (
         "Loading..."

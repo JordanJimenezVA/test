@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import Axios from "axios";
 import Autosuggest from 'react-autosuggest';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 function PersonalInterno() {
@@ -143,7 +144,7 @@ function PersonalInterno() {
         <div className="card-header border-bottom bg-body">
           <div className="row g-3 justify-content-between align-items-center">
             <div className="col-12 col-md">
-              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Personal Externo<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Personal Interno<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
             </div>
           </div>
         </div>

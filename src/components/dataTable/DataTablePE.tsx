@@ -1,7 +1,11 @@
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import "./dataTable.scss";
-import { Link } from "react-router-dom";
-
+import { IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import EditIcon from '@mui/icons-material/Edit';
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+const host_server = import.meta.env.VITE_SERVER_HOST;
 
 type Props = {
     columns: GridColDef[],
@@ -11,28 +15,41 @@ type Props = {
 
 const DataTablePE = (props: Props) => {
 
-    const handleDelete= (IDPE: number) => {
-        //axios.delete(`/api/${slug}/idPI`)
-        console.log(IDPE+ "eliminado")
+    const navigate = useNavigate();
+
+    const handleDelete = (IDPE: number) => {
+        axios.delete(`${host_server}/${props.slug}/${IDPE}`)
+    }
+    const handleEditClick = (IDPE: number) => {
+        navigate(`/EditarPersonalExterno/${IDPE}`);
     }
 
-const actionColumn: GridColDef = {
-
-    field: 'acciones',
-    headerName: 'Acciones',
-    width: 100,
-    renderCell: (params) => {
-        return <div className="action">
-            <Link to={`${props.slug}/${params.row.IDPE}`}>
-                <img src="view.svg" alt="" />
-            </Link>
-            <div className="delete" onClick={() => handleDelete(params.row.IDPE)}>
-                <img src="/delete.svg" alt="" />
-            </div>
-        </div>
-
-    }
-}
+    const actionColumn: GridColDef = {
+        field: 'acciones',
+        headerName: 'Acciones',
+        sortable: false,
+        width: 100,
+        renderCell: (params) => {
+            return (
+                <div className="action">
+                    <IconButton
+                        onClick={() => handleEditClick(params.row.IDPE)}
+                        color="primary"
+                        aria-label="Editar"
+                    >
+                        <EditIcon />
+                    </IconButton>
+                    <IconButton
+                        onClick={() => handleDelete(params.row.IDPE)}
+                        color="secondary"
+                        aria-label="Eliminar"
+                    >
+                        <DeleteIcon />
+                    </IconButton>
+                </div>
+            );
+        },
+    };
 
 return (
     <div className="dataTable">

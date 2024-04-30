@@ -7,7 +7,7 @@ const host_server = import.meta.env.VITE_SERVER_HOST;
 
 function FormularioPersonalCamiones() {
   const [suggestions, setSuggestions] = useState([]);
-  const [IDPE, setidPE] = useState(0);
+  const [IDCA, setidCA] = useState(0);
   const [ChoferCA, setChoferCA] = useState("");
   const [ApellidoChoferCA, setApellidoChoferCA] = useState("");
   const [RutCA, setRutCA] = useState("");
