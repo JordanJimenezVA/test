@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import Axios, { } from "axios";
 import Autosuggest from 'react-autosuggest';
+import useChileanTime from "../../hooks/UseChileanTime";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 function FormularioPersonalCamiones() {
+  const chileanTime  = useChileanTime();
   const [suggestions, setSuggestions] = useState([]);
   const [IDCA, setidCA] = useState(0);
   const [ChoferCA, setChoferCA] = useState("");
@@ -112,7 +114,8 @@ function FormularioPersonalCamiones() {
       EmpresaCA: EmpresaCA,
       ObservacionesCA: ObservacionesCA,
       GuiaDespachoCA: GuiaDespachoCA,
-      SelloCA: SelloCA
+      SelloCA: SelloCA,
+      fechaActualChile: chileanTime.chileanTime
     }).then(() => {
       limpiarcamposCA();
       Swal.fire({

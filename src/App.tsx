@@ -41,11 +41,20 @@ import EditarPE from "./pages/editar/EditarPE";
 import EditarCA from "./pages/editar/EditarCA";
 
 
+
 import TablaIngreso from "./pages/tablaingreso/TablaIngreso";
 
 import Historial from "./pages/historial/Historial";
 
 import { useAuth } from './hooks/Auth';
+
+import Revision from './pages/revision/Revision';
+// @ts-ignore
+import RevisarCamion from './pages/formrevisar/RevisarCamion';
+// @ts-ignore
+import InformeCamion from './pages/informes/informecamion';
+// @ts-ignore
+import VerInforme from './pages/viewinforme/VerInforme';
 
 const queryClient = new QueryClient();
 
@@ -143,6 +152,22 @@ function App() {
         {
           path: "/EditarCamiones/:IDCA",
           element: <EditarCA />
+        },
+        {
+          path: "/Revision",
+          element: <Revision />
+        },
+        {
+          path: "/RevisionCamion/:IDR",
+          element: <RevisarCamion />
+        },
+        {
+          path: "/InformeCamion/",
+          element: <InformeCamion />
+        },
+        {
+          path: "/VerInforme/:IDR",
+          element: <VerInforme />
         }
       ],
     },

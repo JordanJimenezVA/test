@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import Axios, { } from "axios";
 import Autosuggest from "react-autosuggest";
-
+import useChileanTime from "../../hooks/UseChileanTime";
 
 function FormularioPersonalExterno() {
+  const chileanTime = useChileanTime();
   const [suggestions, setSuggestions] = useState([]);
   const [IDPE, setidPE] = useState(0);
   const [RutPE, setRutPE] = useState("");
@@ -16,7 +17,9 @@ function FormularioPersonalExterno() {
   const [PatentePE, setPatentePE] = useState("");
   const [EmpresaPE, setEmpresaPE] = useState("");
   const [RolPE, setRolPE] = useState("");
+  const [ObservacionesPE, setObservacionesPE] = useState("");
   const [rutValido, setRutValido] = React.useState(true);
+
   const host_server = import.meta.env.VITE_SERVER_HOST;
 
   const validarRut = (rut) => {
@@ -96,7 +99,9 @@ function FormularioPersonalExterno() {
       ColorPE: ColorPE,
       PatentePE: PatentePE,
       EmpresaPE: EmpresaPE,
-      RolPE: RolPE
+      RolPE: RolPE,
+      ObservacionesPE: ObservacionesPE,
+      fechaActualChile: chileanTime.chileanTime
     }).then(() => {
       limpiarcamposPE();
       Swal.fire({
@@ -124,6 +129,7 @@ function FormularioPersonalExterno() {
     setPatentePE("");
     setEmpresaPE("");
     setRolPE("");
+    setObservacionesPE("");
   }
   const limpiarCampo = (setState) => {
     setState("");
@@ -149,9 +155,9 @@ function FormularioPersonalExterno() {
             <div className="col-auto">
 
 
-            <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
+              <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
               <div className="input-group mb-3">
-              <Autosuggest
+                <Autosuggest
                   suggestions={suggestions}
                   onSuggestionsFetchRequested={({ value }) => getSuggestions(value)}
                   onSuggestionsClearRequested={() => setSuggestions([])}
@@ -208,6 +214,13 @@ function FormularioPersonalExterno() {
               </div>
             </div>
 
+            <div className="col-md-3">
+              <label>Observaciones</label>
+              <div className="input-group mb-3">
+                <input type="text" onChange={(event) => { setObservacionesPE(event.target.value); }} value={ObservacionesPE} placeholder='Ingrese Observaciones' className='form-control' id={ObservacionesPE} name={ObservacionesPE} />
+                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setObservacionesPE)}>X</button>
+              </div>
+            </div>
 
           </div>
         </div>

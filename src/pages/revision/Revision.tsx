@@ -1,28 +1,18 @@
-// import { useState } from "react"
-import "./tablaIngreso.scss"
-// import AddR from "../../components/add/AddR"
 import { GridColDef } from "@mui/x-data-grid";
+import DataTableR from "../../components/dataTable/DatatableR";
+import "./revision.scss"
+import { useState } from "react";
+import AddPI from "../../components/add/AddPI";
 import { useQuery } from "@tanstack/react-query";
-import DataTableAll from "../../components/dataTable/DataTableAll";
+
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
   { field: 'IDR', headerName: 'ID', width: 40, type: 'number' },
   {
-    field: 'FECHAINGRESO',
-    headerName: 'Fecha Ingreso',
-    width: 140,
-    editable: false,
-    type: 'DATE',
-    valueFormatter: (params) => {
-      const date = new Date(params.value as string);
-      return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
-    },
-  },
-  {
     field: 'PERSONAL',
     headerName: 'Nombre',
-    width: 170,
+    width: 150,
     editable: false,
     type: 'string',
     valueGetter: (params) => `${params.row.PERSONAL} ${params.row.APELLIDO}`,
@@ -69,30 +59,34 @@ const columns: GridColDef[] = [
     },
   }
 ];
-const TablaIngreso = () => {
+
+
+const Revision = () => {
+  const [open, setOpen] = useState(false)
+
+
   const { isLoading, data } = useQuery({
-    queryKey: ['registros'],
+    queryKey: ['revision'],
     queryFn: () =>
-      fetch(`${host_server}/TablaIngreso`).then((res) =>
+      fetch(`${host_server}/Revision`).then((res) =>
         res.json(),
-
       ),
+  })
 
-  });
 
   return (
-    <div className="Camiones">
+    <div className="PI">
       <div className="info">
-        <h1 className="h1d">LISTA DE PERSONAS/CAMIONES ADENTRO</h1>
+        <h1 className="h1d">Revision Camiones</h1>
       </div>
       {isLoading ? (
         "Loading..."
       ) : (
-        < DataTableAll slug="AllR" columns={columns} rows={data} />
+        <DataTableR slug="registros" columns={columns} rows={data} />
       )}
-      {/* {open && <AddR slug="AllR" columns={columns} setOpen={setOpen} />} */}
+      {open && <AddPI slug="registros" columns={columns} setOpen={setOpen} />}
     </div>
   )
 }
 
-export default TablaIngreso
+export default Revision

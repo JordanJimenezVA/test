@@ -4,6 +4,8 @@ import Axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 const host_server = import.meta.env.VITE_SERVER_HOST;
+
+
 function FormularioSalida() {
   const { IDR } = useParams();
   const [rutValido, setRutValido] = React.useState(true);

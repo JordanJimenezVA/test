@@ -24,7 +24,7 @@ export const Navbar = ({ nombreUsuario }: { nombreUsuario: string }) => {
     <div className="navbar">
       <div className="logo">
         <img src="logo.svg" alt="" />
-        <span>Monitoreo</span>
+        <span>SISTEMA ANDES</span>
       </div>
       <div className="icons">
         <div className="user">

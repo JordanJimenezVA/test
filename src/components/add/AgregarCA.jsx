@@ -57,7 +57,8 @@ function AgregarCA() {
             ColorCA: ColorCA,
             PatenteCA: PatenteCA,
             RolCA: RolCA,
-            EmpresaCA: EmpresaCA
+            EmpresaCA: EmpresaCA,
+
         }).then(() => {
 
             limpiarCamposPE();

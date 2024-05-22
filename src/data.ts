@@ -64,15 +64,21 @@ export const menu = [
   },
   {
     id: 4,
-    title: "SUPERVISION",
+    title: "Revision",
     role: ["Administrador", "Supervisor"],
     listItems: [
       {
         id: 1,
         title: "Revisión Camiones",
-        url: "/Home",
+        url: "/Revision",
         icon: "form3.svg",
       },
+      {
+        id: 1,
+        title: "Informe Camiones",
+        url: "/InformeCamion",
+        icon: "form3.svg",
+      }
     ],
   },
   {

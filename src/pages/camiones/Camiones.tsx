@@ -77,6 +77,7 @@ const columns: GridColDef[] = [
     type: 'string',
   }
 ];
+
 const Camiones = () => {
   const [open, setOpen] = useState(false)
   const navigate = useNavigate();

@@ -1,0 +1,353 @@
+import './revisarcamion.scss'
+import Swal from 'sweetalert2';
+import Axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+const host_server = import.meta.env.VITE_SERVER_HOST;
+
+
+function RevisarCamion() {
+    const { IDR } = useParams();
+    const [rutValido, setRutValido] = React.useState(true);
+    const [formValues, setFormValues] = useState({
+        PERSONAL: '',
+        APELLIDO: '',
+        RUT: '',
+        PATENTE: '',
+        ROL: '',
+        OBSERVACIONES: '',
+        GUIADESPACHO: '',
+        SELLO: '',
+        ANDEN: '',
+        KILOS: '',
+        PALLETS: '',
+        SUPERVISOR: '',
+        JEFET: '',
+        FOTOS: []
+    });
+    const [fechaInicio, setFechaInicio] = useState(null);
+    const [fechaFin, setFechaFin] = useState(null);
+    const [estado, setEstado] = useState("inicio");
+    const [formDisabled, setFormDisabled] = useState(true);
+    const [confirmDisabled, setConfirmDisabled] = useState(true);
+
+    useEffect(() => {
+        getRegistros(IDR);
+    }, [IDR]);
+
+    const validarRut = (rut) => {
+        if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
+        let tmp = rut.split('-');
+        let digv = tmp[1];
+        rut = tmp[0];
+        if (digv == 'K') digv = 'k';
+        return (dv(rut) == digv);
+    }
+
+    const dv = (T) => {
+        let M = 0, S = 1;
+        for (; T; T = Math.floor(T / 10)) {
+            S = (S + T % 10 * (9 - M++ % 6)) % 11;
+        }
+        return S ? S - 1 : 'k';
+    }
+
+    const handleRutChange = (event, { newValue }) => {
+        setRutPI(newValue);
+        setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
+    }
+
+    const getRegistros = (IDR) => {
+        Axios.get(`${host_server}/FormularioSalida/${IDR}`)
+            .then((res) => {
+                const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO, SELLO } = res.data[0];
+                setFormValues({
+                    PERSONAL,
+                    APELLIDO,
+                    RUT,
+                    PATENTE,
+                    ROL,
+                    OBSERVACIONES,
+                    GUIADESPACHO,
+                    SELLO,
+                });
+            })
+            .catch((error) => {
+                console.error("Error al obtener registros:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Error al obtener registros, intente nuevamente más tarde",
+                });
+            });
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormValues((prevValues) => ({
+            ...prevValues,
+            [name]: value,
+        }));
+    };
+
+    const handleFileChange = (event) => {
+        const files = event.target.files;
+        if (!files || files.length === 0) return;
+
+        const allowedTypes = ["image/jpeg", "image/png"];
+        const newPhotos = Array.from(files).filter(file => allowedTypes.includes(file.type));
+
+        setFormValues(prevState => ({
+            ...prevState,
+            FOTOS: newPhotos
+        }));
+    };
+
+    const limpiarCampos = () => {
+        setFormValues({
+            PERSONAL: '',
+            APELLIDO: '',
+            RUT: '',
+            PATENTE: '',
+            ROL: '',
+            OBSERVACIONES: '',
+            GUIADESPACHO: '',
+            SELLO: '',
+            ANDEN: '',
+            KILOS: '',
+            PALLETS: '',
+            SUPERVISOR: '',
+            JEFET: '',
+            FOTOS: []
+        });
+        setFechaInicio(null);
+        setFechaFin(null);
+        setEstado("inicio");
+        setFormDisabled(true);
+        setConfirmDisabled(true);
+    };
+
+    const limpiarCampo = (campo) => {
+        setFormValues((prevValues) => ({
+            ...prevValues,
+            [campo]: '',
+        }));
+    };
+
+    const handleFecha = () => {
+        const now = new Date();
+        const formattedDate = now.toISOString().slice(0, 19).replace('T', ' ');
+        if (estado === "inicio") {
+            setFechaInicio(formattedDate);
+            setEstado("fin");
+            setFormDisabled(false);
+
+        } else {
+            setFechaFin(formattedDate);
+            setConfirmDisabled(false);
+
+        }
+    };
+
+    const revisionCA = () => {
+
+        const formData = new FormData();
+        Object.keys(formValues).forEach(key => {
+            if (key === 'FOTOS') {
+                formValues[key].forEach((photo, index) => {
+                    formData.append('FOTOS', photo); // Aquí el nombre del campo debe ser 'FOTOS'
+                });
+            } else {
+                formData.append(key, formValues[key]);
+            }
+        });
+        formData.append('fechaInicio', fechaInicio);
+        formData.append('fechaFin', fechaFin);
+        Axios.post(`${host_server}/RevisionCamion/${IDR}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(() => {
+            limpiarCampos();
+            Swal.fire({
+                title: 'Revision Exitosa!',
+                icon: 'success',
+                text: 'Revision Realizada Correctamente',
+                timer: 1500
+            });
+        })
+            .catch((error) => {
+                console.error("Error al marcar realizar Revision:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Error al realizar revisión, intente nuevamente más tarde",
+                });
+            });
+    }
+    return (
+        <form onSubmit={(e) => {
+            e.preventDefault(); // Evita que se recargue la página
+            handleFecha();
+            revisionCA();
+        }}>
+            <h1 className='h1formd'>Revision Camion</h1>
+            <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                <div className="card-header border-bottom bg-body">
+                    <div className="row g-3 justify-content-between align-items-center">
+                        <div className="col-12 col-md">
+                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Camion<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="card-body ">
+
+                    <div className="row g-3 needs-validation">
+
+                        <div className="col-auto">
+
+
+                            <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
+                            <div className="input-group mb-3">
+
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
+                                    value={formValues.RUT}
+                                    placeholder='Ingrese Rut'
+                                    disabled={formDisabled}
+                                />
+                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('RUT')} disabled={formDisabled}>X</button>
+                            </div>
+                        </div>
+
+                        <div className="col-md-3">
+                            <label>Nombre</label>
+                            <div className="input-group mb-3">
+                                <input type="text" name="PERSONAL" value={formValues.PERSONAL} onChange={handleChange} placeholder="Ingrese Nombre" disabled={formDisabled} className="form-control" ></input>
+                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('PERSONAL')} disabled={formDisabled} >X</button>
+                            </div>
+                        </div>
+
+                        <div className="col-md-3">
+                            <label>Apellido</label>
+                            <div className="input-group mb-3">
+                                <input type="text" name="APELLIDO" value={formValues.APELLIDO} onChange={handleChange} placeholder='Ingrese Apellido' disabled={formDisabled} className='form-control' />
+                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('APELLIDO')} disabled={formDisabled}>X</button>
+                            </div>
+                        </div>
+
+                        <div className="col-md-3">
+                            <label>Rol</label>
+                            <div className="input-group mb-3">
+                                <input type="text" name="ROL" value={formValues.ROL} onChange={handleChange} placeholder='Ingrese Rol' disabled={formDisabled} className='form-control'></input>
+                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('ROL')} disabled={formDisabled} >X</button>
+                            </div>
+                        </div>
+                        <div className="col-md-3">
+                            <label>Planilla de Transporte</label>
+                            <div className="input-group mb-3">
+                                <input type="text" name="GUIADESPACHO" value={formValues.GUIADESPACHO} onChange={handleChange} placeholder='Ingrese Planilla de Transporte' disabled={formDisabled} className='form-control' />
+                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('GUIADESPACHO')} disabled={formDisabled} >X</button>
+                            </div>
+                        </div>
+
+                        <div className="col-md-3">
+                            <label>Sello Cortado</label>
+                            <div className="input-group mb-3">
+                                <input type="text" name="SELLO" value={formValues.SELLO} onChange={handleChange} placeholder='Ingrese Sello' disabled={formDisabled} className='form-control' />
+                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('SELLO')} disabled={formDisabled} >X</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div className="card shadow-none border my-4" data-component-card="data-component-card">
+                <div className="card-header border-bottom bg-body">
+                    <div className="row g-3 justify-content-between align-items-center">
+                        <div className="col-12 col-md">
+                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Revision<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="card-body ">
+
+                    <div className="row g-3 needs-validation">
+                        <div className="col-md-3">
+                            <label>Observaciones</label>
+                            <div className="input-group mb-3">
+                                <input type="text" name="OBSERVACIONES" value={formValues.OBSERVACIONES} onChange={handleChange} placeholder='Ingrese Observaciones' disabled={formDisabled} className='form-control' />
+                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('OBSERVACIONES')} disabled={formDisabled} >X</button>
+                            </div>
+                        </div>
+
+
+                        <div className="col-md-3">
+                            <label>N° Anden</label>
+                            <div className="input-group mb-3">
+                                <input type="text" name="ANDEN" value={formValues.ANDEN} onChange={handleChange} placeholder='Ingrese N°Anden' disabled={formDisabled} className='form-control' />
+                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('ANDEN')} disabled={formDisabled} >X</button>
+                            </div>
+                        </div>
+
+                        <div className="col-md-3">
+                            <label>Total Kilos</label>
+                            <div className="input-group mb-3">
+                                <input type="text" name="KILOS" value={formValues.KILOS} onChange={handleChange} placeholder='Ingrese Total Kilos' disabled={formDisabled} className='form-control' />
+                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('KILOS')} disabled={formDisabled} >X</button>
+                            </div>
+                        </div>
+
+                        <div className="col-md-3">
+                            <label>Cantidad Pallets</label>
+                            <div className="input-group mb-3">
+                                <input type="text" name="PALLETS" value={formValues.PALLETS} onChange={handleChange} placeholder='Ingrese Cantidad Pallets' disabled={formDisabled} className='form-control' />
+                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('PALLETS')} disabled={formDisabled} >X</button>
+                            </div>
+                        </div>
+
+                        <div className="col-md-3">
+                            <label>Supervisor</label>
+                            <div className="input-group mb-3">
+                                <input type="text" name="SUPERVISOR" value={formValues.SUPERVISOR} onChange={handleChange} placeholder='Ingrese Supervisor' disabled={formDisabled} className='form-control' />
+                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('SUPERVISOR')} disabled={formDisabled} >X</button>
+                            </div>
+                        </div>
+
+                        <div className="col-md-3">
+                            <label>Jefe de turno CD</label>
+                            <div className="input-group mb-3">
+                                <input type="text" name="JEFET" value={formValues.JEFET} onChange={handleChange} placeholder='Ingrese Jefe de turno CD' disabled={formDisabled}  className='form-control' />
+                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('JEFET')} disabled={formDisabled} >X</button>
+                            </div>
+                        </div>
+
+                        <div className="col-md-3">
+                            <label>Fotos</label>
+                            <div>
+                                <input type="file" name="FOTOS" onChange={handleFileChange} disabled={formDisabled} multiple accept=".jpg, .jpeg, .png" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div className="div-btn-container">
+                <button type="button" onClick={handleFecha} className="btn btn-primary me-2">{estado === "inicio" ? "Dar Inicio" : "Dar Fin"}</button>
+                <button className='btn btn-success' disabled={confirmDisabled} type='submit'>Confirmar Revision</button>
+
+
+            </div>
+        </form>
+
+    );
+}
+
+export default RevisarCamion;

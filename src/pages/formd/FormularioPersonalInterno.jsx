@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import Axios from "axios";
 import Autosuggest from 'react-autosuggest';
-import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import useChileanTime from "../../hooks/UseChileanTime";
+
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 function PersonalInterno() {
+  const chileanTime  = useChileanTime();
   const [suggestions, setSuggestions] = useState([]);
   const [IDPI, setidPI] = useState(0);
   const [RutPI, setRutPI] = useState("");
@@ -16,6 +18,7 @@ function PersonalInterno() {
   const [ColorPI, setColorPI] = useState("");
   const [PatentePI, setPatentePI] = useState("");
   const [RolPI, setRolPI] = useState("");
+  const [ObservacionesPI, setObservacionesPI] = useState("");
   const [rutValido, setRutValido] = React.useState(true);
 
   const validarRut = (rut) => {
@@ -59,7 +62,6 @@ function PersonalInterno() {
     try {
       const response = await Axios.get(`${host_server}/FormularioPersonalInterno/suggestion/${suggestion}`);
       const data = response.data;
-
       setNombrePI(data.NOMBREPI);
       setApellidoPI(data.APELLIDOPI);
       setVehiculoPI(data.VEHICULOPI);
@@ -94,8 +96,9 @@ function PersonalInterno() {
       VehiculoPI: VehiculoPI,
       ColorPI: ColorPI,
       PatentePI: PatentePI,
-      // ObservacionesPI: ObservacionesPI,
-      RolPI: RolPI
+      ObservacionesPI: ObservacionesPI,
+      RolPI: RolPI,
+      fechaActualChile: chileanTime.chileanTime
     }).then(() => {
 
       limpiarcamposPI();
@@ -122,7 +125,7 @@ function PersonalInterno() {
     setVehiculoPI("");
     setColorPI("");
     setPatentePI("");
-    // setObservacionesPI("");
+    setObservacionesPI("");
     setRolPI("");
   }
 
@@ -203,7 +206,14 @@ function PersonalInterno() {
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRolPI)}>X</button>
               </div>
             </div>
-
+            
+            <div className="col-md-3">
+              <label>Observaciones</label>
+              <div className="input-group mb-3">
+                <input type="text" onChange={(event) => { setObservacionesPI(event.target.value); }} value={ObservacionesPI} placeholder='Ingrese Observaciones' className='form-control' id={ObservacionesPI} name={ObservacionesPI} />
+                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setObservacionesPI)}>X</button>
+              </div>
+            </div>
 
           </div>
         </div>
