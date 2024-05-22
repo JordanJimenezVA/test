@@ -51,8 +51,9 @@ import { useAuth } from './hooks/Auth';
 import Revision from './pages/revision/Revision';
 // @ts-ignore
 import RevisarCamion from './pages/formrevisar/RevisarCamion';
-// @ts-ignore
-import InformeCamion from './pages/informes/InformeCamion';
+
+import InformeCamion from './pages/informes/Informecamion';
+
 // @ts-ignore
 import VerInforme from './pages/viewinforme/VerInforme';
 
