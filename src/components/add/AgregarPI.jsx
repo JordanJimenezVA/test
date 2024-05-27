@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import Axios from "axios";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
+  
 function AgregarPI() {
     const [RutPI, setRutPI] = useState("");
     const [NombrePI, setNombrePI] = useState("");
@@ -80,7 +81,7 @@ function AgregarPI() {
         setVehiculoPI("");
         setColorPI("");
         setPatentePI("");
-        // setObservacionesPI("");
+        setObservacionesPI("");
         setRolPI("");
     }
 

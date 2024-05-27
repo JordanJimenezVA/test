@@ -6,7 +6,7 @@ import Autosuggest from 'react-autosuggest';
 import useChileanTime from "../../hooks/UseChileanTime";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
-function FormularioPersonalCamiones() {
+function FormularioCamiones() {
   const chileanTime  = useChileanTime();
   const [suggestions, setSuggestions] = useState([]);
   const [IDCA, setidCA] = useState(0);
@@ -355,4 +355,4 @@ function FormularioPersonalCamiones() {
 
   )
 }
-export default FormularioPersonalCamiones;
+export default FormularioCamiones;

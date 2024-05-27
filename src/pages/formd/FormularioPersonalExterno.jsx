@@ -8,7 +8,6 @@ import useChileanTime from "../../hooks/UseChileanTime";
 function FormularioPersonalExterno() {
   const chileanTime = useChileanTime();
   const [suggestions, setSuggestions] = useState([]);
-  const [IDPE, setidPE] = useState(0);
   const [RutPE, setRutPE] = useState("");
   const [NombrePE, setNombrePE] = useState("");
   const [ApellidoPE, setApellidoPE] = useState("");

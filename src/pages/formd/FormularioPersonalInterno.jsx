@@ -7,10 +7,9 @@ import useChileanTime from "../../hooks/UseChileanTime";
 
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
-function PersonalInterno() {
+function FormularioPersonalInterno() {
   const chileanTime  = useChileanTime();
   const [suggestions, setSuggestions] = useState([]);
-  const [IDPI, setidPI] = useState(0);
   const [RutPI, setRutPI] = useState("");
   const [NombrePI, setNombrePI] = useState("");
   const [ApellidoPI, setApellidoPI] = useState("");
@@ -74,11 +73,11 @@ function PersonalInterno() {
   };
 
 
-  const inputProps = {
-    placeholder: "Ingrese RUT",
-    value: RutPI,
-    onChange: (_, { newValue }) => setRutPI(newValue),
-  };
+  // const inputProps = {
+  //   placeholder: "Ingrese RUT",
+  //   value: RutPI,
+  //   onChange: (_, { newValue }) => setRutPI(newValue),
+  // };
 
   const ingresoformdPI = () => {
     if (!validarRut(RutPI)) {
@@ -268,4 +267,4 @@ function PersonalInterno() {
     </form>
   )
 }
-export default PersonalInterno;
+export default FormularioPersonalInterno;

@@ -14,6 +14,7 @@ import Login from "./pages/login/Login";
 
 // @ts-ignore
 import AgregarPI from "./components/add/AgregarPI";
+
 // @ts-ignore
 import AgregarPE from "./components/add/AgregarPE";
 // @ts-ignore
@@ -49,6 +50,7 @@ import Historial from "./pages/historial/Historial";
 import { useAuth } from './hooks/Auth';
 
 import Revision from './pages/revision/Revision';
+
 // @ts-ignore
 import RevisarCamion from './pages/formrevisar/RevisarCamion';
 
@@ -62,7 +64,7 @@ const queryClient = new QueryClient();
 function App() {
 
   const Layout = () => {
-    const { nombreUsuario  } = useAuth();
+    const { nombreUsuario } = useAuth();
     return (
       <div className="main">
         <Navbar nombreUsuario={nombreUsuario ? nombreUsuario : ''} />
@@ -100,75 +102,67 @@ function App() {
         },
         {
           path: "/Personal Externo",
-          element: <PersonalExterno />
+          element: <AuthProvider><PersonalExterno /></AuthProvider>
         },
         {
           path: "/Camiones",
-          element: <Camiones />
+          element: <AuthProvider><Camiones /></AuthProvider>
         },
         {
           path: "/FormularioPersonalInterno",
-          element: <FormularioPersonalInterno />
+          element: <AuthProvider><FormularioPersonalInterno /></AuthProvider>
         },
         {
           path: "/FormularioPersonalExterno",
-          element: <FormularioPersonalExterno />
+          element: <AuthProvider><FormularioPersonalExterno /></AuthProvider>
         },
         {
           path: "/FormularioCamiones",
-          element: <FormularioCamiones />
+          element: <AuthProvider><FormularioCamiones /></AuthProvider>
+        },
+        {
+          path: "/AgregarPersonalInterno",
+          element: <AuthProvider><AgregarPI /></AuthProvider>
         },
         {
           path: "/TablaIngreso",
-          element: <TablaIngreso />
+          element: <AuthProvider><TablaIngreso /></AuthProvider>
         },
         {
           path: "/Logs",
-          element: <Historial />
+          element: <AuthProvider> <Historial /></AuthProvider>
         },
         {
           path: "/FormularioSalida/:IDR",
           element: <FormularioSalida />
         },
         {
-          path: "/AgregarPersonalInterno",
-          element: <AgregarPI />
-        },
-        {
-          path: "/AgregarPersonalExterno",
-          element: <AgregarPE />
-        },
-        {
-          path: "/AgregarCamion",
-          element: <AgregarCA />
-        },
-        {
           path: "/EditarPersonalInterno/:IDPI",
-          element: <EditarPI />
+          element: <AuthProvider><EditarPI /></AuthProvider>
         },
         {
           path: "/EditarPersonalExterno/:IDPE",
-          element: <EditarPE />
+          element: <AuthProvider><EditarPE /></AuthProvider>
         },
         {
           path: "/EditarCamiones/:IDCA",
-          element: <EditarCA />
+          element: <AuthProvider><EditarCA /></AuthProvider>
         },
         {
           path: "/Revision",
-          element: <Revision />
+          element: <AuthProvider><Revision /></AuthProvider>
         },
         {
           path: "/RevisionCamion/:IDR",
-          element: <RevisarCamion />
+          element: <AuthProvider><RevisarCamion /></AuthProvider>
         },
         {
           path: "/InformeCamion/",
-          element: <InformeCamion />
+          element: <AuthProvider><InformeCamion /> </AuthProvider>
         },
         {
           path: "/VerInforme/:IDR",
-          element: <VerInforme />
+          element: <AuthProvider><VerInforme /></AuthProvider>
         }
       ],
     },

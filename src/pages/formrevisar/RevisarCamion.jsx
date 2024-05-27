@@ -30,6 +30,8 @@ function RevisarCamion() {
     const [estado, setEstado] = useState("inicio");
     const [formDisabled, setFormDisabled] = useState(true);
     const [confirmDisabled, setConfirmDisabled] = useState(true);
+    const [GuardarProgresoDisabled, setGuardarProgresoDisabled] = useState(true);
+
 
     useEffect(() => {
         getRegistros(IDR);
@@ -56,6 +58,41 @@ function RevisarCamion() {
         setRutPI(newValue);
         setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
     }
+
+
+    useEffect(() => {
+        Axios.get(`${host_server}/ProgresoRevision/${IDR}`)
+            .then((res) => {
+                if (res.data.length > 0) {
+                    const progreso = res.data[0];
+                    setFormValues({
+                        PERSONAL: progreso.PERSONAL,
+                        APELLIDO: progreso.APELLIDO,
+                        RUT: progreso.RUT,
+                        PATENTE: progreso.PATENTE,
+                        ROL: progreso.ROL,
+                        OBSERVACIONES: progreso.OBSERVACIONES,
+                        GUIADESPACHO: progreso.GUIADESPACHO,
+                        SELLO: progreso.SELLO,
+                        ANDEN: progreso.ANDEN,
+                        KILOS: progreso.KILOS,
+                        PALLETS: progreso.PALLETS,
+                        SUPERVISOR: progreso.SUPERVISOR,
+                        JEFET: progreso.JEFET,
+                        FOTOS: progreso.FOTOS
+                    });
+                    setFechaInicio(progreso.fechaInicio);
+                    setFechaFin(progreso.fechaFin);
+                    setEstado("fin");
+                    setFormDisabled(false);
+                    setGuardarProgresoDisabled(false);
+                } else {
+                    setFormDisabled(true);
+                    setConfirmDisabled(true);
+                    setGuardarProgresoDisabled(true);
+                }
+            })
+    }, [IDR]);
 
     const getRegistros = (IDR) => {
         Axios.get(`${host_server}/FormularioSalida/${IDR}`)
@@ -141,6 +178,7 @@ function RevisarCamion() {
             setFechaInicio(formattedDate);
             setEstado("fin");
             setFormDisabled(false);
+            setGuardarProgresoDisabled(false);
 
         } else {
             setFechaFin(formattedDate);
@@ -185,6 +223,43 @@ function RevisarCamion() {
                 });
             });
     }
+
+    const guardarProgreso = () => {
+        const formData = new FormData();
+        Object.keys(formValues).forEach(key => {
+            if (key === 'FOTOS') {
+                if (Array.isArray(formValues[key])) {
+                    formValues[key].forEach(photo => {
+                        formData.append('FOTOS', photo); // Asegúrate de que `photo` es un objeto File
+                    });
+                }
+            } else {
+                formData.append(key, formValues[key]);
+            }
+        });
+        formData.append('fechaInicio', fechaInicio);
+    
+        Axios.post(`${host_server}/GuardarProgreso/${IDR}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(() => {
+            Swal.fire({
+                title: 'Progreso Guardado!',
+                icon: 'success',
+                text: 'El progreso ha sido guardado correctamente',
+                timer: 1500
+            });
+        }).catch((error) => {
+            console.error("Error al guardar el progreso:", error);
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Error al guardar el progreso, intente nuevamente más tarde",
+            });
+        });
+    };
+
     return (
         <form onSubmit={(e) => {
             e.preventDefault(); // Evita que se recargue la página
@@ -323,7 +398,7 @@ function RevisarCamion() {
                         <div className="col-md-3">
                             <label>Jefe de turno CD</label>
                             <div className="input-group mb-3">
-                                <input type="text" name="JEFET" value={formValues.JEFET} onChange={handleChange} placeholder='Ingrese Jefe de turno CD' disabled={formDisabled}  className='form-control' />
+                                <input type="text" name="JEFET" value={formValues.JEFET} onChange={handleChange} placeholder='Ingrese Jefe de turno CD' disabled={formDisabled} className='form-control' />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('JEFET')} disabled={formDisabled} >X</button>
                             </div>
                         </div>
@@ -340,8 +415,10 @@ function RevisarCamion() {
             </div>
 
             <div className="div-btn-container">
-                <button type="button" onClick={handleFecha} className="btn btn-primary me-2">{estado === "inicio" ? "Dar Inicio" : "Dar Fin"}</button>
+                <button type="button" onClick={handleFecha} className="btn btn-warning me-2">{estado === "inicio" ? "Dar Inicio" : "Dar Fin"}</button>
+                <button type='button' className='btn btn-primary me-2' disabled={GuardarProgresoDisabled} onClick={guardarProgreso}>Guardar Progreso</button>
                 <button className='btn btn-success' disabled={confirmDisabled} type='submit'>Confirmar Revision</button>
+
 
 
             </div>
