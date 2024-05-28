@@ -127,6 +127,18 @@ function RevisarCamion() {
         }));
     };
 
+    // const handleFileChange = (event) => {
+    //     const files = event.target.files;
+    //     if (!files || files.length === 0) return;
+
+    //     const allowedTypes = ["image/jpeg", "image/png"];
+    //     const newPhotos = Array.from(files).filter(file => allowedTypes.includes(file.type));
+
+    //     setFormValues(prevState => ({
+    //         ...prevState,
+    //         FOTOS: newPhotos
+    //     }));
+    // };
     const handleFileChange = (event) => {
         const files = event.target.files;
         if (!files || files.length === 0) return;
@@ -136,10 +148,10 @@ function RevisarCamion() {
 
         setFormValues(prevState => ({
             ...prevState,
-            FOTOS: newPhotos
+            FOTOS: [...prevState.FOTOS, ...newPhotos]
         }));
     };
-
+    
     const limpiarCampos = () => {
         setFormValues({
             PERSONAL: '',
