@@ -23,7 +23,8 @@ function RevisarCamion() {
         PALLETS: '',
         SUPERVISOR: '',
         JEFET: '',
-        FOTOS: []
+        FOTOS: [],
+        FECHAINICIO: '',
     });
     const [fechaInicio, setFechaInicio] = useState(null);
     const [fechaFin, setFechaFin] = useState(null);
@@ -59,12 +60,23 @@ function RevisarCamion() {
         setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
     }
 
-
+    const formatDateTime = (isoString) => {
+        const date = new Date(isoString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    };
+    
     useEffect(() => {
         Axios.get(`${host_server}/ProgresoRevision/${IDR}`)
             .then((res) => {
                 if (res.data.length > 0) {
                     const progreso = res.data[0];
+                    const formattedFechaInicio = formatDateTime(progreso.FECHAINICIO);
                     setFormValues({
                         PERSONAL: progreso.PERSONAL,
                         APELLIDO: progreso.APELLIDO,
@@ -79,13 +91,16 @@ function RevisarCamion() {
                         PALLETS: progreso.PALLETS,
                         SUPERVISOR: progreso.SUPERVISOR,
                         JEFET: progreso.JEFET,
-                        FOTOS: progreso.FOTOS
+                        FOTOS: Array.isArray(progreso.FOTOS) ? progreso.FOTOS : [],
+                        FECHAINICIO: formattedFechaInicio,
                     });
-                    setFechaInicio(progreso.fechaInicio);
-                    setFechaFin(progreso.fechaFin);
+                    setFechaInicio(formattedFechaInicio);
                     setEstado("fin");
                     setFormDisabled(false);
                     setGuardarProgresoDisabled(false);
+
+
+
                 } else {
                     setFormDisabled(true);
                     setConfirmDisabled(true);
@@ -107,6 +122,7 @@ function RevisarCamion() {
                     OBSERVACIONES,
                     GUIADESPACHO,
                     SELLO,
+                    FOTOS: []
                 });
             })
             .catch((error) => {
@@ -151,6 +167,7 @@ function RevisarCamion() {
             FOTOS: [...prevState.FOTOS, ...newPhotos]
         }));
     };
+
     
     const limpiarCampos = () => {
         setFormValues({
@@ -200,12 +217,11 @@ function RevisarCamion() {
     };
 
     const revisionCA = () => {
-
         const formData = new FormData();
         Object.keys(formValues).forEach(key => {
             if (key === 'FOTOS') {
                 formValues[key].forEach((photo, index) => {
-                    formData.append('FOTOS', photo); // Aquí el nombre del campo debe ser 'FOTOS'
+                    formData.append('FOTOS', photo);
                 });
             } else {
                 formData.append(key, formValues[key]);
@@ -213,6 +229,7 @@ function RevisarCamion() {
         });
         formData.append('fechaInicio', fechaInicio);
         formData.append('fechaFin', fechaFin);
+        console.log(formData)
         Axios.post(`${host_server}/RevisionCamion/${IDR}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'

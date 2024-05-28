@@ -29,12 +29,28 @@ function VerInforme() {
         ER: '',
         JEFET: '',
         FOTOS: [],
+        FECHAINICIO: '',
+        FECHAFIN: ''
     });
 
     useEffect(() => {
         getRegistros(IDR);
     }, [IDR]);
 
+    const formatDateTime = (dateString) => {
+        const date = new Date(dateString);
+        const pad = (num) => (num < 10 ? `0${num}` : num);
+    
+        const year = date.getFullYear();
+        const month = pad(date.getMonth() + 1);
+        const day = pad(date.getDate());
+        const hours = pad(date.getHours());
+        const minutes = pad(date.getMinutes());
+        const seconds = pad(date.getSeconds());
+    
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    };
+    
     const validarRut = (rut) => {
         if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
         let tmp = rut.split('-');
@@ -60,7 +76,7 @@ function VerInforme() {
     const getRegistros = (IDR) => {
         Axios.get(`${host_server}/VerInforme/${IDR}`)
             .then((res) => {
-                const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO, SELLO, ANDEN, KILOS, PALLETS, SUPERVISOR, ER, JEFET, FOTOS } = res.data[0];
+                const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO, SELLO, ANDEN, KILOS, PALLETS, SUPERVISOR, ER, JEFET, FOTOS, FECHAINICIO, FECHAFIN } = res.data[0];
                 // Verificar si FOTOS es un array antes de mapearlo
 
                 const fotosArray = FOTOS.split(', ').map(filename => `${host_server}/imagenes/${filename}`);
@@ -80,6 +96,8 @@ function VerInforme() {
                     ER,
                     JEFET,
                     FOTOS: fotosArray,
+                    FECHAINICIO: formatDateTime(FECHAINICIO),
+                    FECHAFIN: formatDateTime(FECHAFIN)
                 });
             })
             .catch((error) => {
@@ -236,6 +254,19 @@ function VerInforme() {
                             </div>
                         </div>
 
+                        <div className="col-md-3">
+                            <label>Fecha de Inicio</label>
+                            <div className="input-group mb-3">
+                                <input type="text" name="FECHAINICIO" value={formValues.FECHAINICIO} disabled="true" onChange={handleChange} placeholder='Ingrese Fecha de Inicio' className='form-control' />
+                            </div>
+                        </div>
+
+                        <div className="col-md-3">
+                            <label>Fecha de Fin</label>
+                            <div className="input-group mb-3">
+                                <input type="text" name="FECHAFIN" value={formValues.FECHAFIN} disabled="true" onChange={handleChange} placeholder='Ingrese Fecha de Fin' className='form-control' />
+                            </div>
+                        </div>
 
 
                     </div>
