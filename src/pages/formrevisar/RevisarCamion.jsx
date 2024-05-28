@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import Axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import useChileanTime from '../../hooks/UseChileanTime';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
@@ -32,6 +33,7 @@ function RevisarCamion() {
     const [formDisabled, setFormDisabled] = useState(true);
     const [confirmDisabled, setConfirmDisabled] = useState(true);
     const [GuardarProgresoDisabled, setGuardarProgresoDisabled] = useState(true);
+    const chileanTime = useChileanTime();
 
 
     useEffect(() => {
@@ -70,13 +72,13 @@ function RevisarCamion() {
         const seconds = String(date.getSeconds()).padStart(2, '0');
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     };
-    
+
     useEffect(() => {
         Axios.get(`${host_server}/ProgresoRevision/${IDR}`)
             .then((res) => {
                 if (res.data.length > 0) {
                     const progreso = res.data[0];
-                    const formattedFechaInicio = formatDateTime(progreso.FECHAINICIO);
+                    const formattedFechaInicio = formatDateTime(new Date(progreso.FECHAINICIO));
                     setFormValues({
                         PERSONAL: progreso.PERSONAL,
                         APELLIDO: progreso.APELLIDO,
@@ -94,7 +96,9 @@ function RevisarCamion() {
                         FOTOS: Array.isArray(progreso.FOTOS) ? progreso.FOTOS : [],
                         FECHAINICIO: formattedFechaInicio,
                     });
+
                     setFechaInicio(formattedFechaInicio);
+                    console.log("useeffect: "+formattedFechaInicio)
                     setEstado("fin");
                     setFormDisabled(false);
                     setGuardarProgresoDisabled(false);
@@ -143,18 +147,7 @@ function RevisarCamion() {
         }));
     };
 
-    // const handleFileChange = (event) => {
-    //     const files = event.target.files;
-    //     if (!files || files.length === 0) return;
 
-    //     const allowedTypes = ["image/jpeg", "image/png"];
-    //     const newPhotos = Array.from(files).filter(file => allowedTypes.includes(file.type));
-
-    //     setFormValues(prevState => ({
-    //         ...prevState,
-    //         FOTOS: newPhotos
-    //     }));
-    // };
     const handleFileChange = (event) => {
         const files = event.target.files;
         if (!files || files.length === 0) return;
@@ -168,7 +161,7 @@ function RevisarCamion() {
         }));
     };
 
-    
+
     const limpiarCampos = () => {
         setFormValues({
             PERSONAL: '',
@@ -201,20 +194,30 @@ function RevisarCamion() {
     };
 
     const handleFecha = () => {
-        const now = new Date();
-        const formattedDate = now.toISOString().slice(0, 19).replace('T', ' ');
+        if (!chileanTime) {
+            console.error('Hora chilena no disponible');
+            return;
+        }
+
+        // Log para verificar el formato de la fecha
+        console.log('Chilean Time:', chileanTime);
+
+        const formattedDate = chileanTime;
+
         if (estado === "inicio") {
             setFechaInicio(formattedDate);
             setEstado("fin");
             setFormDisabled(false);
             setGuardarProgresoDisabled(false);
-
         } else {
             setFechaFin(formattedDate);
             setConfirmDisabled(false);
-
         }
     };
+
+
+
+
 
     const revisionCA = () => {
         const formData = new FormData();
@@ -228,8 +231,9 @@ function RevisarCamion() {
             }
         });
         formData.append('fechaInicio', fechaInicio);
-        formData.append('fechaFin', fechaFin);
-        console.log(formData)
+        console.log(fechaInicio);
+        formData.append('fechaFin', fechaFin.chileanTime);
+
         Axios.post(`${host_server}/RevisionCamion/${IDR}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -266,8 +270,8 @@ function RevisarCamion() {
                 formData.append(key, formValues[key]);
             }
         });
-        formData.append('fechaInicio', fechaInicio);
-    
+        formData.append('fechaInicio', fechaInicio.chileanTime);
+
         Axios.post(`${host_server}/GuardarProgreso/${IDR}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
