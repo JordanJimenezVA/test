@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 interface Row {
     IDR: number;
     Rol: string;
+    estadoRevision: string;
     // Agrega las demás propiedades de tus filas aquí
 }
 
@@ -22,6 +23,7 @@ const DataTableAll = (props: Props) => {
     const handleMarcarSalida = (IDR: number) => {
         navigate(`/FormularioSalida/${IDR}`);
     }
+ 
     const actionColumn: GridColDef = {
         field: 'acciones',
         headerName: 'Marcar Salida',
@@ -29,13 +31,16 @@ const DataTableAll = (props: Props) => {
         width: 130,
         renderCell: (params) => {
             const row = params.row as Row; // Castear params.row como Row
-            return <div className="action">
-
-                <div className="marcar-salida" onClick={() => handleMarcarSalida(row.IDR)}>
-                    {/* <img src="/view2.svg" alt="" /> */}
-                    <button type="button" className="btn-salida-datatable">SALIDA</button>
+            const isDisabled = row.estadoRevision === 'REVISANDO';
+            return (
+                <div className="action">
+                    <div className={`marcar-salida ${isDisabled ? 'disabled' : ''}`} onClick={() => !isDisabled && handleMarcarSalida(row.IDR)}>
+                        <button type="button" className="btn-salida-datatable" disabled={isDisabled}>
+                            SALIDA
+                        </button>
+                    </div>
                 </div>
-            </div>
+            );
         }
     }
     return (
@@ -43,7 +48,6 @@ const DataTableAll = (props: Props) => {
             <DataGrid className="dataGrid"
                 rows={rows}
                 columns={[props.columns[0], actionColumn, ...props.columns.slice(2)]}
-
                 getRowId={(row) => `${row.IDR}`}
                 initialState={{
                     pagination: {
@@ -59,7 +63,6 @@ const DataTableAll = (props: Props) => {
                         quickFilterProps: { debounceMs: 500 },
                     }
                 }}
-
                 pageSizeOptions={[10]}
                 disableColumnMenu
                 disableRowSelectionOnClick
@@ -71,4 +74,4 @@ const DataTableAll = (props: Props) => {
     )
 }
 
-export default DataTableAll
+export default DataTableAll;

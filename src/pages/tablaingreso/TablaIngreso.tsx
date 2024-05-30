@@ -51,7 +51,7 @@ const columns: GridColDef[] = [
   {
     field: 'FECHAINGRESO',
     headerName: 'Fecha Ingreso',
-    width: 260,
+    width: 220,
     editable: false,
     type: 'DATE',
     valueFormatter: (params) => {
@@ -67,7 +67,14 @@ const columns: GridColDef[] = [
         return ''; 
       }
     },
-  }
+  },
+  {
+    field: 'estadoRevision',
+    headerName: 'Estado',
+    width: 140,
+    editable: false,
+    type: 'string',
+}
 ];
 const TablaIngreso = () => {
   const { isLoading, data } = useQuery({
@@ -83,7 +90,7 @@ const TablaIngreso = () => {
   return (
     <div className="Camiones">
       <div className="info">
-        <h1 className="h1d">LISTA DE PERSONAS/CAMIONES ADENTRO</h1>
+        <h1 className="h1d">LISTA DE PERSONAS/CAMIONES EN INSTALACIONES</h1>
       </div>
       {isLoading ? (
         "Loading..."

@@ -181,7 +181,7 @@ function FormularioPersonalInterno() {
             <div className="col-md-3">
               <label>Nombre</label>
               <div className="input-group mb-3">
-                <input type="text" className="form-control" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} placeholder='Ingrese Nombre' id={NombrePI} name={NombrePI} ></input>
+                <input required type="text" className="form-control" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} placeholder='Ingrese Nombre' id={NombrePI} name={NombrePI} ></input>
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setNombrePI)}>X</button>
               </div>
             </div>
@@ -189,7 +189,7 @@ function FormularioPersonalInterno() {
             <div className="col-md-3">
               <label>Apellido</label>
               <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPI} name={ApellidoPI} />
+                <input required type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPI} name={ApellidoPI} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoPI)}>X</button>
               </div>
             </div>
@@ -197,8 +197,8 @@ function FormularioPersonalInterno() {
             <div className="col-md-3">
               <label>Rol</label>
               <div className="input-group mb-3">
-                <select onChange={(event) => { setRolPI(event.target.value); }} value={RolPI} className='form-select ' id={RolPI} name={RolPI}>
-                  <option value=""></option>
+                <select required onChange={(event) => { setRolPI(event.target.value); }} value={RolPI} className='form-select ' id={RolPI} name={RolPI}>
+                  <option value="">Seleccionar una opción</option>
                   <option value="Administrativo">Administrativo</option>
                   <option value="Bodega">Bodega</option>
                 </select>

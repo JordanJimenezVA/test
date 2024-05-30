@@ -36,7 +36,7 @@ function AgregarCA() {
     }
 
     const handleRutChange = (event, { newValue }) => {
-        setRutPE(newValue);
+        setRutCA(newValue);
         setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
     }
 
@@ -49,23 +49,24 @@ function AgregarCA() {
             });
             return;
         }
-        Axios.post(`${host_server}/AgregarPersonalExterno`, {
-            rutCA: RutCA,
-            NombreCA: NombreCA,
+        Axios.post(`${host_server}/AgregarCamion`, {
+            ChoferCA: ChoferCA,
             ApellidoCA: ApellidoCA,
-            VehiculoCA: VehiculoCA,
-            ColorCA: ColorCA,
+            RutCA: RutCA,
             PatenteCA: PatenteCA,
-            RolCA: RolCA,
+            MarcaCA: MarcaCA,
+            TipoCA: TipoCA,
+            ModeloCA: ModeloCA,
+            ColorCA: ColorCA,
             EmpresaCA: EmpresaCA,
 
         }).then(() => {
 
-            limpiarCamposPE();
+            limpiarCamposCA();
             Swal.fire({
                 title: 'Ingreso Exitoso!',
                 icon: 'success',
-                text: 'Personal Externo ingresado con Exito',
+                text: 'Personal Camion ingresado con Exito',
                 timer: 1500
             })
         }).catch(function (error) {
@@ -78,15 +79,17 @@ function AgregarCA() {
     }
 
 
-    const limpiarCamposPE = () => {
+    const limpiarCamposCA = () => {
         setRutCA("");
-        setNombreCA("");
+        setChoferCA("");
         setApellidoCA("");
-        setVehiculoCA("");
-        setColorCA("");
         setPatenteCA("");
-        setRolCA("");
+        setMarcaCA("");
+        setTipoCA("");
+        setModeloCA("");
+        setColorCA("");
         setEmpresaCA("");
+
     }
 
     const limpiarCampo = (setState) => {
@@ -129,6 +132,7 @@ function AgregarCA() {
                                     placeholder='Ingrese Rut'
                                     id={RutCA}
                                     name={RutCA}
+                                    required
                                 />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRutCA)}>X</button>
                             </div>
@@ -138,7 +142,7 @@ function AgregarCA() {
                         <div className="col-md-3">
                             <label>Nombre Chofer</label>
                             <div className="input-group ">
-                                <input type="text" className="form-control" onChange={(event) => { setChoferCA(event.target.value); }} value={ChoferCA} placeholder='Ingrese Nombre' id={ChoferCA} name={ChoferCA} ></input>
+                                <input type="text" required className="form-control" onChange={(event) => { setChoferCA(event.target.value); }} value={ChoferCA} placeholder='Ingrese Nombre' id={ChoferCA} name={ChoferCA} ></input>
                                 <div className="invalid-feedback">
                                     Please choose a username.
                                 </div>
@@ -150,7 +154,7 @@ function AgregarCA() {
                             <label>Apellido Chofer</label>
                             <div className="input-group ">
 
-                                <input type="text" onChange={(event) => { setApellidoCA(event.target.value); }} value={ApellidoCA} placeholder='Ingrese Apellido' className='form-control' id={ApellidoCA} name={ApellidoCA} />
+                                <input type="text" required onChange={(event) => { setApellidoCA(event.target.value); }} value={ApellidoCA} placeholder='Ingrese Apellido' className='form-control' id={ApellidoCA} name={ApellidoCA} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoCA)}>X</button>
                             </div>
                         </div>
@@ -174,11 +178,11 @@ function AgregarCA() {
                             <label>Tipo</label>
                             <div className="input-group mb-3">
 
-                                <select onChange={(event) => { setTipoCA(event.target.value); }} value={TipoCA} className='form-select' id={TipoCA} name={TipoCA}>
-                                    <option value=""></option>
-                                    <option value="Fumigación">Remolque Abierto</option>
-                                    <option value="Camiones">Remolque Cerrado</option>
-                                    <option value="Reciclaje">Remolque Refrigerado</option>
+                                <select required onChange={(event) => { setTipoCA(event.target.value); }} value={TipoCA} className='form-select' id={TipoCA} name={TipoCA}>
+                                    <option value="">Seleccionar una opción</option>
+                                    <option value="Remolque Abierto">Remolque Abierto</option>
+                                    <option value="Remolque Cerrado">Remolque Cerrado</option>
+                                    <option value="Remolque Refrigerado">Remolque Refrigerado</option>
                                     <option value="Otros">Otros</option>
                                 </select>
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setTipoCA)}>X</button>
@@ -188,7 +192,7 @@ function AgregarCA() {
                         <div className="col-md-3">
                             <label>Modelo</label>
                             <div className="input-group mb-3">
-                                <input type="text" onChange={(event) => { setModeloCA(event.target.value); }} value={ModeloCA} placeholder='Ingrese Modelo' className='form-control' id={ModeloCA} name={ModeloCA} />
+                                <input type="text" required onChange={(event) => { setModeloCA(event.target.value); }} value={ModeloCA} placeholder='Ingrese Modelo' className='form-control' id={ModeloCA} name={ModeloCA} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setModeloCA)}>X</button>
                             </div>
                         </div>
@@ -197,7 +201,7 @@ function AgregarCA() {
                             <label>Color</label>
                             <div className="input-group mb-3">
 
-                                <input type="text" onChange={(event) => { setColorCA(event.target.value); }} value={ColorCA} placeholder='Ingrese Color' className='form-control' id={ColorCA} name={ColorCA} />
+                                <input type="text" required onChange={(event) => { setColorCA(event.target.value); }} value={ColorCA} placeholder='Ingrese Color' className='form-control' id={ColorCA} name={ColorCA} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setColorCA)}>X</button>
                             </div>
                         </div>
@@ -209,7 +213,7 @@ function AgregarCA() {
                             <label>Patente Rampa</label>
                             <div className="input-group ">
 
-                                <input type="text" onChange={(event) => { setPatenteCA(event.target.value); }} value={PatenteCA} placeholder='Ingrese Patente' className='form-control' id={PatenteCA} name={PatenteCA} />
+                                <input type="text" required onChange={(event) => { setPatenteCA(event.target.value); }} value={PatenteCA} placeholder='Ingrese Patente' className='form-control' id={PatenteCA} name={PatenteCA} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatenteCA)}>X</button>
                             </div>
                         </div>
@@ -218,7 +222,7 @@ function AgregarCA() {
                             <label>Marca</label>
                             <div className="input-group ">
 
-                                <input type="text" onChange={(event) => { setMarcaCA(event.target.value); }} value={MarcaCA} placeholder='Ingrese Marca' className='form-control' id={MarcaCA} name={MarcaCA} />
+                                <input type="text" required onChange={(event) => { setMarcaCA(event.target.value); }} value={MarcaCA} placeholder='Ingrese Marca' className='form-control' id={MarcaCA} name={MarcaCA} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setMarcaCA)}>X</button>
                             </div>
                         </div>
@@ -227,7 +231,7 @@ function AgregarCA() {
                             <label>Empresa</label>
                             <div className="input-group ">
 
-                                <input type="text" onChange={(event) => { setEmpresaCA(event.target.value); }} value={EmpresaCA} placeholder='Ingrese Empresa' className='form-control' id={EmpresaCA} name={EmpresaCA} />
+                                <input type="text" required onChange={(event) => { setEmpresaCA(event.target.value); }} value={EmpresaCA} placeholder='Ingrese Empresa' className='form-control' id={EmpresaCA} name={EmpresaCA} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setEmpresaCA)}>X</button>
                             </div>
                         </div>
@@ -242,7 +246,7 @@ function AgregarCA() {
 
 
             <div className="div-btn-container">
-                <button className='btn btn-success' onClick={ingresoformdCA}>Agregar Camion</button>
+                <button className='btn btn-success' type='submit'>Agregar Camion</button>
 
             </div>
         </form>

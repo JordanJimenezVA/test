@@ -37,40 +37,6 @@ function AgregarPI() {
         setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
     }
 
-    // const ingresoformdPI = () => {
-    //     if (!validarRut(RutPI)) {
-    //         Swal.fire({
-    //             icon: "error",
-    //             title: "Error",
-    //             text: "RUT inválido. Por favor, ingrese un RUT válido.",
-    //         });
-    //         return;
-    //     }
-    //     Axios.post(`${host_server}/AgregarPersonalInterno`, {
-    //         rutPI: RutPI,
-    //         NombrePI: NombrePI,
-    //         ApellidoPI: ApellidoPI,
-    //         VehiculoPI: VehiculoPI,
-    //         ColorPI: ColorPI,
-    //         PatentePI: PatentePI,
-    //         RolPI: RolPI
-    //     }).then(() => {
-
-    //         limpiarcamposPI();
-    //         Swal.fire({
-    //             title: 'Ingreso Exitoso!',
-    //             icon: 'success',
-    //             text: 'Personal Interno ingresado con Exito',
-    //             timer: 1500
-    //         })
-    //     }).catch(function (error) {
-    //         Swal.fire({
-    //             icon: "error",
-    //             title: "Oops...",
-    //             text: JSON.parse(JSON.stringify(error)).message === "Network Error" ? "Intente mas tarde" : JSON.parse(JSON.stringify(error))
-    //         });
-    //     });
-    // }
     const ingresoformdPI = () => {
         if (!validarRut(RutPI)) {
             Swal.fire({
@@ -93,9 +59,9 @@ function AgregarPI() {
             Swal.fire({
                 title: 'Ingreso Exitoso!',
                 icon: 'success',
-                text: response.data.message,
+                text: 'Personal Interno ingresado con Exito',
                 timer: 1500
-            });
+            })
         }).catch((error) => {
             console.error('Error:', error); // Agrega este log para ver el error en detalle
             const errorMessage = error.response && error.response.data && error.response.data.message 
@@ -117,7 +83,6 @@ function AgregarPI() {
         setColorPI("");
         setRolPI("");
         setPatentePI("");
-        setObservacionesPI("");
   
     }
 
@@ -162,6 +127,7 @@ function AgregarPI() {
                                     placeholder='Ingrese Rut'
                                     id="rutpi-input"
                                     name={RutPI}
+                                    required
                                 />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRutPI)}>X</button>
                             </div>
@@ -170,7 +136,7 @@ function AgregarPI() {
                         <div className="col-md-3">
                             <label htmlFor="nombrepi-input">Nombre</label>
                             <div className="input-group mb-3">
-                                <input type="text" className="form-control" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} placeholder='Ingrese Nombre' id="nombrepi-input" name={NombrePI} ></input>
+                                <input type="text" className="form-control" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} required placeholder='Ingrese Nombre' id="nombrepi-input" name={NombrePI} ></input>
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setNombrePI)}>X</button>
                             </div>
                         </div>
@@ -178,7 +144,7 @@ function AgregarPI() {
                         <div className="col-md-3">
                             <label htmlFor="apellidopi-input">Apellido</label>
                             <div className="input-group mb-3">
-                            <input type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' className='form-control' id="apellidopi-input" name={ApellidoPI} />
+                            <input type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' required className='form-control' id="apellidopi-input" name={ApellidoPI} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoPI)}>X</button>
                             </div>
                         </div>
@@ -186,8 +152,8 @@ function AgregarPI() {
                         <div className="col-md-3">
                             <label htmlFor="rolpi-input">Rol</label>
                             <div className="input-group mb-3">
-                                <select onChange={(event) => { setRolPI(event.target.value); }} value={RolPI} className='form-select ' id="rolpi-input" name={RolPI}>
-                                    <option value=""></option>
+                                <select onChange={(event) => { setRolPI(event.target.value); }} required value={RolPI} className='form-select ' id="rolpi-input" name={RolPI}>
+                                    <option value="">Seleccionar una opción</option>
                                     <option value="Administrativo">Administrativo</option>
                                     <option value="Bodega">Bodega</option>
                                 </select>

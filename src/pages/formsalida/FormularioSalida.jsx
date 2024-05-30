@@ -3,13 +3,15 @@ import Swal from 'sweetalert2';
 import Axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import useChileanTime from '../../hooks/UseChileanTime';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
 function FormularioSalida() {
   const { IDR } = useParams();
   const [rutValido, setRutValido] = React.useState(true);
-
+  const currentTime = useChileanTime();
+  console.log(currentTime)
   const [formValues, setFormValues] = useState({
     PERSONAL: '',
     APELLIDO: '',
@@ -100,8 +102,11 @@ function FormularioSalida() {
   };
 
   const salidaCA = () => {
+    const formattedDate = `${currentTime.chileanTime.slice(0, 10)} ${currentTime.chileanTime.slice(11, 19)}`;
     Axios.post(`${host_server}/FormularioSalida/${IDR}`, {
-      ...formValues
+      ...formValues,
+      FECHASALIDA: formattedDate
+     
     }).then(() => {
       limpiarCampos();
       Swal.fire({
@@ -227,7 +232,7 @@ function FormularioSalida() {
 
 
       <div className="div-btn-container">
-        <button className='btn btn-success' type='submit'>Agregar</button>
+        <button className='btn btn-success' type='submit'>Confirmar Salida</button>
 
 
       </div>

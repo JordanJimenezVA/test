@@ -208,10 +208,6 @@ function RevisarCamion() {
             console.error('Hora chilena no disponible');
             return;
         }
-
-        // Log para verificar el formato de la fecha
-        console.log('Chilean Time:', chileanTime);
-
         const formattedDate = chileanTime;
 
         if (estado === "inicio") {
@@ -240,9 +236,10 @@ function RevisarCamion() {
                 formData.append(key, formValues[key]);
             }
         });
-        formData.append('fechaInicio', fechaInicio);
+        formData.append('fechaInicio', fechaInicio.chileanTime);
         console.log(fechaInicio);
         formData.append('fechaFin', fechaFin.chileanTime);
+        console.log(fechaFin)
 
         Axios.post(`${host_server}/RevisionCamion/${IDR}`, formData, {
             headers: {

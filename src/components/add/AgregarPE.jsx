@@ -126,6 +126,7 @@ function AgregarPE() {
                                     placeholder='Ingrese Rut'
                                     id="rutpe-input"
                                     name={RutPE}
+                                    required
                                 />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRutPE)}>X</button>
                             </div>
@@ -134,7 +135,7 @@ function AgregarPE() {
                         <div className="col-md-3">
                             <label>Nombre</label>
                             <div className="input-group mb-3">
-                                <input type="text" className="form-control" onChange={(event) => { setNombrePE(event.target.value); }} value={NombrePE} placeholder='Ingrese Nombre' id={NombrePE} name={NombrePE} ></input>
+                                <input type="text" required className="form-control" onChange={(event) => { setNombrePE(event.target.value); }} value={NombrePE} placeholder='Ingrese Nombre' id={NombrePE} name={NombrePE} ></input>
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setNombrePE)}>X</button>
                             </div>
                         </div>
@@ -142,7 +143,7 @@ function AgregarPE() {
                         <div className="col-md-3">
                             <label>Apellido</label>
                             <div className="input-group mb-3">
-                                <input type="text" onChange={(event) => { setApellidoPE(event.target.value); }} value={ApellidoPE} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPE} name={ApellidoPE} />
+                                <input type="text" required onChange={(event) => { setApellidoPE(event.target.value); }} value={ApellidoPE} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPE} name={ApellidoPE} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoPE)}>X</button>
                             </div>
                         </div>
@@ -150,8 +151,8 @@ function AgregarPE() {
                         <div className="col-md-3">
                             <label>Rol</label>
                             <div className="input-group mb-3">
-                                <select onChange={(event) => { setRolPE(event.target.value); }} value={RolPE} className='form-select ' id={RolPE} name={RolPE}>
-                                    <option value=""></option>
+                                <select onChange={(event) => { setRolPE(event.target.value); }} value={RolPE} className='form-select ' required id={RolPE} name={RolPE}>
+                                    <option value="">Seleccionar una opción</option>
                                     <option value="Jardines">Jardines</option>
                                     <option value="Fumigación">Fumigación</option>
                                     <option value="Camiones">Camiones</option>
@@ -166,7 +167,7 @@ function AgregarPE() {
                         <div className="col-md-3">
                             <label>Empresa</label>
                             <div className="input-group mb-3">
-                                <input type="text" onChange={(event) => { setEmpresaPE(event.target.value); }} value={EmpresaPE} placeholder='Ingrese Empresa' className='form-control' id={EmpresaPE} name={EmpresaPE} />
+                                <input type="text" onChange={(event) => { setEmpresaPE(event.target.value); }} value={EmpresaPE} required placeholder='Ingrese Empresa' className='form-control' id={EmpresaPE} name={EmpresaPE} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setEmpresaPE)}>X</button>
                             </div>
                         </div>

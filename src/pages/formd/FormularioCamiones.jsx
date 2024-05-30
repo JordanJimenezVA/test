@@ -198,7 +198,7 @@ function FormularioCamiones() {
             <div className="col-md-3">
               <label>Nombre Chofer</label>
               <div className="input-group ">
-                <input type="text" className="form-control" onChange={(event) => { setChoferCA(event.target.value); }} value={ChoferCA} placeholder='Ingrese Nombre' id={ChoferCA} name={ChoferCA} ></input>
+                <input required type="text" className="form-control" onChange={(event) => { setChoferCA(event.target.value); }} value={ChoferCA} placeholder='Ingrese Nombre' id={ChoferCA} name={ChoferCA} ></input>
                 <div className="invalid-feedback">
                   Please choose a username.
                 </div>
@@ -210,7 +210,7 @@ function FormularioCamiones() {
               <label>Apellido Chofer</label>
               <div className="input-group ">
 
-                <input type="text" onChange={(event) => { setApellidoChoferCA(event.target.value); }} value={ApellidoChoferCA} placeholder='Ingrese Apellido' className='form-control' id={ApellidoChoferCA} name={ApellidoChoferCA} />
+                <input required type="text" onChange={(event) => { setApellidoChoferCA(event.target.value); }} value={ApellidoChoferCA} placeholder='Ingrese Apellido' className='form-control' id={ApellidoChoferCA} name={ApellidoChoferCA} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoChoferCA)}>X</button>
               </div>
             </div>
@@ -235,8 +235,8 @@ function FormularioCamiones() {
               <label>Tipo</label>
               <div className="input-group mb-3">
 
-                <select onChange={(event) => { setTipoCA(event.target.value); }} value={TipoCA} className='form-select' id={TipoCA} name={TipoCA}>
-                  <option value=""></option>
+                <select required onChange={(event) => { setTipoCA(event.target.value); }} value={TipoCA} className='form-select' id={TipoCA} name={TipoCA}>
+                  <option value="">Seleccionar una opción</option>
                   <option value="Fumigación">Remolque Abierto</option>
                   <option value="Camiones">Remolque Cerrado</option>
                   <option value="Reciclaje">Remolque Refrigerado</option>
@@ -249,7 +249,7 @@ function FormularioCamiones() {
             <div className="col-md-3">
               <label>Modelo</label>
               <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setModeloCA(event.target.value); }} value={ModeloCA} placeholder='Ingrese Modelo' className='form-control' id={ModeloCA} name={ModeloCA} />
+                <input required type="text" onChange={(event) => { setModeloCA(event.target.value); }} value={ModeloCA} placeholder='Ingrese Modelo' className='form-control' id={ModeloCA} name={ModeloCA} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setModeloCA)}>X</button>
               </div>
             </div>
@@ -258,7 +258,7 @@ function FormularioCamiones() {
               <label>Color</label>
               <div className="input-group mb-3">
 
-                <input type="text" onChange={(event) => { setColorCA(event.target.value); }} value={ColorCA} placeholder='Ingrese Color' className='form-control' id={ColorCA} name={ColorCA} />
+                <input required type="text" onChange={(event) => { setColorCA(event.target.value); }} value={ColorCA} placeholder='Ingrese Color' className='form-control' id={ColorCA} name={ColorCA} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setColorCA)}>X</button>
               </div>
             </div>
@@ -270,7 +270,7 @@ function FormularioCamiones() {
               <label>Patente Rampa</label>
               <div className="input-group ">
 
-                <input type="text" onChange={(event) => { setPatenteCA(event.target.value); }} value={PatenteCA} placeholder='Ingrese Patente' className='form-control' id={PatenteCA} name={PatenteCA} />
+                <input required type="text" onChange={(event) => { setPatenteCA(event.target.value); }} value={PatenteCA} placeholder='Ingrese Patente' className='form-control' id={PatenteCA} name={PatenteCA} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatenteCA)}>X</button>
               </div>
             </div>
@@ -279,7 +279,7 @@ function FormularioCamiones() {
               <label>Marca</label>
               <div className="input-group ">
 
-                <input type="text" onChange={(event) => { setMarcaCA(event.target.value); }} value={MarcaCA} placeholder='Ingrese Marca' className='form-control' id={MarcaCA} name={MarcaCA} />
+                <input required type="text" onChange={(event) => { setMarcaCA(event.target.value); }} value={MarcaCA} placeholder='Ingrese Marca' className='form-control' id={MarcaCA} name={MarcaCA} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setMarcaCA)}>X</button>
               </div>
             </div>
@@ -288,7 +288,7 @@ function FormularioCamiones() {
               <label>Empresa</label>
               <div className="input-group ">
 
-                <input type="text" onChange={(event) => { setEmpresaCA(event.target.value); }} value={EmpresaCA} placeholder='Ingrese Empresa' className='form-control' id={EmpresaCA} name={EmpresaCA} />
+                <input required type="text" onChange={(event) => { setEmpresaCA(event.target.value); }} value={EmpresaCA} placeholder='Ingrese Empresa' className='form-control' id={EmpresaCA} name={EmpresaCA} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setEmpresaCA)}>X</button>
               </div>
             </div>
@@ -316,7 +316,7 @@ function FormularioCamiones() {
               <label>N° Planilla Transporte</label>
               <div className="input-group ">
 
-                <input type="text" onChange={(event) => { setGuiaDespachoCA(event.target.value); }} value={GuiaDespachoCA} placeholder='Planilla Transporte' className='form-control' id={GuiaDespachoCA} name={GuiaDespachoCA} />
+                <input required type="text" onChange={(event) => { setGuiaDespachoCA(event.target.value); }} value={GuiaDespachoCA} placeholder='Planilla Transporte' className='form-control' id={GuiaDespachoCA} name={GuiaDespachoCA} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setGuiaDespachoCA)}>X</button>
               </div>
             </div>
@@ -334,7 +334,7 @@ function FormularioCamiones() {
               <label>Sello</label>
               <div className="input-group ">
 
-                <input type="text" onChange={(event) => { setSelloCA(event.target.value); }} value={SelloCA} placeholder='Ingrese Sello' className='form-control' id={SelloCA} name={SelloCA} />
+                <input required type="text" onChange={(event) => { setSelloCA(event.target.value); }} value={SelloCA} placeholder='Ingrese Sello' className='form-control' id={SelloCA} name={SelloCA} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setSelloCA)}>X</button>
               </div>
             </div>

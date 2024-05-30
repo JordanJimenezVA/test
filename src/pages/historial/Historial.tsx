@@ -41,7 +41,7 @@ const Historial = () => {
     {
       field: 'ROL',
       headerName: 'Rol',
-      width: 200,
+      width: 180,
       editable: false,
       type: 'string',
     },
