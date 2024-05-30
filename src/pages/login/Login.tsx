@@ -56,7 +56,7 @@ export default function Login() {
     <div className="login-page">
       <div className="formlogin">
         <form onSubmit={handleSubmit} className="login-form">
-          <input onChange={e => setValues({ ...values, rut: e.target.value })} type="text" name="rut" placeholder="RUT" autoComplete='rut' />
+          <input onChange={e => setValues({ ...values, rut: e.target.value })} type="text" name="rut" placeholder="Usuario" autoComplete='rut' />
           <input onChange={e => setValues({ ...values, password: e.target.value })} type="password" name="password" placeholder="Contraseña" autoComplete='password' />
           <button>login</button>
         </form>

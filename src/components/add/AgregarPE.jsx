@@ -115,7 +115,7 @@ function AgregarPE() {
                         <div className="col-auto">
 
 
-                            <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
+                            <label htmlFor='rutpe-input'>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
                             <div className="input-group mb-3">
 
                                 <input
@@ -124,7 +124,7 @@ function AgregarPE() {
                                     onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
                                     value={RutPE}
                                     placeholder='Ingrese Rut'
-                                    id={RutPE}
+                                    id="rutpe-input"
                                     name={RutPE}
                                 />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRutPE)}>X</button>

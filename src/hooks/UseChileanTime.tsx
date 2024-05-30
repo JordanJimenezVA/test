@@ -5,7 +5,7 @@ const useChileanTime = () => {
 
   const fetchChileanTime = async () => {
     try {
-      const response = await fetch('http://worldtimeapi.org/api/timezone/America/Santiago');
+      const response = await fetch('https://worldtimeapi.org/api/timezone/America/Santiago');
       const data = await response.json();
       const date = new Date(data.datetime);
       const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
