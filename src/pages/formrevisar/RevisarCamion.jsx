@@ -98,7 +98,6 @@ function RevisarCamion() {
                     });
 
                     setFechaInicio(formattedFechaInicio);
-                    console.log("useeffect: "+formattedFechaInicio)
                     setEstado("fin");
                     setFormDisabled(false);
                     setGuardarProgresoDisabled(false);

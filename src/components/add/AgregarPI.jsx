@@ -53,7 +53,6 @@ function AgregarPI() {
             VehiculoPI: VehiculoPI,
             ColorPI: ColorPI,
             PatentePI: PatentePI,
-            // ObservacionesPI: ObservacionesPI,
             RolPI: RolPI
         }).then(() => {
 
@@ -142,7 +141,7 @@ function AgregarPI() {
                         <div className="col-md-3">
                             <label>Apellido</label>
                             <div className="input-group mb-3">
-                                <input type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPI} name={ApellidoPI} />
+                            <input type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPI} name={ApellidoPI} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoPI)}>X</button>
                             </div>
                         </div>

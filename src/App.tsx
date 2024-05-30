@@ -125,6 +125,14 @@ function App() {
           element: <AuthProvider><AgregarPI /></AuthProvider>
         },
         {
+          path: "/AgregarPersonalExterno",
+          element: <AuthProvider><AgregarPE /></AuthProvider>
+        },
+        {
+          path: "/AgregarCamion",
+          element: <AuthProvider><AgregarCA /></AuthProvider>
+        },
+        {
           path: "/TablaIngreso",
           element: <AuthProvider><TablaIngreso /></AuthProvider>
         },

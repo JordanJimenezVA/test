@@ -35,8 +35,21 @@ const TopBox = () => {
       </div>
 
       <div className="list">
-        {Array.isArray(logs) && logs.slice(0, 7).map(log => (
+        {/* {Array.isArray(logs) && logs.slice(0, 7).map(log => (
           <div className="listItem" key={log.IDL}>
+            <div className="user">
+              <div className="userTexts">
+                <span className="username">{log.PERSONAL} {log.APELLIDO}</span>
+                <span className="type">{log.ROL}</span>
+              </div>
+            </div>
+            <span className={`action ${log.ESTADO === 'SALIDA' ? 'redText' : 'greenText'}`}>
+              {log.ESTADO}
+            </span>
+          </div>
+        ))} */}
+        {Array.isArray(logs) && logs.slice(0, 7).map((log, index) => (
+          <div className="listItem" key={`${log.IDL}-${index}`}>
             <div className="user">
               <div className="userTexts">
                 <span className="username">{log.PERSONAL} {log.APELLIDO}</span>
