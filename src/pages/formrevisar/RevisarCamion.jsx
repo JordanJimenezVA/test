@@ -34,11 +34,16 @@ function RevisarCamion() {
     const [confirmDisabled, setConfirmDisabled] = useState(true);
     const [GuardarProgresoDisabled, setGuardarProgresoDisabled] = useState(true);
     const chileanTime = useChileanTime();
-
+    const [isFirstOpen, setIsFirstOpen] = useState(true); // Nuevo estado
 
     useEffect(() => {
-        getRegistros(IDR);
-    }, [IDR]);
+        if (isFirstOpen) {
+            getRegistros(IDR);
+            setIsFirstOpen(false); // Actualiza el estado para que no vuelva a llamar a getRegistros
+        } else {
+            getProgresoRevision(IDR);
+        }
+    }, [IDR, isFirstOpen]);
 
     const validarRut = (rut) => {
         if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
@@ -73,7 +78,7 @@ function RevisarCamion() {
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     };
 
-    useEffect(() => {
+    const getProgresoRevision = (IDR) => {
         Axios.get(`${host_server}/ProgresoRevision/${IDR}`)
             .then((res) => {
                 if (res.data.length > 0) {
@@ -101,16 +106,22 @@ function RevisarCamion() {
                     setEstado("fin");
                     setFormDisabled(false);
                     setGuardarProgresoDisabled(false);
-
-
-
                 } else {
                     setFormDisabled(true);
                     setConfirmDisabled(true);
                     setGuardarProgresoDisabled(true);
                 }
             })
-    }, [IDR]);
+            .catch((error) => {
+                console.error("Error al obtener progreso de revisión:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Error al obtener progreso de revisión, intente nuevamente más tarde",
+                });
+            });
+    };
+
 
     const getRegistros = (IDR) => {
         Axios.get(`${host_server}/FormularioSalida/${IDR}`)
