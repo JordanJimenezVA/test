@@ -1,9 +1,9 @@
 import DataTableL from "../../components/dataTable/DataTableL";
 import "./logs.scss"
-import { format, toZonedTime } from 'date-fns-tz';
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 const host_server = import.meta.env.VITE_SERVER_HOST;
+
 
 
 const Historial = () => {
@@ -14,16 +14,7 @@ const Historial = () => {
         res.json(),
       ),
   })
-
-
-  const formatDate = (date: string | null | undefined) => {
-    if (!date) {
-      return '';
-    }
-    const zonedDate = toZonedTime(date, 'America/Santiago');
-    return format(zonedDate, 'dd-MM-yyyy HH:mm', { timeZone: 'America/Santiago' });
-  };
-
+  
   const columns: GridColDef[] = [
     { field: 'IDL', headerName: 'ID', width: 40, type: 'number' },
     {
@@ -81,16 +72,18 @@ const Historial = () => {
       headerName: 'Fecha Ingreso',
       width: 180,
       editable: false,
-      type: 'Date',
-      valueFormatter: (params) => formatDate(params.value),
+      type: 'dateTime',
+      valueGetter: (params) => {
+        const date = new Date(params.row.FECHAINGRESO); // Convertir la fecha de texto a objeto Date
+        return date; // Formatear la fecha y hora como quieras
+      },
     },
     {
       field: 'FECHASALIDA',
       headerName: 'Fecha Salida',
       width: 180,
       editable: false,
-      type: 'dateTime',
-      valueFormatter: (params) => formatDate(params.value),
+      type: 'DATE',
     }
   ];
 
