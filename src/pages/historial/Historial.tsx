@@ -17,7 +17,14 @@ const Historial = () => {
 
   const timeZone = 'America/Santiago';
 
-
+  const formatDate = (date: string | null | undefined) => {
+    if (!date) {
+      return '';
+    }
+    const zonedDate = toZonedTime(date, timeZone);
+    return format(zonedDate, 'dd-MM-yyyy HH:mm', { timeZone });
+  };
+  
   const columns: GridColDef[] = [
     { field: 'IDL', headerName: 'ID', width: 40, type: 'number' },
     {
@@ -70,19 +77,13 @@ const Historial = () => {
       editable: false,
       type: 'string',
     },
-   {
+    {
       field: 'FECHAINGRESO',
       headerName: 'Fecha Ingreso',
       width: 180,
       editable: false,
       type: 'Date',
-      valueFormatter: (params) => {
-        if (!params.value) {
-          return '';
-        }
-        const zonedDate = toZonedTime(params.value as string, timeZone);
-        return format(zonedDate, 'dd-MM-yyyy HH:mm', { timeZone });
-      },
+      valueFormatter: (params) => formatDate(params.value),
     },
     {
       field: 'FECHASALIDA',
