@@ -1,5 +1,6 @@
 import DataTableL from "../../components/dataTable/DataTableL";
 import "./logs.scss"
+import { format, toZonedTime } from 'date-fns-tz';
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 const host_server = import.meta.env.VITE_SERVER_HOST;
@@ -14,24 +15,7 @@ const Historial = () => {
       ),
   })
 
-
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) {
-      return ''; // Return an empty string if dateString is null or undefined
-    }
-    const date = new Date(dateString);
-    if (date && !isNaN(date.getTime())) {
-      const day = date.getDate().toString().padStart(2, '0');
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const year = date.getFullYear();
-      const hours = date.getHours().toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      return `${day}-${month}-${year} ${hours}:${minutes}`;
-    } else {
-      return ''; // Return an empty string if the date is invalid
-    }
-  }
-
+  const timeZone = 'America/Santiago';
 
 
   const columns: GridColDef[] = [
@@ -86,13 +70,19 @@ const Historial = () => {
       editable: false,
       type: 'string',
     },
-    {
+   {
       field: 'FECHAINGRESO',
       headerName: 'Fecha Ingreso',
       width: 180,
       editable: false,
       type: 'Date',
-      valueFormatter: (params) => formatDate(params.value as string),
+      valueFormatter: (params) => {
+        if (!params.value) {
+          return '';
+        }
+        const zonedDate = toZonedTime(params.value as string, timeZone);
+        return format(zonedDate, 'dd-MM-yyyy HH:mm', { timeZone });
+      },
     },
     {
       field: 'FECHASALIDA',
