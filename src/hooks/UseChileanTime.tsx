@@ -8,7 +8,7 @@ const useChileanTime = () => {
       const response = await fetch('https://worldtimeapi.org/api/timezone/America/Santiago');
       const data = await response.json();
       const date = new Date(data.datetime);
-      const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+      const formattedDate = date.toISOString().slice(0, 19).replace('T', ' '); // Formato compatible con MySQL
       setChileanTime(formattedDate);
     } catch (error) {
       console.error('Error fetching Chilean time:', error);
@@ -18,7 +18,6 @@ const useChileanTime = () => {
   useEffect(() => {
     fetchChileanTime();
   }, []);
-
 
   return { chileanTime };
 };

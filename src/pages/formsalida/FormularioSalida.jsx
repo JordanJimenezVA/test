@@ -10,8 +10,8 @@ const host_server = import.meta.env.VITE_SERVER_HOST;
 function FormularioSalida() {
   const { IDR } = useParams();
   const [rutValido, setRutValido] = React.useState(true);
-  const currentTime = useChileanTime();
-  console.log(currentTime)
+  const { chileanTime } = useChileanTime(); 
+  console.log(chileanTime)
   const [formValues, setFormValues] = useState({
     PERSONAL: '',
     APELLIDO: '',
@@ -102,10 +102,9 @@ function FormularioSalida() {
   };
 
   const salidaCA = () => {
-    const formattedDate = `${currentTime.chileanTime.slice(0, 10)} ${currentTime.chileanTime.slice(11, 19)}`;
     Axios.post(`${host_server}/FormularioSalida/${IDR}`, {
       ...formValues,
-      FECHASALIDA: formattedDate
+      FECHASALIDA: chileanTime
      
     }).then(() => {
       limpiarCampos();
