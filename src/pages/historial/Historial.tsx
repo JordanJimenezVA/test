@@ -15,16 +15,15 @@ const Historial = () => {
       ),
   })
 
-  const timeZone = 'America/Santiago';
 
   const formatDate = (date: string | null | undefined) => {
     if (!date) {
       return '';
     }
-    const zonedDate = toZonedTime(date, timeZone);
-    return format(zonedDate, 'dd-MM-yyyy HH:mm', { timeZone });
+    const zonedDate = toZonedTime(date, 'America/Santiago');
+    return format(zonedDate, 'dd-MM-yyyy HH:mm', { timeZone: 'America/Santiago' });
   };
-  
+
   const columns: GridColDef[] = [
     { field: 'IDL', headerName: 'ID', width: 40, type: 'number' },
     {
