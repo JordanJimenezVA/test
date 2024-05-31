@@ -236,9 +236,9 @@ function RevisarCamion() {
                 formData.append(key, formValues[key]);
             }
         });
-        formData.append('fechaInicio', fechaInicio.chileanTime);
+        formData.append('fechaInicio', fechaInicio);
         console.log(fechaInicio);
-        formData.append('fechaFin', fechaFin.chileanTime);
+        formData.append('fechaFin', fechaFin);
         console.log(fechaFin)
 
         Axios.post(`${host_server}/RevisionCamion/${IDR}`, formData, {

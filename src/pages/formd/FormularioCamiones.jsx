@@ -115,7 +115,7 @@ function FormularioCamiones() {
       ObservacionesCA: ObservacionesCA,
       GuiaDespachoCA: GuiaDespachoCA,
       SelloCA: SelloCA,
-      fechaActualChile: chileanTime.chileanTime
+      fechaActualChile: chileanTime
     }).then(() => {
       limpiarcamposCA();
       Swal.fire({
