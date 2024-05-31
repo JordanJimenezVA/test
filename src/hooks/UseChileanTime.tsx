@@ -23,7 +23,7 @@ const useChileanTime = () => {
   useEffect(() => {
     fetchChileanTime();
   }, []);
-
+  console.log("hora chilena desde hook: "+chileanTime)
   return chileanTime; // Devolver directamente la cadena de fecha formateada sin segundos
 };
 
