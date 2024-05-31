@@ -13,7 +13,7 @@ const useChileanTime = () => {
       const day = String(date.getDate()).padStart(2, '0');
       const hours = String(date.getHours()).padStart(2, '0');
       const minutes = String(date.getMinutes()).padStart(2, '0');
-      const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}`; // Formato sin segundos
+      const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}`; // Formato sin segundos
       setChileanTime(formattedDate);
     } catch (error) {
       console.error('Error fetching Chilean time:', error);
@@ -23,7 +23,7 @@ const useChileanTime = () => {
   useEffect(() => {
     fetchChileanTime();
   }, []);
-  console.log("hora chilena desde hook: "+chileanTime)
+
   return chileanTime; // Devolver directamente la cadena de fecha formateada sin segundos
 };
 
