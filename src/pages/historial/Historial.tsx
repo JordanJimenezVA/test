@@ -14,6 +14,26 @@ const Historial = () => {
       ),
   })
 
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) {
+      return ''; // Return an empty string if dateString is null or undefined
+    }
+    const date = new Date(dateString);
+    if (date && !isNaN(date.getTime())) {
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${day}-${month}-${year} ${hours}:${minutes}`;
+    } else {
+      return ''; // Return an empty string if the date is invalid
+    }
+  }
+
+
+
   const columns: GridColDef[] = [
     { field: 'IDL', headerName: 'ID', width: 40, type: 'number' },
     {
@@ -71,20 +91,8 @@ const Historial = () => {
       headerName: 'Fecha Ingreso',
       width: 180,
       editable: false,
-      type: 'DATE',
-      valueFormatter: (params) => {
-        const date = params.value ? new Date(params.value as string) : null;
-        if (date && !isNaN(date.getTime())) {
-          const day = date.getDate().toString().padStart(2, '0');
-          const month = (date.getMonth() + 1).toString().padStart(2, '0');
-          const year = date.getFullYear();
-          const hours = date.getHours().toString().padStart(2, '0');
-          const minutes = date.getMinutes().toString().padStart(2, '0');
-          return `${day}-${month}-${year} ${hours}:${minutes}`;
-        } else {
-          return '';
-        }
-      },
+      type: 'Date',
+      valueFormatter: (params) => formatDate(params.value as string),
     },
     {
       field: 'FECHASALIDA',
