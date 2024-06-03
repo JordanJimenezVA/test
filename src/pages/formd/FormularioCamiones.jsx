@@ -23,7 +23,7 @@ function FormularioCamiones() {
   const [ObservacionesCA, setObservacionesCA] = useState("");
   const [GuiaDespachoCA, setGuiaDespachoCA] = useState("");
   const [SelloCA, setSelloCA] = useState("");
-  const [Empresas, setEmpresas] = useState([]);
+  const [mensajeEstado, setMensajeEstado] = useState('');
   const [rutValido, setRutValido] = React.useState(true);
 
   const validarRut = (rut) => {
@@ -64,11 +64,30 @@ function FormularioCamiones() {
     }
   };
 
+
   const onSuggestionSelected = async (_, { suggestion }) => {
     try {
-      const response = await Axios.get(`${host_server}/FormularioCamiones/suggestion/${suggestion}`);
-      const data = response.data;
-      setRutCA(data.RUTCA || ""),
+        const response = await Axios.get(`${host_server}/FormularioCamiones/suggestion/${suggestion}`);
+        const data = response.data;
+
+        let mensajeEstado = '';
+        if (data.ESTADONG) {
+            switch (data.ESTADONG) {
+                case 'PERMS1':
+                    mensajeEstado = 'DEBE TENER PRECAUCIÓN PARA ENTRAR';
+                    break;
+                case 'PERMS2':
+                    mensajeEstado = 'SOLICITAR PERMISO PARA ENTRAR';
+                    break;
+                case 'NOACCESO':
+                    mensajeEstado = 'PROHIBIDO EL ACCESO';
+                    break;
+                default:
+                    mensajeEstado = '';
+            }
+        }
+
+        setRutCA(data.RUTCA || ""),
         setChoferCA(data.CHOFERCA || ""),
         setApellidoChoferCA(data.APELLIDOCHOFERCA || ""),
         setPeonetaCA(data.PEONETACA || ""),
@@ -82,9 +101,9 @@ function FormularioCamiones() {
         setGuiaDespachoCA(data.GUIADESPACHOCA || "")
       setSelloCA(data.SELLOCA || "")
     } catch (error) {
-      console.error('Error al obtener sugerencias:', error);
+        console.error('Error al obtener sugerencias:', error);
     }
-  };
+};
 
   const inputProps = {
     placeholder: "Ingrese RUT",
@@ -156,13 +175,27 @@ function FormularioCamiones() {
   return (
 
 
-    <div>
+    <form onSubmit={(e) => {
+      e.preventDefault(); // Evita que se recargue la página
+      if (mensajeEstado === 'PROHIBIDO EL ACCESO') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Prohibido el acceso',
+          text: 'Este personal no tiene permitido el ingreso.',
+        });
+      } else {
+        ingresoformdCA();
+      }
+    }}>
       <h1 className='h1formd'>Entrada Camión</h1>
       <div className="card shadow-none border my-4" data-component-card="data-component-card">
         <div className="card-header border-bottom bg-body">
           <div className="row g-3 justify-content-between align-items-center">
             <div className="col-12 col-md">
-              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Chofer<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Camión 
+                {mensajeEstado && <span style={{ color: mensajeEstado === ' PROHIBIDO EL ACCESO' ? 'red' : 'orange' }}>{mensajeEstado}</span>}
+                <a className="anchorjs-link" aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a>
+              </h4>
             </div>
           </div>
         </div>
@@ -334,7 +367,7 @@ function FormularioCamiones() {
               <label>Sello</label>
               <div className="input-group ">
 
-                <input required type="text" onChange={(event) => { setSelloCA(event.target.value); }} value={SelloCA} placeholder='Ingrese Sello' className='form-control' id={SelloCA} name={SelloCA} />
+                <input type="text" onChange={(event) => { setSelloCA(event.target.value); }} value={SelloCA} placeholder='Ingrese Sello' className='form-control' required id={SelloCA} name={SelloCA} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setSelloCA)}>X</button>
               </div>
             </div>
@@ -347,10 +380,10 @@ function FormularioCamiones() {
 
 
       <div className="div-btn-container">
-        <button className='btn btn-success' onClick={ingresoformdCA}>Marcar Ingreso</button>
+        <button className='btn btn-success' type='submit'>Marcar Ingreso</button>
 
       </div>
-    </div>
+    </form>
 
 
   )

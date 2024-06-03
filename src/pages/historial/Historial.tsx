@@ -72,18 +72,14 @@ const Historial = () => {
       headerName: 'Fecha Ingreso',
       width: 180,
       editable: false,
-      type: 'dateTime',
-      valueGetter: (params) => {
-        const date = new Date(params.row.FECHAINGRESO); // Convertir la fecha de texto a objeto Date
-        return date; // Formatear la fecha y hora como quieras
-      },
+      type: 'string',
     },
     {
       field: 'FECHASALIDA',
       headerName: 'Fecha Salida',
       width: 180,
       editable: false,
-      type: 'DATE',
+      type: 'string',
     }
   ];
 

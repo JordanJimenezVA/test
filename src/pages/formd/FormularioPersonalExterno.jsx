@@ -18,7 +18,7 @@ function FormularioPersonalExterno() {
   const [RolPE, setRolPE] = useState("");
   const [ObservacionesPE, setObservacionesPE] = useState("");
   const [rutValido, setRutValido] = React.useState(true);
-
+  const [mensajeEstado, setMensajeEstado] = useState('');
   const host_server = import.meta.env.VITE_SERVER_HOST;
 
   const validarRut = (rut) => {
@@ -40,7 +40,7 @@ function FormularioPersonalExterno() {
 
   const handleRutChange = (event, { newValue }) => {
     setRutPE(newValue);
-    setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
+    setRutValido(validarRut(newValue));
   }
 
   const getSuggestions = async (value) => {
@@ -54,26 +54,51 @@ function FormularioPersonalExterno() {
         setSuggestions([]);
       }
     } catch (error) {
-      // console.error('Error al obtener sugerencias:', error);
     }
   };
-
 
   const onSuggestionSelected = async (_, { suggestion }) => {
     try {
-      const response = await Axios.get(`${host_server}/FormularioPersonalExterno/suggestion/${suggestion}`);
-      const data = response.data;
-      setNombrePE(data.NOMBREPE);
-      setApellidoPE(data.APELLIDOPE);
-      setVehiculoPE(data.VEHICULOPE);
-      setColorPE(data.COLORPE);
-      setPatentePE(data.PATENTEPE);
-      setEmpresaPE(data.EMPRESAPE);
-      setRolPE(data.ROLPE);
+        const response = await Axios.get(`${host_server}/FormularioPersonalExterno/suggestion/${suggestion}`);
+        const data = response.data;
+
+        let mensajeEstado = '';
+        if (data.ESTADONG) {
+            switch (data.ESTADONG) {
+                case 'PERMS1':
+                    mensajeEstado = 'DEBE TENER PRECAUCIÓN PARA ENTRAR';
+                    break;
+                case 'PERMS2':
+                    mensajeEstado = 'SOLICITAR PERMISO PARA ENTRAR';
+                    break;
+                case 'NOACCESO':
+                    mensajeEstado = 'PROHIBIDO EL ACCESO';
+                    break;
+                default:
+                    mensajeEstado = '';
+            }
+        }
+
+        setMensajeEstado(mensajeEstado);
+
+        // Autocompletar los campos del formulario
+        console.log("entro a rellenar")
+        setNombrePE(data.NOMBREPE || '');
+        setApellidoPE(data.APELLIDOPE || '');
+        setVehiculoPE(data.VEHICULOPE || '');
+        setColorPE(data.COLORPE || '');
+        setPatentePE(data.PATENTEPE || '');
+        setEmpresaPE(data.EMPRESAPE || '');
+        setRolPE(data.ROLPE || '');
     } catch (error) {
-      console.error('Error al obtener sugerencias:', error);
+        console.error('Error al obtener sugerencias:', error);
     }
-  };
+};
+
+
+
+
+
 
   const inputProps = {
     placeholder: "Ingrese RUT",
@@ -81,43 +106,87 @@ function FormularioPersonalExterno() {
     onChange: (_, { newValue }) => setRutPE(newValue),
   };
 
+  // const ingresoformdPE = () => {
+  //   if (!validarRut(RutPE)) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: "RUT inválido. Por favor, ingrese un RUT válido.",
+  //     });
+  //     return;
+  //   }
+  //   Axios.post(`${host_server}/FormularioPersonalExterno`, {
+  //     rutPE: RutPE,
+  //     NombrePE: NombrePE,
+  //     ApellidoPE: ApellidoPE,
+  //     VehiculoPE: VehiculoPE,
+  //     ColorPE: ColorPE,
+  //     PatentePE: PatentePE,
+  //     EmpresaPE: EmpresaPE,
+  //     RolPE: RolPE,
+  //     ObservacionesPE: ObservacionesPE,
+  //     fechaActualChile: chileanTime.chileanTime
+  //   }).then(() => {
+  //     limpiarcamposPE();
+  //     Swal.fire({
+  //       title: 'Ingreso Exitoso!',
+  //       icon: 'success',
+  //       text: 'Personal Externo ingresado con Exito',
+  //       timer: 1500
+  //     })
+  //   }).catch(function (error) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Oops...",
+  //       text: JSON.parse(JSON.stringify(error)).message === "Network Error" ? "Intente mas tarde" : JSON.parse(JSON.stringify(error))
+  //     });
+  //   });
+  // }
   const ingresoformdPE = () => {
     if (!validarRut(RutPE)) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "RUT inválido. Por favor, ingrese un RUT válido.",
-      });
-      return;
+        Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "RUT inválido. Por favor, ingrese un RUT válido.",
+        });
+        return;
     }
-    Axios.post(`${host_server}/FormularioPersonalExterno`, {
-      rutPE: RutPE,
-      NombrePE: NombrePE,
-      ApellidoPE: ApellidoPE,
-      VehiculoPE: VehiculoPE,
-      ColorPE: ColorPE,
-      PatentePE: PatentePE,
-      EmpresaPE: EmpresaPE,
-      RolPE: RolPE,
-      ObservacionesPE: ObservacionesPE,
-      fechaActualChile: chileanTime.chileanTime
-    }).then(() => {
-      limpiarcamposPE();
-      Swal.fire({
-        title: 'Ingreso Exitoso!',
-        icon: 'success',
-        text: 'Personal Externo ingresado con Exito',
-        timer: 1500
-      })
-    }).catch(function (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: JSON.parse(JSON.stringify(error)).message === "Network Error" ? "Intente mas tarde" : JSON.parse(JSON.stringify(error))
-      });
-    });
-  }
 
+    Axios.post(`${host_server}/FormularioPersonalExterno`, {
+        rutPE: RutPE,
+        NombrePE: NombrePE,
+        ApellidoPE: ApellidoPE,
+        VehiculoPE: VehiculoPE,
+        ColorPE: ColorPE,
+        PatentePE: PatentePE,
+        EmpresaPE: EmpresaPE,
+        RolPE: RolPE,
+        ObservacionesPE: ObservacionesPE,
+        fechaActualChile: chileanTime
+    }).then(() => {
+        limpiarcamposPE();
+        Swal.fire({
+            title: 'Ingreso Exitoso!',
+            icon: 'success',
+            text: 'Personal Externo ingresado con Exito',
+            timer: 1500
+        });
+    }).catch(function (error) {
+        if (error.response && error.response.data && error.response.data.error) {
+            Swal.fire({
+                icon: "error",
+                title: "Cuidado",
+                text: error.response.data.error,
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Intente mas tarde",
+            });
+        }
+    });
+}
 
   const limpiarcamposPE = () => {
     setRutPE("");
@@ -136,17 +205,30 @@ function FormularioPersonalExterno() {
 
 
   return (
-    <div>
+    <form onSubmit={(e) => {
+      e.preventDefault(); // Evita que se recargue la página
+      if (mensajeEstado === 'PROHIBIDO EL ACCESO') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Prohibido el acceso',
+          text: 'Este personal no tiene permitido el ingreso.',
+        });
+      } else {
+        ingresoformdPE();
+      }
+    }}>
       <h1 className='h1formd'>Entrada Personal Externo</h1>
       <div className="card shadow-none border my-4" data-component-card="data-component-card">
         <div className="card-header border-bottom bg-body">
           <div className="row g-3 justify-content-between align-items-center">
             <div className="col-12 col-md">
-              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Personal Externo<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Personal Externo 
+                {mensajeEstado && <span style={{ color: mensajeEstado === ' PROHIBIDO EL ACCESO' ? 'red' : 'orange' }}>{mensajeEstado}</span>}
+                <a className="anchorjs-link" aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a>
+              </h4>
             </div>
           </div>
         </div>
-
         <div className="card-body ">
 
           <div className="row g-3 needs-validation">
@@ -168,7 +250,7 @@ function FormularioPersonalExterno() {
                     onChange: handleRutChange,
                   }}
                   onSuggestionSelected={onSuggestionSelected}
-                
+
                 />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRutPE)}>X</button>
               </div>
@@ -201,7 +283,7 @@ function FormularioPersonalExterno() {
             <div className="col-md-3">
               <label>Rol</label>
               <div className="input-group mb-3">
-                <select required onChange={(event) => { setRolPE(event.target.value); }} value={RolPE} placeholder="Seleccione una opcion"className='form-select ' id={RolPE} name={RolPE}>
+                <select required onChange={(event) => { setRolPE(event.target.value); }} value={RolPE} placeholder="Seleccione una opcion" className='form-select ' id={RolPE} name={RolPE}>
                   <option value="">Seleccionar una opción</option>
                   <option value="Jardines">Jardines</option>
                   <option value="Fumigación">Fumigación</option>
@@ -268,11 +350,11 @@ function FormularioPersonalExterno() {
 
 
       <div className="div-btn-container">
-        <button className='btn btn-success' onClick={ingresoformdPE}>Marcar Ingreso</button>
+        <button className='btn btn-success' type='submit'>Marcar Ingreso</button>
 
 
       </div>
-    </div>
+    </form>
 
 
   )

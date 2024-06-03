@@ -53,20 +53,7 @@ const columns: GridColDef[] = [
     headerName: 'Fecha Ingreso',
     width: 220,
     editable: false,
-    type: 'DATE',
-    valueFormatter: (params) => {
-      const date = params.value ? new Date(params.value as string) : null;
-      if (date && !isNaN(date.getTime())) {
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const year = date.getFullYear();
-        const hours = date.getHours().toString().padStart(2, '0');
-        const minutes = date.getMinutes().toString().padStart(2, '0');
-        return `${day}-${month}-${year} ${hours}:${minutes}`;
-      } else {
-        return ''; 
-      }
-    },
+    type: 'string',
   },
   {
     field: 'estadoRevision',

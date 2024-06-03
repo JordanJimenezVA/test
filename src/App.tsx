@@ -7,6 +7,7 @@ import { RouterProvider, createBrowserRouter, Outlet } from "react-router-dom";
 import PersonalInterno from "./pages/personalinterno/PersonalInterno";
 import PersonalExterno from "./pages/personalexterno/PersonalExterno";
 import Camiones from "./pages/camiones/Camiones";
+import PersonasReportadas from "./pages/personasreportadas/PersonasReportadas";
 
 import Navbar from "./components/navbar/Navbar";
 import Menu from "./components/menu/Menu";
@@ -14,7 +15,8 @@ import Login from "./pages/login/Login";
 
 // @ts-ignore
 import AgregarPI from "./components/add/AgregarPI";
-
+// @ts-ignore
+import AgregarNG from "./components/add/AgregarNG"
 // @ts-ignore
 import AgregarPE from "./components/add/AgregarPE";
 // @ts-ignore
@@ -40,6 +42,8 @@ import EditarPI from "./pages/editar/EditarPI";
 import EditarPE from "./pages/editar/EditarPE";
 // @ts-ignore
 import EditarCA from "./pages/editar/EditarCA";
+// @ts-ignore
+import EditarNG from "./pages/editar/EditarNG";
 
 
 
@@ -109,6 +113,10 @@ function App() {
           element: <AuthProvider><Camiones /></AuthProvider>
         },
         {
+          path: "/Personas Reportadas",
+          element: <AuthProvider><PersonasReportadas /></AuthProvider>
+        },
+        {
           path: "/FormularioPersonalInterno",
           element: <AuthProvider><FormularioPersonalInterno /></AuthProvider>
         },
@@ -133,6 +141,10 @@ function App() {
           element: <AuthProvider><AgregarCA /></AuthProvider>
         },
         {
+          path: "/AgregarPersonaNG",
+          element: <AuthProvider><AgregarNG /></AuthProvider>
+        },
+        {
           path: "/TablaIngreso",
           element: <AuthProvider><TablaIngreso /></AuthProvider>
         },
@@ -155,6 +167,10 @@ function App() {
         {
           path: "/EditarCamiones/:IDCA",
           element: <AuthProvider><EditarCA /></AuthProvider>
+        },
+        {
+          path: "/EditarPersonasReportadas/:IDNG",
+          element: <AuthProvider><EditarNG /></AuthProvider>
         },
         {
           path: "/Revision",

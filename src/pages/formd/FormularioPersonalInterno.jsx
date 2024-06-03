@@ -8,7 +8,7 @@ import useChileanTime from "../../hooks/UseChileanTime";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 function FormularioPersonalInterno() {
-  const chileanTime  = useChileanTime();
+  const chileanTime = useChileanTime();
   const [suggestions, setSuggestions] = useState([]);
   const [RutPI, setRutPI] = useState("");
   const [NombrePI, setNombrePI] = useState("");
@@ -18,6 +18,7 @@ function FormularioPersonalInterno() {
   const [PatentePI, setPatentePI] = useState("");
   const [RolPI, setRolPI] = useState("");
   const [ObservacionesPI, setObservacionesPI] = useState("");
+  const [mensajeEstado, setMensajeEstado] = useState('');
   const [rutValido, setRutValido] = React.useState(true);
 
   const validarRut = (rut) => {
@@ -57,10 +58,30 @@ function FormularioPersonalInterno() {
     }
   };
 
+
   const onSuggestionSelected = async (_, { suggestion }) => {
     try {
       const response = await Axios.get(`${host_server}/FormularioPersonalInterno/suggestion/${suggestion}`);
       const data = response.data;
+
+      let mensajeEstado = '';
+      if (data.ESTADONG) {
+        switch (data.ESTADONG) {
+          case 'PERMS1':
+            mensajeEstado = 'DEBE TENER PRECAUCIÓN PARA ENTRAR';
+            break;
+          case 'PERMS2':
+            mensajeEstado = 'SOLICITAR PERMISO PARA ENTRAR';
+            break;
+          case 'NOACCESO':
+            mensajeEstado = 'PROHIBIDO EL ACCESO';
+            break;
+          default:
+            mensajeEstado = '';
+        }
+      }
+
+      setMensajeEstado(mensajeEstado);
       setNombrePI(data.NOMBREPI);
       setApellidoPI(data.APELLIDOPI);
       setVehiculoPI(data.VEHICULOPI);
@@ -72,7 +93,6 @@ function FormularioPersonalInterno() {
     }
   };
 
-
   // const inputProps = {
   //   placeholder: "Ingrese RUT",
   //   value: RutPI,
@@ -80,6 +100,7 @@ function FormularioPersonalInterno() {
   // };
 
   const ingresoformdPI = () => {
+    
     if (!validarRut(RutPI)) {
       Swal.fire({
         icon: "error",
@@ -89,17 +110,18 @@ function FormularioPersonalInterno() {
       return;
     }
     Axios.post(`${host_server}/FormularioPersonalInterno`, {
-      rutPI: RutPI,
-      NombrePI: NombrePI,
-      ApellidoPI: ApellidoPI,
-      VehiculoPI: VehiculoPI,
-      ColorPI: ColorPI,
-      PatentePI: PatentePI,
-      ObservacionesPI: ObservacionesPI,
-      RolPI: RolPI,
-      fechaActualChile: chileanTime.chileanTime
+      RUTPI: RutPI,
+      NOMBREPI: NombrePI,
+      APELLIDOPI: ApellidoPI,
+      VEHICULOPI: VehiculoPI,
+      COLORPI: ColorPI,
+      PATENTEPI: PatentePI,
+      OBSERVACIONESPI: ObservacionesPI,
+      ROLPI: RolPI,
+      fechaActualChile: chileanTime
+      
+      
     }).then(() => {
-
       limpiarcamposPI();
       Swal.fire({
         title: 'Ingreso Exitoso!',
@@ -139,14 +161,25 @@ function FormularioPersonalInterno() {
 
     <form onSubmit={(e) => {
       e.preventDefault(); // Evita que se recargue la página
-      ingresoformdPI();
+      if (mensajeEstado === 'PROHIBIDO EL ACCESO') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Prohibido el acceso',
+          text: 'Este personal no tiene permitido el ingreso.',
+        });
+      } else {
+        ingresoformdPI();
+      }
     }}>
       <h1 className='h1formd'>Entrada Personal Interno</h1>
       <div className="card shadow-none border my-4" data-component-card="data-component-card">
         <div className="card-header border-bottom bg-body">
           <div className="row g-3 justify-content-between align-items-center">
             <div className="col-12 col-md">
-              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Personal Interno<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Personal Interno
+                {mensajeEstado && <span style={{ color: mensajeEstado === ' PROHIBIDO EL ACCESO' ? 'red' : 'orange' }}>{mensajeEstado}</span>}
+                <a className="anchorjs-link" aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a>
+              </h4>
             </div>
           </div>
         </div>
@@ -205,7 +238,7 @@ function FormularioPersonalInterno() {
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRolPI)}>X</button>
               </div>
             </div>
-            
+
             <div className="col-md-3">
               <label>Observaciones</label>
               <div className="input-group mb-3">
