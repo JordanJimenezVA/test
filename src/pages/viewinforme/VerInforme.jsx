@@ -96,8 +96,8 @@ function VerInforme() {
                     ER,
                     JEFET,
                     FOTOS: fotosArray,
-                    FECHAINICIO: formatDateTime(FECHAINICIO),
-                    FECHAFIN: formatDateTime(FECHAFIN)
+                    FECHAINICIO: (FECHAINICIO),
+                    FECHAFIN: (FECHAFIN)
                 });
             })
             .catch((error) => {

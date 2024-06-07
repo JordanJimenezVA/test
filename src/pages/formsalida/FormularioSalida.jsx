@@ -10,8 +10,7 @@ const host_server = import.meta.env.VITE_SERVER_HOST;
 function FormularioSalida() {
   const { IDR } = useParams();
   const [rutValido, setRutValido] = React.useState(true);
-  const { chileanTime } = useChileanTime(); 
-  console.log(chileanTime)
+  const chileanTime = useChileanTime();
   const [formValues, setFormValues] = useState({
     PERSONAL: '',
     APELLIDO: '',
@@ -20,7 +19,7 @@ function FormularioSalida() {
     ROL: '',
     OBSERVACIONES: '',
     GUIADESPACHO: '',
-    // SELLO: '',
+    SELLO: '',
   });
 
   useEffect(() => {
@@ -50,7 +49,7 @@ function FormularioSalida() {
   const getRegistros = (IDR) => {
     Axios.get(`${host_server}/FormularioSalida/${IDR}`)
       .then((res) => {
-        const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO } = res.data[0];
+        const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO, SELLO } = res.data[0];
         setFormValues({
           PERSONAL,
           APELLIDO,
@@ -59,7 +58,7 @@ function FormularioSalida() {
           ROL,
           OBSERVACIONES,
           GUIADESPACHO,
-          // SELLO
+          SELLO
         });
       })
       .catch((error) => {
@@ -90,7 +89,7 @@ function FormularioSalida() {
       ROL: '',
       OBSERVACIONES: '',
       GUIADESPACHO: '',
-      // SELLO: '',
+      SELLO: '',
     });
   };
 

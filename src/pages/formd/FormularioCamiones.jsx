@@ -7,7 +7,7 @@ import useChileanTime from "../../hooks/UseChileanTime";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 function FormularioCamiones() {
-  const chileanTime  = useChileanTime();
+  const chileanTime = useChileanTime();
   const [suggestions, setSuggestions] = useState([]);
   const [IDCA, setidCA] = useState(0);
   const [ChoferCA, setChoferCA] = useState("");
@@ -67,27 +67,27 @@ function FormularioCamiones() {
 
   const onSuggestionSelected = async (_, { suggestion }) => {
     try {
-        const response = await Axios.get(`${host_server}/FormularioCamiones/suggestion/${suggestion}`);
-        const data = response.data;
+      const response = await Axios.get(`${host_server}/FormularioCamiones/suggestion/${suggestion}`);
+      const data = response.data;
 
-        let mensajeEstado = '';
-        if (data.ESTADONG) {
-            switch (data.ESTADONG) {
-                case 'PERMS1':
-                    mensajeEstado = 'DEBE TENER PRECAUCIÓN PARA ENTRAR';
-                    break;
-                case 'PERMS2':
-                    mensajeEstado = 'SOLICITAR PERMISO PARA ENTRAR';
-                    break;
-                case 'NOACCESO':
-                    mensajeEstado = 'PROHIBIDO EL ACCESO';
-                    break;
-                default:
-                    mensajeEstado = '';
-            }
+      let mensajeEstado = '';
+      if (data.ESTADONG) {
+        switch (data.ESTADONG) {
+          case 'PERMS1':
+            mensajeEstado = 'DEBE TENER PRECAUCIÓN PARA ENTRAR';
+            break;
+          case 'PERMS2':
+            mensajeEstado = 'SOLICITAR PERMISO PARA ENTRAR';
+            break;
+          case 'NOACCESO':
+            mensajeEstado = 'PROHIBIDO EL ACCESO';
+            break;
+          default:
+            mensajeEstado = '';
         }
+      }
 
-        setRutCA(data.RUTCA || ""),
+      setRutCA(data.RUTCA || ""),
         setChoferCA(data.CHOFERCA || ""),
         setApellidoChoferCA(data.APELLIDOCHOFERCA || ""),
         setPeonetaCA(data.PEONETACA || ""),
@@ -101,9 +101,9 @@ function FormularioCamiones() {
         setGuiaDespachoCA(data.GUIADESPACHOCA || "")
       setSelloCA(data.SELLOCA || "")
     } catch (error) {
-        console.error('Error al obtener sugerencias:', error);
+      console.error('Error al obtener sugerencias:', error);
     }
-};
+  };
 
   const inputProps = {
     placeholder: "Ingrese RUT",
@@ -144,10 +144,13 @@ function FormularioCamiones() {
         timer: 1500
       })
     }).catch(function (error) {
+      const errorMsg = error.response && error.response.data && error.response.data.error
+        ? error.response.data.error
+        : 'Error desconocido. Intente más tarde';
       Swal.fire({
         icon: "error",
-        title: "Oops...",
-        text: JSON.parse(JSON.stringify(error)).message === "Network Error" ? "Intente mas tarde" : JSON.parse(JSON.stringify(error))
+        title: "Cuidado...",
+        text: errorMsg
       });
     });
   }
@@ -192,7 +195,7 @@ function FormularioCamiones() {
         <div className="card-header border-bottom bg-body">
           <div className="row g-3 justify-content-between align-items-center">
             <div className="col-12 col-md">
-              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Camión 
+              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Camión
                 {mensajeEstado && <span style={{ color: mensajeEstado === ' PROHIBIDO EL ACCESO' ? 'red' : 'orange' }}>{mensajeEstado}</span>}
                 <a className="anchorjs-link" aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a>
               </h4>

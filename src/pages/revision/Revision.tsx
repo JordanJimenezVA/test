@@ -41,7 +41,7 @@ const columns: GridColDef[] = [
   {
     field: 'FECHAINGRESO',
     headerName: 'Fecha Ingreso',
-    width: 260,
+    width: 190,
     editable: false,
     type: 'string',
   }

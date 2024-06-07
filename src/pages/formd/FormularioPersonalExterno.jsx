@@ -96,52 +96,12 @@ function FormularioPersonalExterno() {
 };
 
 
-
-
-
-
   const inputProps = {
     placeholder: "Ingrese RUT",
     value: RutPE,
     onChange: (_, { newValue }) => setRutPE(newValue),
   };
 
-  // const ingresoformdPE = () => {
-  //   if (!validarRut(RutPE)) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "RUT inválido. Por favor, ingrese un RUT válido.",
-  //     });
-  //     return;
-  //   }
-  //   Axios.post(`${host_server}/FormularioPersonalExterno`, {
-  //     rutPE: RutPE,
-  //     NombrePE: NombrePE,
-  //     ApellidoPE: ApellidoPE,
-  //     VehiculoPE: VehiculoPE,
-  //     ColorPE: ColorPE,
-  //     PatentePE: PatentePE,
-  //     EmpresaPE: EmpresaPE,
-  //     RolPE: RolPE,
-  //     ObservacionesPE: ObservacionesPE,
-  //     fechaActualChile: chileanTime.chileanTime
-  //   }).then(() => {
-  //     limpiarcamposPE();
-  //     Swal.fire({
-  //       title: 'Ingreso Exitoso!',
-  //       icon: 'success',
-  //       text: 'Personal Externo ingresado con Exito',
-  //       timer: 1500
-  //     })
-  //   }).catch(function (error) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Oops...",
-  //       text: JSON.parse(JSON.stringify(error)).message === "Network Error" ? "Intente mas tarde" : JSON.parse(JSON.stringify(error))
-  //     });
-  //   });
-  // }
   const ingresoformdPE = () => {
     if (!validarRut(RutPE)) {
         Swal.fire({

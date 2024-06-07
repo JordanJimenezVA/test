@@ -130,10 +130,13 @@ function FormularioPersonalInterno() {
         timer: 1500
       })
     }).catch(function (error) {
+      const errorMsg = error.response && error.response.data && error.response.data.error
+        ? error.response.data.error
+        : 'Error desconocido. Intente más tarde';
       Swal.fire({
         icon: "error",
-        title: "Oops...",
-        text: JSON.parse(JSON.stringify(error)).message === "Network Error" ? "Intente mas tarde" : JSON.parse(JSON.stringify(error))
+        title: "Cuidado...",
+        text: errorMsg
       });
     });
   }

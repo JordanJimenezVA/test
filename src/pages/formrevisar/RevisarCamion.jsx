@@ -4,6 +4,7 @@ import Axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useChileanTime from '../../hooks/UseChileanTime';
+import useCamionTime from '../../hooks/CamionTime';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
@@ -26,15 +27,19 @@ function RevisarCamion() {
         JEFET: '',
         FOTOS: [],
         FECHAINICIO: '',
+        FECHAFIN: ''
     });
+    // const [fechaInicio, setFechaInicio] = useState(null);
+    // const [fechaFin, setFechaFin] = useState(null);
     const [fechaInicio, setFechaInicio] = useState(null);
     const [fechaFin, setFechaFin] = useState(null);
     const [estado, setEstado] = useState("inicio");
     const [formDisabled, setFormDisabled] = useState(true);
     const [confirmDisabled, setConfirmDisabled] = useState(true);
     const [GuardarProgresoDisabled, setGuardarProgresoDisabled] = useState(true);
+    const [isFirstOpen, setIsFirstOpen] = useState(true);
     const chileanTime = useChileanTime();
-    const [isFirstOpen, setIsFirstOpen] = useState(true); // Nuevo estado
+    const camionTime = useCamionTime();
 
     useEffect(() => {
         if (isFirstOpen) {
@@ -44,6 +49,31 @@ function RevisarCamion() {
             getProgresoRevision(IDR);
         }
     }, [IDR, isFirstOpen]);
+
+    const handleFechaInicio = async () => {
+        const horaInicio = await useCamionTime(); // Llamada directa al hook para obtener la hora actual
+        setFechaInicio(horaInicio);
+        console.log('Fecha de inicio establecida:', horaInicio);
+        setFormValues(prevValues => ({
+            ...prevValues,
+            FECHAINICIO: horaInicio,
+        }));
+        setEstado('fin');
+        setFormDisabled(false);
+        setGuardarProgresoDisabled(false);
+        setConfirmDisabled(true); // Bloquea el botón de confirmar
+    };
+
+    const handleFechaFin = async () => {
+        const horaFin = await useCamionTime(); // Llamada directa al hook para obtener la hora actual
+        setFechaFin(horaFin);
+        setFormValues(prevValues => ({
+            ...prevValues,
+            FECHAFIN: horaFin,
+        }));
+        console.log('Fecha de fin establecida:', horaFin);
+        setConfirmDisabled(false); // Desbloquea el botón de confirmar
+    };
 
     const validarRut = (rut) => {
         if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
@@ -67,23 +97,11 @@ function RevisarCamion() {
         setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
     }
 
-    const formatDateTime = (isoString) => {
-        const date = new Date(isoString);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        const seconds = String(date.getSeconds()).padStart(2, '0');
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    };
-
     const getProgresoRevision = (IDR) => {
         Axios.get(`${host_server}/ProgresoRevision/${IDR}`)
             .then((res) => {
                 if (res.data.length > 0) {
                     const progreso = res.data[0];
-                    const formattedFechaInicio = formatDateTime(new Date(progreso.FECHAINICIO));
                     setFormValues({
                         PERSONAL: progreso.PERSONAL,
                         APELLIDO: progreso.APELLIDO,
@@ -99,10 +117,10 @@ function RevisarCamion() {
                         SUPERVISOR: progreso.SUPERVISOR,
                         JEFET: progreso.JEFET,
                         FOTOS: Array.isArray(progreso.FOTOS) ? progreso.FOTOS : [],
-                        FECHAINICIO: formattedFechaInicio,
+                        FECHAINICIO: fechaInicio,
                     });
-
-                    setFechaInicio(formattedFechaInicio);
+                    console.log(progreso.FECHAINICIO);
+                    setFechaInicio(progreso.FECHAINICIO);
                     setEstado("fin");
                     setFormDisabled(false);
                     setGuardarProgresoDisabled(false);
@@ -203,65 +221,80 @@ function RevisarCamion() {
         }));
     };
 
-    const handleFecha = () => {
-        if (!chileanTime) {
-            console.error('Hora chilena no disponible');
-            return;
-        }
-        const formattedDate = chileanTime;
-
-        if (estado === "inicio") {
-            setFechaInicio(formattedDate);
-            setEstado("fin");
-            setFormDisabled(false);
-            setGuardarProgresoDisabled(false);
-        } else {
-            setFechaFin(formattedDate);
-            setConfirmDisabled(false);
-        }
-    };
-
-
-
-
 
     const revisionCA = () => {
+        // const formData = new FormData();
+        // Object.keys(formValues).forEach(key => {
+        //     if (key === 'FOTOS') {
+        //         formValues[key].forEach((photo, index) => {
+        //             formData.append('FOTOS', photo);
+        //         });
+        //     } else {
+        //         formData.append(key, formValues[key]);
+        //     }
+        // });
+        // formData.append('fechaInicio', fechaInicio);
+        // formData.append('fechaFin', fechaFin);
+
+
+        // Axios.post(`${host_server}/RevisionCamion/${IDR}`, formData, {
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data'
+        //     }
+        // }).then(() => {
+        //     Swal.fire({
+        //         title: 'Revision Exitosa!',
+        //         icon: 'success',
+        //         text: 'Revision Realizada Correctamente',
+        //         timer: 1500
+        //     });
+        //     limpiarCampos();
+        // })
+        //     .catch((error) => {
+        //         console.error("Error al marcar realizar Revision:", error);
+        //         Swal.fire({
+        //             icon: "error",
+        //             title: "Oops...",
+        //             text: "Error al realizar revisión, intente nuevamente más tarde",
+        //         });
+        //     });
+        console.log('Datos antes de enviar:', formValues); // <-- Agregar este log
+
         const formData = new FormData();
         Object.keys(formValues).forEach(key => {
             if (key === 'FOTOS') {
-                formValues[key].forEach((photo, index) => {
-                    formData.append('FOTOS', photo);
-                });
+                if (Array.isArray(formValues[key])) {
+                    formValues[key].forEach(photo => {
+                        formData.append('FOTOS', photo);
+                    });
+                }
             } else {
                 formData.append(key, formValues[key]);
             }
         });
         formData.append('fechaInicio', fechaInicio);
-        console.log(fechaInicio);
         formData.append('fechaFin', fechaFin);
-        console.log(fechaFin)
+        console.log('FormData antes de enviar:', formData); // <-- Agregar este log para verificar los datos
 
         Axios.post(`${host_server}/RevisionCamion/${IDR}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(() => {
-            limpiarCampos();
             Swal.fire({
                 title: 'Revision Exitosa!',
                 icon: 'success',
                 text: 'Revision Realizada Correctamente',
                 timer: 1500
             });
-        })
-            .catch((error) => {
-                console.error("Error al marcar realizar Revision:", error);
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "Error al realizar revisión, intente nuevamente más tarde",
-                });
+        }).catch((error) => {
+            console.error("Error al confirmar la revisión:", error);
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Error al confirmar la revisión, intente nuevamente más tarde",
             });
+        });
     }
 
     const guardarProgreso = () => {
@@ -277,7 +310,7 @@ function RevisarCamion() {
                 formData.append(key, formValues[key]);
             }
         });
-        formData.append('fechaInicio', fechaInicio.chileanTime);
+        formData.append('fechaInicio', fechaInicio);
 
         Axios.post(`${host_server}/GuardarProgreso/${IDR}`, formData, {
             headers: {
@@ -303,7 +336,6 @@ function RevisarCamion() {
     return (
         <form onSubmit={(e) => {
             e.preventDefault(); // Evita que se recargue la página
-            handleFecha();
             revisionCA();
         }}>
             <h1 className='h1formd'>Revision Camion</h1>
@@ -454,11 +486,15 @@ function RevisarCamion() {
                 </div>
             </div>
 
-            <div className="div-btn-container">
-                <button type="button" onClick={handleFecha} className="btn btn-warning me-2">{estado === "inicio" ? "Dar Inicio" : "Dar Fin"}</button>
-                <button type='button' className='btn btn-primary me-2' disabled={GuardarProgresoDisabled} onClick={guardarProgreso}>Guardar Progreso</button>
-                <button className='btn btn-success' disabled={confirmDisabled} type='submit'>Confirmar Revision</button>
-
+            <div className="buttons-container">
+                <div className="buttons-left">
+                    <button type="button" onClick={handleFechaInicio} className="btn btn-warning me-2">Dar Inicio</button>
+                    <button type='button' className='btn btn-primary me-2' disabled={GuardarProgresoDisabled} onClick={guardarProgreso}>Guardar Progreso</button>
+                    /</div>
+                <div className="buttons-right">
+                    <button type="button" onClick={handleFechaFin} className="btn btn-warning me-2">Dar Fin</button>
+                    <button className='btn btn-success' disabled={confirmDisabled} type='submit'>Confirmar Revision</button>
+                </div>
 
 
             </div>
