@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react';
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import "./dataTable.scss";
 import axios from "axios";
+import Swal from 'sweetalert2';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -14,14 +16,33 @@ type Props = {
 }
 
 const DataTable = (props: Props) => {
+    const [rows, setRows] = useState(props.rows);
     const navigate = useNavigate();
 
-    const handleDelete = (IDPI: number) => {
-        axios.delete(`${host_server}/${props.slug}/${IDPI}`)
-    }
+    const handleDelete = async (IDPI: number) => {
+        const result = await Swal.fire({
+            title: '¿Estás seguro de borrar?',
+            text: "¡No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, bórralo!'
+        });
+        if (result.isConfirmed) {
+            await axios.delete(`${host_server}/${props.slug}/${IDPI}`);
+            Swal.fire('Borrado!', 'El registro ha sido borrado.', 'success');
+            setRows(rows.filter((row: any) => row.IDPI !== IDPI));
+        }
+    };
+
     const handleEditClick = (IDPI: number) => {
         navigate(`/EditarPersonalInterno/${IDPI}`);
     }
+
+    useEffect(() => {
+        setRows(props.rows);
+    }, [props.rows]);
 
     const actionColumn: GridColDef = {
         field: 'acciones',
@@ -64,6 +85,9 @@ const DataTable = (props: Props) => {
                             pageSize: 10,
                         },
                     },
+                }}
+                localeText={{
+                    noRowsLabel: 'No hay registros',
                 }}
                 slots={{ toolbar: GridToolbar }}
                 slotProps={{

@@ -23,9 +23,9 @@ const DataTableR = (props: Props) => {
         renderCell: (params) => {
             return (
                 <div className="action">
-                  <div className="marcar-salida" onClick={() => handleRevison(params.row.IDR)}>
-                    <button type="button" className="btn-revision-datatable">Revision</button>
-                </div>
+                    <div className="marcar-salida" onClick={() => handleRevison(params.row.IDR)}>
+                        <button type="button" className="btn-revision-datatable">Revision</button>
+                    </div>
                 </div>
             );
         },
@@ -37,7 +37,6 @@ const DataTableR = (props: Props) => {
                 rows={props.rows}
                 editMode="row"
                 columns={[...props.columns, actionColumn]}
-
                 getRowId={(row) => `${row.IDR}`}
                 initialState={{
                     pagination: {
@@ -46,6 +45,9 @@ const DataTableR = (props: Props) => {
                         },
                     },
                 }}
+                localeText={{
+                    noRowsLabel: 'No hay registros',
+                }}
                 slots={{ toolbar: GridToolbar }}
                 slotProps={{
                     toolbar: {
@@ -53,7 +55,6 @@ const DataTableR = (props: Props) => {
                         quickFilterProps: { debounceMs: 500 },
                     }
                 }}
-
                 pageSizeOptions={[10]}
                 disableColumnMenu
                 disableRowSelectionOnClick

@@ -67,6 +67,9 @@ const DataTableCA = (props: Props) => {
                         },
                     },
                 }}
+                localeText={{
+                    noRowsLabel: 'No hay registros',
+                }}
                 slots={{ toolbar: GridToolbar }}
                 slotProps={{
                     toolbar: {

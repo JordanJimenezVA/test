@@ -59,41 +59,38 @@ function FormularioPersonalExterno() {
 
   const onSuggestionSelected = async (_, { suggestion }) => {
     try {
-        const response = await Axios.get(`${host_server}/FormularioPersonalExterno/suggestion/${suggestion}`);
-        const data = response.data;
+      const response = await Axios.get(`${host_server}/FormularioPersonalExterno/suggestion/${suggestion}`);
+      const data = response.data;
 
-        let mensajeEstado = '';
-        if (data.ESTADONG) {
-            switch (data.ESTADONG) {
-                case 'PERMS1':
-                    mensajeEstado = 'DEBE TENER PRECAUCIÓN PARA ENTRAR';
-                    break;
-                case 'PERMS2':
-                    mensajeEstado = 'SOLICITAR PERMISO PARA ENTRAR';
-                    break;
-                case 'NOACCESO':
-                    mensajeEstado = 'PROHIBIDO EL ACCESO';
-                    break;
-                default:
-                    mensajeEstado = '';
-            }
+      let mensajeEstado = '';
+      if (data.ESTADONG) {
+        switch (data.ESTADONG) {
+          case 'PERMS1':
+            mensajeEstado = 'ENTRAR CON PRECAUCIÓN';
+            break;
+          case 'PERMS2':
+            mensajeEstado = 'SOLICITAR PERMISO PARA ENTRAR';
+            break;
+          case 'NOACCESO':
+            mensajeEstado = 'PROHIBIDO EL ACCESO';
+            break;
+          default:
+            mensajeEstado = '';
         }
+      }
 
-        setMensajeEstado(mensajeEstado);
-
-        // Autocompletar los campos del formulario
-        console.log("entro a rellenar")
-        setNombrePE(data.NOMBREPE || '');
-        setApellidoPE(data.APELLIDOPE || '');
-        setVehiculoPE(data.VEHICULOPE || '');
-        setColorPE(data.COLORPE || '');
-        setPatentePE(data.PATENTEPE || '');
-        setEmpresaPE(data.EMPRESAPE || '');
-        setRolPE(data.ROLPE || '');
+      setMensajeEstado(mensajeEstado);
+      setNombrePE(data.NOMBREPE || '');
+      setApellidoPE(data.APELLIDOPE || '');
+      setVehiculoPE(data.VEHICULOPE || '');
+      setColorPE(data.COLORPE || '');
+      setPatentePE(data.PATENTEPE || '');
+      setEmpresaPE(data.EMPRESAPE || '');
+      setRolPE(data.ROLPE || '');
     } catch (error) {
-        console.error('Error al obtener sugerencias:', error);
+      console.error('Error al obtener sugerencias:', error);
     }
-};
+  };
 
 
   const inputProps = {
@@ -102,51 +99,72 @@ function FormularioPersonalExterno() {
     onChange: (_, { newValue }) => setRutPE(newValue),
   };
 
+  const confirmIngreso = () => {
+    if (mensajeEstado) {
+      Swal.fire({
+        title: '¿Estás seguro del ingreso de esta persona?',
+        text: 'Esta persona tiene el estado: ' + mensajeEstado,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, ingresar',
+        cancelButtonText: 'No, cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          ingresoformdPE();
+        }
+      });
+    } else {
+      ingresoformdPE();
+    }
+  };
+  
   const ingresoformdPE = () => {
     if (!validarRut(RutPE)) {
-        Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "RUT inválido. Por favor, ingrese un RUT válido.",
-        });
-        return;
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "RUT inválido. Por favor, ingrese un RUT válido.",
+      });
+      return;
     }
 
     Axios.post(`${host_server}/FormularioPersonalExterno`, {
-        rutPE: RutPE,
-        NombrePE: NombrePE,
-        ApellidoPE: ApellidoPE,
-        VehiculoPE: VehiculoPE,
-        ColorPE: ColorPE,
-        PatentePE: PatentePE,
-        EmpresaPE: EmpresaPE,
-        RolPE: RolPE,
-        ObservacionesPE: ObservacionesPE,
-        fechaActualChile: chileanTime
+      rutPE: RutPE,
+      NombrePE: NombrePE,
+      ApellidoPE: ApellidoPE,
+      VehiculoPE: VehiculoPE,
+      ColorPE: ColorPE,
+      PatentePE: PatentePE,
+      EmpresaPE: EmpresaPE,
+      RolPE: RolPE,
+      ObservacionesPE: ObservacionesPE,
+      fechaActualChile: chileanTime
     }).then(() => {
-        limpiarcamposPE();
-        Swal.fire({
-            title: 'Ingreso Exitoso!',
-            icon: 'success',
-            text: 'Personal Externo ingresado con Exito',
-            timer: 1500
-        });
+      limpiarcamposPE();
+      Swal.fire({
+        title: 'Ingreso Exitoso!',
+        icon: 'success',
+        text: 'Personal Externo ingresado con Exito',
+        timer: 1500
+      });
     }).catch(function (error) {
-        if (error.response && error.response.data && error.response.data.error) {
-            Swal.fire({
-                icon: "error",
-                title: "Cuidado",
-                text: error.response.data.error,
-            });
-        } else {
-            Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: "Intente mas tarde",
-            });
-        }
+      if (error.response && error.response.data && error.response.data.error) {
+        Swal.fire({
+          icon: "error",
+          title: "Cuidado",
+          text: error.response.data.error,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Intente mas tarde",
+        });
+      }
     });
-}
+  }
 
   const limpiarcamposPE = () => {
     setRutPE("");
@@ -167,23 +185,20 @@ function FormularioPersonalExterno() {
   return (
     <form onSubmit={(e) => {
       e.preventDefault(); // Evita que se recargue la página
-      if (mensajeEstado === 'PROHIBIDO EL ACCESO') {
-        Swal.fire({
-          icon: 'error',
-          title: 'Prohibido el acceso',
-          text: 'Este personal no tiene permitido el ingreso.',
-        });
-      } else {
-        ingresoformdPE();
-      }
+      confirmIngreso();
     }}>
       <h1 className='h1formd'>Entrada Personal Externo</h1>
       <div className="card shadow-none border my-4" data-component-card="data-component-card">
         <div className="card-header border-bottom bg-body">
           <div className="row g-3 justify-content-between align-items-center">
             <div className="col-12 col-md">
-              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Personal Externo 
-                {mensajeEstado && <span style={{ color: mensajeEstado === ' PROHIBIDO EL ACCESO' ? 'red' : 'orange' }}>{mensajeEstado}</span>}
+            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">
+                Datos Personal Externo
+                {mensajeEstado && (
+                  <span style={{ color: mensajeEstado === 'PROHIBIDO EL ACCESO' ? 'red' : 'orange', marginLeft: '10px' }}>
+                    {mensajeEstado}
+                  </span>
+                )}
                 <a className="anchorjs-link" aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a>
               </h4>
             </div>
@@ -196,7 +211,7 @@ function FormularioPersonalExterno() {
             <div className="col-auto">
 
 
-              <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
+              <label htmlFor='rutpe-input'>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
               <div className="input-group mb-3">
                 <Autosuggest
                   suggestions={suggestions}
@@ -207,6 +222,7 @@ function FormularioPersonalExterno() {
                   inputProps={{
                     placeholder: "Ingrese RUT",
                     value: RutPE,
+                    id:"rutpe-input",
                     onChange: handleRutChange,
                   }}
                   onSuggestionSelected={onSuggestionSelected}
@@ -217,33 +233,33 @@ function FormularioPersonalExterno() {
             </div>
 
             <div className="col-md-3">
-              <label>Nombre</label>
+              <label htmlFor='nombrepe-input'>Nombre</label>
               <div className="input-group mb-3">
-                <input required type="text" className="form-control" onChange={(event) => { setNombrePE(event.target.value); }} value={NombrePE} placeholder='Ingrese Nombre' id={NombrePE} name={NombrePE} ></input>
+                <input required type="text" className="form-control" onChange={(event) => { setNombrePE(event.target.value); }} value={NombrePE} placeholder='Ingrese Nombre' id="nombrepe-input" name={NombrePE} ></input>
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setNombrePE)}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Apellido</label>
+              <label htmlFor='apellidope-input'>Apellido</label>
               <div className="input-group mb-3">
-                <input required type="text" onChange={(event) => { setApellidoPE(event.target.value); }} value={ApellidoPE} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPE} name={ApellidoPE} />
+                <input required type="text" onChange={(event) => { setApellidoPE(event.target.value); }} value={ApellidoPE} placeholder='Ingrese Apellido' className='form-control' id="apellidope-input" name={ApellidoPE} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoPE)}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Empresa</label>
+              <label htmlFor='empresape-input'>Empresa</label>
               <div className="input-group mb-3">
-                <input required type="text" onChange={(event) => { setEmpresaPE(event.target.value); }} value={EmpresaPE} placeholder='Ingrese Empresa' className='form-control' id={EmpresaPE} name={EmpresaPE} />
+                <input required type="text" onChange={(event) => { setEmpresaPE(event.target.value); }} value={EmpresaPE} placeholder='Ingrese Empresa' className='form-control' id="empresape-input" name={EmpresaPE} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setEmpresaPE)}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Rol</label>
+              <label htmlFor='rolpe-input'>Rol</label>
               <div className="input-group mb-3">
-                <select required onChange={(event) => { setRolPE(event.target.value); }} value={RolPE} placeholder="Seleccione una opcion" className='form-select ' id={RolPE} name={RolPE}>
+                <select required onChange={(event) => { setRolPE(event.target.value); }} value={RolPE} placeholder="Seleccione una opcion" className='form-select ' id="rolpe-input" name={RolPE}>
                   <option value="">Seleccionar una opción</option>
                   <option value="Jardines">Jardines</option>
                   <option value="Fumigación">Fumigación</option>
@@ -257,9 +273,9 @@ function FormularioPersonalExterno() {
             </div>
 
             <div className="col-md-3">
-              <label>Observaciones</label>
+              <label htmlFor='observacionespe-input'>Observaciones</label>
               <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setObservacionesPE(event.target.value); }} value={ObservacionesPE} placeholder='Ingrese Observaciones' className='form-control' id={ObservacionesPE} name={ObservacionesPE} />
+                <input type="text" required={mensajeEstado !== ''} onChange={(event) => { setObservacionesPE(event.target.value); }} value={ObservacionesPE} placeholder='Ingrese Observaciones' className='form-control' id="observacionespe-input" name={ObservacionesPE} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setObservacionesPE)}>X</button>
               </div>
             </div>
@@ -281,25 +297,25 @@ function FormularioPersonalExterno() {
 
           <div className="row g-3 needs-validation">
             <div className="col-md-3">
-              <label>Vehiculo</label>
+              <label htmlFor='vehiculope-input'>Vehiculo</label>
               <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setVehiculoPE(event.target.value); }} value={VehiculoPE} placeholder='Ingrese Vehiculo' className='form-control' id={VehiculoPE} name={VehiculoPE} />
+                <input type="text" onChange={(event) => { setVehiculoPE(event.target.value); }} value={VehiculoPE} placeholder='Ingrese Vehiculo' className='form-control' id="vehiculope-input" name={VehiculoPE} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setVehiculoPE)}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Patente</label>
+              <label htmlFor='patentepe-input'>Patente</label>
               <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setPatentePE(event.target.value); }} value={PatentePE} placeholder='Ingrese Patente' className='form-control' id={PatentePE} name={PatentePE} />
+                <input type="text" onChange={(event) => { setPatentePE(event.target.value); }} value={PatentePE} placeholder='Ingrese Patente' className='form-control' id="patentepe-input" name={PatentePE} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatentePE)}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Color</label>
+              <label htmlFor='colorpe-input'>Color</label>
               <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setColorPE(event.target.value); }} value={ColorPE} placeholder='Ingrese Color' className='form-control' id={ColorPE} name={ColorPE} />
+                <input type="text" onChange={(event) => { setColorPE(event.target.value); }} value={ColorPE} placeholder='Ingrese Color' className='form-control' id="colorpe-input" name={ColorPE} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setColorPE)}>X</button>
               </div>
             </div>

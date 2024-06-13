@@ -122,7 +122,7 @@ function AgregarCA() {
                         <div className="col-auto">
 
 
-                            <label>Rut Chofer{rutValido ? null : <span style={{ color: "red" }}> RUT inválido</span>}</label>
+                            <label htmlFor='rutca-input'>Rut Chofer{rutValido ? null : <span style={{ color: "red" }}> RUT inválido</span>}</label>
                             <div className="input-group ">
                             <input
                                     type="text"
@@ -130,7 +130,7 @@ function AgregarCA() {
                                     onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
                                     value={RutCA}
                                     placeholder='Ingrese Rut'
-                                    id={RutCA}
+                                    id="rutca-input"
                                     name={RutCA}
                                     required
                                 />
@@ -140,9 +140,9 @@ function AgregarCA() {
                         </div>
 
                         <div className="col-md-3">
-                            <label>Nombre Chofer</label>
+                            <label htmlFor='choferca-input'>Nombre Chofer</label>
                             <div className="input-group ">
-                                <input type="text" required className="form-control" onChange={(event) => { setChoferCA(event.target.value); }} value={ChoferCA} placeholder='Ingrese Nombre' id={ChoferCA} name={ChoferCA} ></input>
+                                <input type="text" required className="form-control" onChange={(event) => { setChoferCA(event.target.value); }} value={ChoferCA} placeholder='Ingrese Nombre' id="choferca-input" name={ChoferCA} ></input>
                                 <div className="invalid-feedback">
                                     Please choose a username.
                                 </div>
@@ -151,10 +151,9 @@ function AgregarCA() {
                         </div>
 
                         <div className="col-md-3">
-                            <label>Apellido Chofer</label>
+                            <label htmlFor='apellidoca-input'>Apellido Chofer</label>
                             <div className="input-group ">
-
-                                <input type="text" required onChange={(event) => { setApellidoCA(event.target.value); }} value={ApellidoCA} placeholder='Ingrese Apellido' className='form-control' id={ApellidoCA} name={ApellidoCA} />
+                                <input type="text" required onChange={(event) => { setApellidoCA(event.target.value); }} value={ApellidoCA} placeholder='Ingrese Apellido' className='form-control' id="apellidoca-input" name={ApellidoCA} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoCA)}>X</button>
                             </div>
                         </div>
@@ -175,10 +174,9 @@ function AgregarCA() {
                     <div className="row g-3 needs-validation">
 
                         <div className="col-md-3">
-                            <label>Tipo</label>
+                            <label htmlFor='tipoca-input'>Tipo</label>
                             <div className="input-group mb-3">
-
-                                <select required onChange={(event) => { setTipoCA(event.target.value); }} value={TipoCA} className='form-select' id={TipoCA} name={TipoCA}>
+                                <select required onChange={(event) => { setTipoCA(event.target.value); }} value={TipoCA} className='form-select' id="tipoca-input" name={TipoCA}>
                                     <option value="">Seleccionar una opción</option>
                                     <option value="Remolque Abierto">Remolque Abierto</option>
                                     <option value="Remolque Cerrado">Remolque Cerrado</option>
@@ -190,18 +188,17 @@ function AgregarCA() {
                         </div>
 
                         <div className="col-md-3">
-                            <label>Modelo</label>
+                            <label htmlFor='modeloca-input'>Modelo</label>
                             <div className="input-group mb-3">
-                                <input type="text" required onChange={(event) => { setModeloCA(event.target.value); }} value={ModeloCA} placeholder='Ingrese Modelo' className='form-control' id={ModeloCA} name={ModeloCA} />
+                                <input type="text" required onChange={(event) => { setModeloCA(event.target.value); }} value={ModeloCA} placeholder='Ingrese Modelo' className='form-control' id="modeloca-input" name={ModeloCA} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setModeloCA)}>X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Color</label>
+                            <label htmlFor='colorca-input'>Color</label>
                             <div className="input-group mb-3">
-
-                                <input type="text" required onChange={(event) => { setColorCA(event.target.value); }} value={ColorCA} placeholder='Ingrese Color' className='form-control' id={ColorCA} name={ColorCA} />
+                                <input type="text" required onChange={(event) => { setColorCA(event.target.value); }} value={ColorCA} placeholder='Ingrese Color' className='form-control' id="colorca-input" name={ColorCA} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setColorCA)}>X</button>
                             </div>
                         </div>
@@ -210,28 +207,26 @@ function AgregarCA() {
 
                     <div className="row g-3 needs-validation">
                         <div className="col-md-3">
-                            <label>Patente Rampa</label>
+                            <label htmlFor='patenteca-input'>Patente Rampa</label>
                             <div className="input-group ">
 
-                                <input type="text" required onChange={(event) => { setPatenteCA(event.target.value); }} value={PatenteCA} placeholder='Ingrese Patente' className='form-control' id={PatenteCA} name={PatenteCA} />
+                                <input type="text" required onChange={(event) => { setPatenteCA(event.target.value); }} value={PatenteCA} placeholder='Ingrese Patente' className='form-control' id="patenteca-input" name={PatenteCA} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatenteCA)}>X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Marca</label>
+                            <label htmlFor='marcaca-input'>Marca</label>
                             <div className="input-group ">
-
-                                <input type="text" required onChange={(event) => { setMarcaCA(event.target.value); }} value={MarcaCA} placeholder='Ingrese Marca' className='form-control' id={MarcaCA} name={MarcaCA} />
+                                <input type="text" required onChange={(event) => { setMarcaCA(event.target.value); }} value={MarcaCA} placeholder='Ingrese Marca' className='form-control' id="marcaca-input" name={MarcaCA} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setMarcaCA)}>X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Empresa</label>
+                            <label htmlFor='empresaca-input'>Empresa</label>
                             <div className="input-group ">
-
-                                <input type="text" required onChange={(event) => { setEmpresaCA(event.target.value); }} value={EmpresaCA} placeholder='Ingrese Empresa' className='form-control' id={EmpresaCA} name={EmpresaCA} />
+                                <input type="text" required onChange={(event) => { setEmpresaCA(event.target.value); }} value={EmpresaCA} placeholder='Ingrese Empresa' className='form-control' id="empresaca-input" name={EmpresaCA} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setEmpresaCA)}>X</button>
                             </div>
                         </div>

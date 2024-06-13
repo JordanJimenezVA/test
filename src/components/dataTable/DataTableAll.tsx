@@ -1,29 +1,32 @@
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-import { useState } from "react";
+import { useState, useEffect  } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface Row {
     IDR: number;
     Rol: string;
     estadoRevision: string;
-    // Agrega las demás propiedades de tus filas aquí
 }
 
 type Props = {
     columns: GridColDef[],
-    rows: Row[]; // Usa la interfaz Row para describir las filas
+    rows: object[]; 
     slug: string;
 }
 
 const DataTableAll = (props: Props) => {
     const navigate = useNavigate();
-    const [rows] = useState<Row[]>(props.rows);
+    const [rows, setRows] = useState(props.rows);
 
 
     const handleMarcarSalida = (IDR: number) => {
         navigate(`/FormularioSalida/${IDR}`);
     }
- 
+
+    useEffect(() => {
+        setRows(props.rows);
+    }, [props.rows]);
+
     const actionColumn: GridColDef = {
         field: 'acciones',
         headerName: 'Marcar Salida',
@@ -55,6 +58,9 @@ const DataTableAll = (props: Props) => {
                             pageSize: 10,
                         },
                     },
+                }}
+                localeText={{
+                    noRowsLabel: 'No hay registros',
                 }}
                 slots={{ toolbar: GridToolbar }}
                 slotProps={{

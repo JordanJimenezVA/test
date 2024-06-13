@@ -29,8 +29,6 @@ function RevisarCamion() {
         FECHAINICIO: '',
         FECHAFIN: ''
     });
-    // const [fechaInicio, setFechaInicio] = useState(null);
-    // const [fechaFin, setFechaFin] = useState(null);
     const [fechaInicio, setFechaInicio] = useState(null);
     const [fechaFin, setFechaFin] = useState(null);
     const [estado, setEstado] = useState("inicio");
@@ -44,16 +42,15 @@ function RevisarCamion() {
     useEffect(() => {
         if (isFirstOpen) {
             getRegistros(IDR);
-            setIsFirstOpen(false); // Actualiza el estado para que no vuelva a llamar a getRegistros
-        } else {
+            setIsFirstOpen(false); 
             getProgresoRevision(IDR);
         }
     }, [IDR, isFirstOpen]);
 
     const handleFechaInicio = async () => {
-        const horaInicio = await useCamionTime(); // Llamada directa al hook para obtener la hora actual
+        const horaInicio = await useCamionTime(); 
         setFechaInicio(horaInicio);
-        console.log('Fecha de inicio establecida:', horaInicio);
+
         setFormValues(prevValues => ({
             ...prevValues,
             FECHAINICIO: horaInicio,
@@ -61,18 +58,18 @@ function RevisarCamion() {
         setEstado('fin');
         setFormDisabled(false);
         setGuardarProgresoDisabled(false);
-        setConfirmDisabled(true); // Bloquea el botón de confirmar
+        setConfirmDisabled(true); 
     };
 
     const handleFechaFin = async () => {
-        const horaFin = await useCamionTime(); // Llamada directa al hook para obtener la hora actual
+        const horaFin = await useCamionTime(); 
         setFechaFin(horaFin);
         setFormValues(prevValues => ({
             ...prevValues,
             FECHAFIN: horaFin,
         }));
-        console.log('Fecha de fin establecida:', horaFin);
-        setConfirmDisabled(false); // Desbloquea el botón de confirmar
+ 
+        setConfirmDisabled(false); 
     };
 
     const validarRut = (rut) => {
@@ -94,7 +91,7 @@ function RevisarCamion() {
 
     const handleRutChange = (event, { newValue }) => {
         setRutPI(newValue);
-        setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
+        setRutValido(validarRut(newValue)); 
     }
 
     const getProgresoRevision = (IDR) => {
@@ -117,9 +114,8 @@ function RevisarCamion() {
                         SUPERVISOR: progreso.SUPERVISOR,
                         JEFET: progreso.JEFET,
                         FOTOS: Array.isArray(progreso.FOTOS) ? progreso.FOTOS : [],
-                        FECHAINICIO: fechaInicio,
+                        FECHAINICIO: progreso.FECHAINICIO,
                     });
-                    console.log(progreso.FECHAINICIO);
                     setFechaInicio(progreso.FECHAINICIO);
                     setEstado("fin");
                     setFormDisabled(false);
@@ -223,43 +219,6 @@ function RevisarCamion() {
 
 
     const revisionCA = () => {
-        // const formData = new FormData();
-        // Object.keys(formValues).forEach(key => {
-        //     if (key === 'FOTOS') {
-        //         formValues[key].forEach((photo, index) => {
-        //             formData.append('FOTOS', photo);
-        //         });
-        //     } else {
-        //         formData.append(key, formValues[key]);
-        //     }
-        // });
-        // formData.append('fechaInicio', fechaInicio);
-        // formData.append('fechaFin', fechaFin);
-
-
-        // Axios.post(`${host_server}/RevisionCamion/${IDR}`, formData, {
-        //     headers: {
-        //         'Content-Type': 'multipart/form-data'
-        //     }
-        // }).then(() => {
-        //     Swal.fire({
-        //         title: 'Revision Exitosa!',
-        //         icon: 'success',
-        //         text: 'Revision Realizada Correctamente',
-        //         timer: 1500
-        //     });
-        //     limpiarCampos();
-        // })
-        //     .catch((error) => {
-        //         console.error("Error al marcar realizar Revision:", error);
-        //         Swal.fire({
-        //             icon: "error",
-        //             title: "Oops...",
-        //             text: "Error al realizar revisión, intente nuevamente más tarde",
-        //         });
-        //     });
-        console.log('Datos antes de enviar:', formValues); // <-- Agregar este log
-
         const formData = new FormData();
         Object.keys(formValues).forEach(key => {
             if (key === 'FOTOS') {
@@ -274,7 +233,7 @@ function RevisarCamion() {
         });
         formData.append('fechaInicio', fechaInicio);
         formData.append('fechaFin', fechaFin);
-        console.log('FormData antes de enviar:', formData); // <-- Agregar este log para verificar los datos
+   
 
         Axios.post(`${host_server}/RevisionCamion/${IDR}`, formData, {
             headers: {
@@ -303,7 +262,7 @@ function RevisarCamion() {
             if (key === 'FOTOS') {
                 if (Array.isArray(formValues[key])) {
                     formValues[key].forEach(photo => {
-                        formData.append('FOTOS', photo); // Asegúrate de que `photo` es un objeto File
+                        formData.append('FOTOS', photo); 
                     });
                 }
             } else {
@@ -335,7 +294,7 @@ function RevisarCamion() {
 
     return (
         <form onSubmit={(e) => {
-            e.preventDefault(); // Evita que se recargue la página
+            e.preventDefault(); 
             revisionCA();
         }}>
             <h1 className='h1formd'>Revision Camion</h1>
@@ -355,7 +314,7 @@ function RevisarCamion() {
                         <div className="col-auto">
 
 
-                            <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
+                            <label htmlFor='rutr-input'>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
                             <div className="input-group mb-3">
 
                                 <input
@@ -365,46 +324,47 @@ function RevisarCamion() {
                                     value={formValues.RUT}
                                     placeholder='Ingrese Rut'
                                     disabled={formDisabled}
+                                    id='rutr-input'
                                 />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('RUT')} disabled={formDisabled}>X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Nombre</label>
+                            <label htmlFor='nombrer-input'>Nombre</label>
                             <div className="input-group mb-3">
-                                <input type="text" name="PERSONAL" value={formValues.PERSONAL} onChange={handleChange} placeholder="Ingrese Nombre" disabled={formDisabled} className="form-control" ></input>
+                                <input type="text" name="PERSONAL" value={formValues.PERSONAL} onChange={handleChange} placeholder="Ingrese Nombre" disabled={formDisabled} id='nombrer-input' className="form-control" ></input>
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('PERSONAL')} disabled={formDisabled} >X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Apellido</label>
+                            <label htmlFor='apellidor-input'>Apellido</label>
                             <div className="input-group mb-3">
-                                <input type="text" name="APELLIDO" value={formValues.APELLIDO} onChange={handleChange} placeholder='Ingrese Apellido' disabled={formDisabled} className='form-control' />
+                                <input type="text" name="APELLIDO" value={formValues.APELLIDO} onChange={handleChange} placeholder='Ingrese Apellido' disabled={formDisabled} id='apellidor-input' className='form-control' />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('APELLIDO')} disabled={formDisabled}>X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Rol</label>
+                            <label htmlFor='rolr-input'>Rol</label>
                             <div className="input-group mb-3">
-                                <input type="text" name="ROL" value={formValues.ROL} onChange={handleChange} placeholder='Ingrese Rol' disabled={formDisabled} className='form-control'></input>
+                                <input type="text" name="ROL" value={formValues.ROL} onChange={handleChange} placeholder='Ingrese Rol' disabled={formDisabled} id='rolr-input' className='form-control'></input>
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('ROL')} disabled={formDisabled} >X</button>
                             </div>
                         </div>
                         <div className="col-md-3">
-                            <label>Planilla de Transporte</label>
+                            <label htmlFor='planillar-input'>Planilla de Transporte</label>
                             <div className="input-group mb-3">
-                                <input type="text" name="GUIADESPACHO" value={formValues.GUIADESPACHO} onChange={handleChange} placeholder='Ingrese Planilla de Transporte' disabled={formDisabled} className='form-control' />
+                                <input type="text" name="GUIADESPACHO" value={formValues.GUIADESPACHO} onChange={handleChange} placeholder='Ingrese Planilla de Transporte' id='planillar-input' disabled={formDisabled} className='form-control' />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('GUIADESPACHO')} disabled={formDisabled} >X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Sello Cortado</label>
+                            <label htmlFor='sellor-input'>Sello Cortado</label>
                             <div className="input-group mb-3">
-                                <input type="text" name="SELLO" value={formValues.SELLO} onChange={handleChange} placeholder='Ingrese Sello' disabled={formDisabled} className='form-control' />
+                                <input type="text" name="SELLO" value={formValues.SELLO} onChange={handleChange} placeholder='Ingrese Sello' disabled={formDisabled} id='sellor-input' className='form-control' />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('SELLO')} disabled={formDisabled} >X</button>
                             </div>
                         </div>
@@ -427,58 +387,58 @@ function RevisarCamion() {
 
                     <div className="row g-3 needs-validation">
                         <div className="col-md-3">
-                            <label>Observaciones</label>
+                            <label htmlFor='obsr-input'>Observaciones</label>
                             <div className="input-group mb-3">
-                                <input type="text" name="OBSERVACIONES" value={formValues.OBSERVACIONES} onChange={handleChange} placeholder='Ingrese Observaciones' disabled={formDisabled} className='form-control' />
+                                <input type="text" name="OBSERVACIONES" value={formValues.OBSERVACIONES} onChange={handleChange} placeholder='Ingrese Observaciones' disabled={formDisabled} id='obsr-input' className='form-control' />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('OBSERVACIONES')} disabled={formDisabled} >X</button>
                             </div>
                         </div>
 
 
                         <div className="col-md-3">
-                            <label>N° Anden</label>
+                            <label htmlFor='anden-input'>N° Anden</label>
                             <div className="input-group mb-3">
-                                <input type="text" name="ANDEN" value={formValues.ANDEN} onChange={handleChange} placeholder='Ingrese N°Anden' disabled={formDisabled} className='form-control' />
+                                <input type="text" name="ANDEN" value={formValues.ANDEN} onChange={handleChange} placeholder='Ingrese N°Anden' disabled={formDisabled} id='anden-input' className='form-control' />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('ANDEN')} disabled={formDisabled} >X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Total Kilos</label>
+                            <label htmlFor='kilos-input'>Total Kilos</label>
                             <div className="input-group mb-3">
-                                <input type="text" name="KILOS" value={formValues.KILOS} onChange={handleChange} placeholder='Ingrese Total Kilos' disabled={formDisabled} className='form-control' />
+                                <input type="text" name="KILOS" value={formValues.KILOS} onChange={handleChange} placeholder='Ingrese Total Kilos' disabled={formDisabled} id='kilos-input' className='form-control' />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('KILOS')} disabled={formDisabled} >X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Cantidad Pallets</label>
+                            <label htmlFor='pallets-input'>Cantidad Pallets</label>
                             <div className="input-group mb-3">
-                                <input type="text" name="PALLETS" value={formValues.PALLETS} onChange={handleChange} placeholder='Ingrese Cantidad Pallets' disabled={formDisabled} className='form-control' />
+                                <input type="text" name="PALLETS" value={formValues.PALLETS} onChange={handleChange} placeholder='Ingrese Cantidad Pallets' disabled={formDisabled} id='pallets-input' className='form-control' />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('PALLETS')} disabled={formDisabled} >X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Supervisor</label>
+                            <label htmlFor='superv-input'>Supervisor</label>
                             <div className="input-group mb-3">
-                                <input type="text" name="SUPERVISOR" value={formValues.SUPERVISOR} onChange={handleChange} placeholder='Ingrese Supervisor' disabled={formDisabled} className='form-control' />
+                                <input type="text" name="SUPERVISOR" value={formValues.SUPERVISOR} onChange={handleChange} placeholder='Ingrese Supervisor' disabled={formDisabled} id='superv-input' className='form-control' />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('SUPERVISOR')} disabled={formDisabled} >X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Jefe de turno CD</label>
+                            <label htmlFor='jefer-input'>Jefe de turno CD</label>
                             <div className="input-group mb-3">
-                                <input type="text" name="JEFET" value={formValues.JEFET} onChange={handleChange} placeholder='Ingrese Jefe de turno CD' disabled={formDisabled} className='form-control' />
+                                <input type="text" name="JEFET" value={formValues.JEFET} onChange={handleChange} placeholder='Ingrese Jefe de turno CD' disabled={formDisabled} id='jefer-input' className='form-control' />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('JEFET')} disabled={formDisabled} >X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Fotos</label>
+                            <label htmlFor='fotosr-input'>Fotos</label>
                             <div>
-                                <input type="file" name="FOTOS" onChange={handleFileChange} disabled={formDisabled} multiple accept=".jpg, .jpeg, .png" />
+                                <input type="file" name="FOTOS" onChange={handleFileChange} disabled={formDisabled} id='fotosr-input' multiple accept=".jpg, .jpeg, .png" />
                             </div>
                         </div>
 

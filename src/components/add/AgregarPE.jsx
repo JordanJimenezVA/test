@@ -133,25 +133,25 @@ function AgregarPE() {
                         </div>
 
                         <div className="col-md-3">
-                            <label>Nombre</label>
+                            <label htmlFor='nombrepe-input'>Nombre</label>
                             <div className="input-group mb-3">
-                                <input type="text" required className="form-control" onChange={(event) => { setNombrePE(event.target.value); }} value={NombrePE} placeholder='Ingrese Nombre' id={NombrePE} name={NombrePE} ></input>
+                                <input type="text" required className="form-control" onChange={(event) => { setNombrePE(event.target.value); }} value={NombrePE} placeholder='Ingrese Nombre' id="nombrepe-input" name={NombrePE} ></input>
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setNombrePE)}>X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Apellido</label>
+                            <label htmlFor='apellidope-input'>Apellido</label>
                             <div className="input-group mb-3">
-                                <input type="text" required onChange={(event) => { setApellidoPE(event.target.value); }} value={ApellidoPE} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPE} name={ApellidoPE} />
+                                <input type="text" required onChange={(event) => { setApellidoPE(event.target.value); }} value={ApellidoPE} placeholder='Ingrese Apellido' className='form-control' id="apellidope-input" name={ApellidoPE} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoPE)}>X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Rol</label>
+                            <label htmlFor='rolpe-input'>Rol</label>
                             <div className="input-group mb-3">
-                                <select onChange={(event) => { setRolPE(event.target.value); }} value={RolPE} className='form-select ' required id={RolPE} name={RolPE}>
+                                <select onChange={(event) => { setRolPE(event.target.value); }} value={RolPE} className='form-select ' required id="rolpe-input" name={RolPE}>
                                     <option value="">Seleccionar una opción</option>
                                     <option value="Jardines">Jardines</option>
                                     <option value="Fumigación">Fumigación</option>
@@ -165,9 +165,9 @@ function AgregarPE() {
                         </div>
 
                         <div className="col-md-3">
-                            <label>Empresa</label>
+                            <label htmlFor='empresape-input'>Empresa</label>
                             <div className="input-group mb-3">
-                                <input type="text" onChange={(event) => { setEmpresaPE(event.target.value); }} value={EmpresaPE} required placeholder='Ingrese Empresa' className='form-control' id={EmpresaPE} name={EmpresaPE} />
+                                <input type="text" onChange={(event) => { setEmpresaPE(event.target.value); }} value={EmpresaPE} required placeholder='Ingrese Empresa' className='form-control' id="empresape-input" name={EmpresaPE} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setEmpresaPE)}>X</button>
                             </div>
                         </div>
@@ -189,25 +189,25 @@ function AgregarPE() {
 
                     <div className="row g-3 needs-validation">
                         <div className="col-md-3">
-                            <label>Vehiculo</label>
+                            <label htmlFor='vehiculope-input'>Vehiculo</label>
                             <div className="input-group mb-3">
-                                <input type="text" onChange={(event) => { setVehiculoPE(event.target.value); }} value={VehiculoPE} placeholder='Ingrese Vehiculo' className='form-control' id={VehiculoPE} name={VehiculoPE} />
+                                <input type="text" onChange={(event) => { setVehiculoPE(event.target.value); }} value={VehiculoPE} placeholder='Ingrese Vehiculo' className='form-control' id="vehiculope-input" name={VehiculoPE} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setVehiculoPE)}>X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Patente</label>
+                            <label htmlFor='patentepe-input'>Patente</label>
                             <div className="input-group mb-3">
-                                <input type="text" onChange={(event) => { setPatentePE(event.target.value); }} value={PatentePE} placeholder='Ingrese Patente' className='form-control' id={PatentePE} name={PatentePE} />
+                                <input type="text" onChange={(event) => { setPatentePE(event.target.value); }} value={PatentePE} placeholder='Ingrese Patente' className='form-control' id="patentepe-input" name={PatentePE} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatentePE)}>X</button>
                             </div>
                         </div>
 
                         <div className="col-md-3">
-                            <label>Color</label>
+                            <label htmlFor='colorpe-input'>Color</label>
                             <div className="input-group mb-3">
-                                <input type="text" onChange={(event) => { setColorPE(event.target.value); }} value={ColorPE} placeholder='Ingrese Color' className='form-control' id={ColorPE} name={ColorPE} />
+                                <input type="text" onChange={(event) => { setColorPE(event.target.value); }} value={ColorPE} placeholder='Ingrese Color' className='form-control' id="colorpe-input" name={ColorPE} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setColorPE)}>X</button>
                             </div>
                         </div>

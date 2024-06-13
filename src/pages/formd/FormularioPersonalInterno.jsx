@@ -179,8 +179,13 @@ function FormularioPersonalInterno() {
         <div className="card-header border-bottom bg-body">
           <div className="row g-3 justify-content-between align-items-center">
             <div className="col-12 col-md">
-              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Personal Interno
-                {mensajeEstado && <span style={{ color: mensajeEstado === ' PROHIBIDO EL ACCESO' ? 'red' : 'orange' }}>{mensajeEstado}</span>}
+            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">
+                Datos Personal Interno
+                {mensajeEstado && (
+                  <span style={{ color: mensajeEstado === 'PROHIBIDO EL ACCESO' ? 'red' : 'orange', marginLeft: '10px' }}>
+                    {mensajeEstado}
+                  </span>
+                )}
                 <a className="anchorjs-link" aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a>
               </h4>
             </div>
@@ -194,7 +199,7 @@ function FormularioPersonalInterno() {
             <div className="col-auto">
 
 
-              <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
+              <label htmlFor='rutformpi-input'>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
               <div className="input-group mb-3">
 
                 <Autosuggest
@@ -206,6 +211,7 @@ function FormularioPersonalInterno() {
                   inputProps={{
                     placeholder: "Ingrese RUT",
                     value: RutPI,
+                    id: "rutformpi-input",
                     onChange: handleRutChange,
                   }}
                   onSuggestionSelected={onSuggestionSelected}
@@ -215,25 +221,25 @@ function FormularioPersonalInterno() {
             </div>
 
             <div className="col-md-3">
-              <label>Nombre</label>
+              <label htmlFor='nombrepi-input'>Nombre</label>
               <div className="input-group mb-3">
-                <input required type="text" className="form-control" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} placeholder='Ingrese Nombre' id={NombrePI} name={NombrePI} ></input>
+                <input required type="text" className="form-control" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} placeholder='Ingrese Nombre' id="nombrepi-input" name={NombrePI} ></input>
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setNombrePI)}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Apellido</label>
+              <label htmlFor='apellidopi-input'>Apellido</label>
               <div className="input-group mb-3">
-                <input required type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' className='form-control' id={ApellidoPI} name={ApellidoPI} />
+                <input required type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' className='form-control' id="apellidopi-input" name={ApellidoPI} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoPI)}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Rol</label>
+              <label htmlFor='rolpi-input'>Rol</label>
               <div className="input-group mb-3">
-                <select required onChange={(event) => { setRolPI(event.target.value); }} value={RolPI} className='form-select ' id={RolPI} name={RolPI}>
+                <select required onChange={(event) => { setRolPI(event.target.value); }} value={RolPI} className='form-select ' id="rolpi-input" name={RolPI}>
                   <option value="">Seleccionar una opción</option>
                   <option value="Administrativo">Administrativo</option>
                   <option value="Bodega">Bodega</option>
@@ -243,9 +249,9 @@ function FormularioPersonalInterno() {
             </div>
 
             <div className="col-md-3">
-              <label>Observaciones</label>
+              <label htmlFor='observacionespi-input'>Observaciones</label>
               <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setObservacionesPI(event.target.value); }} value={ObservacionesPI} placeholder='Ingrese Observaciones' className='form-control' id={ObservacionesPI} name={ObservacionesPI} />
+                <input type="text" required={mensajeEstado !== ''} onChange={(event) => { setObservacionesPI(event.target.value); }} value={ObservacionesPI} placeholder='Ingrese Observaciones' className='form-control' id="observacionespi-input" name={ObservacionesPI} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setObservacionesPI)}>X</button>
               </div>
             </div>
@@ -267,25 +273,25 @@ function FormularioPersonalInterno() {
 
           <div className="row g-3 needs-validation">
             <div className="col-md-3">
-              <label>Vehiculo</label>
+              <label htmlFor='vehiculopi-input'>Vehiculo</label>
               <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setVehiculoPI(event.target.value); }} value={VehiculoPI} placeholder='Ingrese Vehiculo' className='form-control' id={VehiculoPI} name={VehiculoPI} />
+                <input type="text" onChange={(event) => { setVehiculoPI(event.target.value); }} value={VehiculoPI} placeholder='Ingrese Vehiculo' className='form-control' id="vehiculopi-input" name={VehiculoPI} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setVehiculoPI)}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Patente</label>
+              <label htmlFor='patentepi-input'>Patente</label>
               <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setPatentePI(event.target.value); }} value={PatentePI} placeholder='Ingrese Patente' className='form-control' id={PatentePI} name={PatentePI} />
+                <input type="text" onChange={(event) => { setPatentePI(event.target.value); }} value={PatentePI} placeholder='Ingrese Patente' className='form-control' id="patentepi-input" name={PatentePI} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatentePI)}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Color</label>
+              <label htmlFor='colorpi-input'>Color</label>
               <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setColorPI(event.target.value); }} value={ColorPI} placeholder='Ingrese Color' className='form-control' id={ColorPI} name={ColorPI} />
+                <input type="text" onChange={(event) => { setColorPI(event.target.value); }} value={ColorPI} placeholder='Ingrese Color' className='form-control' id="colorpi-input" name={ColorPI} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setColorPI)}>X</button>
               </div>
             </div>

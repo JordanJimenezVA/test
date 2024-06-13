@@ -145,7 +145,7 @@ function FormularioSalida() {
             <div className="col-auto">
 
 
-              <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
+              <label htmlFor='ruts-input'>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
               <div className="input-group mb-3">
 
                 <input
@@ -154,31 +154,32 @@ function FormularioSalida() {
                   onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
                   value={formValues.RUT}
                   placeholder='Ingrese Rut'
+                  id='ruts-input'
                 />
                 <button className="btn btn-danger" type="button" id="button-addon1"  onClick={() => limpiarCampo('RUT')}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Nombre</label>
+              <label htmlFor='nombres-input'>Nombre</label>
               <div className="input-group mb-3">
-                <input type="text" name="PERSONAL" value={formValues.PERSONAL} onChange={handleChange} placeholder="Ingrese Nombre" className="form-control" ></input>
+                <input type="text" name="PERSONAL" value={formValues.PERSONAL} onChange={handleChange} placeholder="Ingrese Nombre" id='nombres-input' className="form-control" ></input>
                 <button className="btn btn-danger" type="button" id="button-addon1"  onClick={() => limpiarCampo('PERSONAL')}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Apellido</label>
+              <label htmlFor='apellidos-input'>Apellido</label>
               <div className="input-group mb-3">
-                <input type="text" name="APELLIDO" value={formValues.APELLIDO} onChange={handleChange} placeholder='Ingrese Apellido' className='form-control' />
+                <input type="text" name="APELLIDO" value={formValues.APELLIDO} onChange={handleChange} id='apellidos-input' placeholder='Ingrese Apellido' className='form-control' />
                 <button className="btn btn-danger" type="button" id="button-addon1"  onClick={() => limpiarCampo('APELLIDO')}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Rol</label>
+              <label htmlFor='rols-input'>Rol</label>
               <div className="input-group mb-3">
-                <input type="text" name="ROL" value={formValues.ROL} onChange={handleChange} placeholder='Ingrese Rol' className='form-control'></input>
+                <input type="text" name="ROL" value={formValues.ROL} onChange={handleChange} id='rols-input' placeholder='Ingrese Rol' className='form-control'></input>
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('ROL')}>X</button>
               </div>
             </div>
@@ -201,25 +202,25 @@ function FormularioSalida() {
 
           <div className="row g-3 needs-validation">
             <div className="col-md-3">
-              <label>Observaciones</label>
+              <label htmlFor='obss-input'>Observaciones</label>
               <div className="input-group mb-3">
-                <input type="text" name="OBSERVACIONES" value={formValues.OBSERVACIONES} onChange={handleChange} placeholder='Ingrese Observaciones' className='form-control' />
+                <input type="text" name="OBSERVACIONES" value={formValues.OBSERVACIONES} id='obss-input' onChange={handleChange} placeholder='Ingrese Observaciones' className='form-control' />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('OBSERVACIONES')}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Planilla de Transporte</label>
+              <label htmlFor='planillas-input'>Planilla de Transporte</label>
               <div className="input-group mb-3">
-                <input type="text" name="GUIADESPACHO" value={formValues.GUIADESPACHO} onChange={handleChange} placeholder='Ingrese Planilla de Transporte' className='form-control' />
+                <input type="text" name="GUIADESPACHO" value={formValues.GUIADESPACHO} id='planillas-input' onChange={handleChange} placeholder='Ingrese Planilla de Transporte' className='form-control' />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('GUIADESPACHO')}>X</button>
               </div>
             </div>
 
             <div className="col-md-3">
-              <label>Sello</label>
+              <label htmlFor='sellos-input'>Sello</label>
               <div className="input-group mb-3">
-                <input type="text" name="SELLO" value={formValues.SELLO} onChange={handleChange} placeholder='Ingrese Sello' className='form-control' />
+                <input type="text" name="SELLO" value={formValues.SELLO} onChange={handleChange} id='sellos-input' placeholder='Ingrese Sello' className='form-control' />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('SELLO')}>X</button>
               </div>
             </div>

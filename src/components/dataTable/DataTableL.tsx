@@ -1,47 +1,24 @@
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-// import { Link } from "react-router-dom";
-
-import { useState } from "react";
-
-// import { useNavigate } from 'react-router-dom';
+import { useState, useEffect  } from 'react';
 
 interface Row {
     IDL: number;
     Rol: string;
-    // Agrega las demás propiedades de tus filas aquí
 }
 
 type Props = {
     columns: GridColDef[],
-    rows: Row[]; // Usa la interfaz Row para describir las filas
+    rows: Row[]; 
     slug: string;
 }
 
 const DataTableL = (props: Props) => {
-    // const navigate = useNavigate();
-    const [rows] = useState<Row[]>(props.rows);
 
+    const [rows, setRows] = useState(props.rows);
 
-    // const handleMarcarSalida = (IDL: number) => {
-    //     navigate(`/FormularioSalida/${IDL}`);
-    // }
-    // const actionColumn: GridColDef = {
-    //     field: 'acciones',
-    //     headerName: 'Acciones',
-    //     sortable: false,
-    //     width: 150,
-    //     renderCell: (params) => {
-    //         const row = params.row as Row; // Castear params.row como Row
-    //         return <div className="action">
-    //             <Link to={`${props.slug}/${row.IDL}`}>
-    //                 {/* <img src="view.svg" alt="" /> */}
-    //             </Link>
-    //             <div className="marcar-salida" onClick={() => handleMarcarSalida(row.IDL)}>
-    //                 <img src="/view2.svg" alt="" />
-    //             </div>
-    //         </div>
-    //     }
-    // }
+    useEffect(() => {
+        setRows(props.rows);
+    }, [props.rows]);
 
     return (
         <div className="dataTable">
@@ -56,6 +33,9 @@ const DataTableL = (props: Props) => {
                             pageSize: 10,
                         },
                     },
+                }}
+                localeText={{
+                    noRowsLabel: 'No hay registros',
                 }}
                 slots={{ toolbar: GridToolbar }}
                 slotProps={{
