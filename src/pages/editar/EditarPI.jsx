@@ -178,8 +178,21 @@ function EditarPI() {
                             <label>Rol</label>
                             <div className="input-group mb-3">
                                 <select name="ROLPI" value={formValues.ROLPI} onChange={handleChange} className='form-select '>
-                                    <option value="Administrativo">Administrativo</option>
-                                    <option value="Bodega">Bodega</option>
+                                    <option value="Administrativo Existencias">Administrativo Existencias</option>
+                                    <option value="Administrativo de Distribución">Administrativo de Distribución</option>
+                                    <option value="Administrativo Congelados">Administrativo Congelados</option>
+                                    <option value="Jefe de Sucursal">Jefe de Sucursal</option>
+                                    <option value="Jefe Comercial">Jefe Comercial</option>
+                                    <option value="Jefe de Distribución">Jefe de Distribución</option>
+                                    <option value="Coordinador Trade Marketing">Coordinador Trade Marketing</option>
+                                    <option value="Supervisor de Distribución">Supervisor de Distribución</option>
+                                    <option value="Supevisor Ventas">Supevisor Ventas</option>
+                                    <option value="Cajero">Cajero</option>
+                                    <option value="Secretaria">Secretaria</option>
+                                    <option value="Movilizador">Movilizador</option>
+                                    <option value="Gruero">Gruero</option>
+                                    <option value="Despachador">Despachador</option>
+                                    <option value="Recepcionista">Recepcionista</option>
                                 </select>
                             </div>
                         </div>

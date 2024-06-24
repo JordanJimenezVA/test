@@ -51,17 +51,17 @@ function EditarPE() {
     const getPersonalExterno = (IDPE) => {
         Axios.get(`${host_server}/EditarPersonalExterno/${IDPE}`)
             .then((res) => {
-                const { RUTPE, NOMBREPE, APELLIDOPE, ROLPE, EMPRESAPE, ESTADOPE, VEHICULOPE, PATENTEPE, COLORPE } = res.data[0];
+                const { RUTPE, NOMBREPE, APELLIDOPE, VEHICULOPE, COLORPE, PATENTEPE, ROLPE, EMPRESAPE, ESTADOPE } = res.data[0];
                 setFormValues({
                     RUTPE,
                     NOMBREPE,
                     APELLIDOPE,
+                    VEHICULOPE,
+                    COLORPE,
+                    PATENTEPE,
                     ROLPE,
                     EMPRESAPE,
                     ESTADOPE,
-                    VEHICULOPE,
-                    PATENTEPE,
-                    COLORPE,
                 });
             })
             .catch((error) => {
@@ -181,12 +181,16 @@ function EditarPE() {
                             <label>Rol</label>
                             <div className="input-group mb-3">
                                 <select name="ROLPE" value={formValues.ROLPE} onChange={handleChange} className='form-select '>
-                                    <option value="Jardines">Jardines</option>
-                                    <option value="Fumigación">Fumigación</option>
-                                    <option value="Camiones">Camiones</option>
-                                    <option value="Reciclaje">Reciclaje</option>
+                                    <option value="Especialista Trade">Especialista Trade</option>
                                     <option value="Peoneta">Peoneta</option>
-                                    <option value="Otros">Otros</option>
+                                    <option value="Gestor Trade">Gestor Trade</option>
+                                    <option value="Mantencion Cctv">Mantencion Cctv</option>
+                                    <option value="Mantencion Gruas">Mantención Gruas</option>
+                                    <option value="Mantencion Jardines">Mantención Jardines</option>
+                                    <option value="Mantencion General">Mantencion General</option>
+                                    <option value="Mantencion Bresler">Mantencion Bresler</option>
+                                    <option value="Tecnico Fumigación">Tecnico Fumigación</option>
+                                    <option value="OtrosEx">Otros</option>
                                 </select>
                             </div>
                         </div>

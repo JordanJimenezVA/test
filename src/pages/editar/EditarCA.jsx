@@ -180,7 +180,7 @@ function EditarPE() {
                             </div>
                         </div>
 
- 
+
 
 
                         <div className="col-md-3">
@@ -211,14 +211,17 @@ function EditarPE() {
                 <div className="card-body ">
 
                     <div className="row g-3 needs-validation">
-                    <div className="col-md-3">
+                        <div className="col-md-3">
                             <label>Tipo</label>
                             <div className="input-group mb-3">
                                 <select name="TIPOCA" value={formValues.TIPOCA} onChange={handleChange} className='form-select '>
-                                    <option value="Fumigación">Remolque Abierto</option>
-                                    <option value="Camiones">Remolque Cerrado</option>
-                                    <option value="Reciclaje">Remolque Refrigerado</option>
-                                    <option value="Otros">Otros</option>
+                                    <option value="SEMIREMOLQUE">SEMIREMOLQUE</option>
+                                    <option value="CAMION">PEONETA</option>
+                                    <option value="TRACTOCAMION">TRACTOCAMION</option>
+                                    <option value="CHASIS CABINADO">CHASIS CABINADO</option>
+                                    <option value="REMOLQUE">REMOLQUE</option>
+                                    <option value="CHASIS CABINADO">CHASIS CABINADO</option>
+                                    <option value="OtrosCA">Otros</option>
                                 </select>
                             </div>
                         </div>

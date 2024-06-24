@@ -58,7 +58,7 @@ const DataTable = (props: Props) => {
     };
 
     const handleEditClick = (IDNG: number) => {
-        navigate(`/EditarPersonalInterno/${IDNG}`);
+        navigate(`/EditarPersonasReportadas/${IDNG}`);
     }
 
 

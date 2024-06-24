@@ -58,7 +58,7 @@ const DataTable = (props: Props) => {
     };
 
     const handleEditClick = (IDPE: number) => {
-        navigate(`/EditarPersonalInterno/${IDPE}`);
+        navigate(`/EditarPersonalExterno/${IDPE}`);
     }
 
 
