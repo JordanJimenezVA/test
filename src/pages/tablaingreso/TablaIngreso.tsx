@@ -82,7 +82,7 @@ const TablaIngreso = () => {
       {isLoading ? (
         "Loading..."
       ) : (
-        < DataTableAll slug="AllR" columns={columns} rows={data} />
+        < DataTableAll slug="registros" columns={columns} rows={data} />
       )}
       {/* {open && <AddR slug="AllR" columns={columns} setOpen={setOpen} />} */}
     </div>

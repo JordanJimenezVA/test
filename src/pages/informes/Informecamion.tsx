@@ -1,8 +1,6 @@
 import { GridColDef } from "@mui/x-data-grid";
 import DataTableInforme from "../../components/dataTable/DataTableInforme";
 import "./informeCamion.scss"
-import { useState } from "react";
-import AddPI from "../../components/add/AddPI";
 import { useQuery } from "@tanstack/react-query";
 
 const host_server = import.meta.env.VITE_SERVER_HOST;
@@ -43,8 +41,6 @@ const columns: GridColDef[] = [
 
 
 const InformeCamion = () => {
-  const [open, setOpen] = useState(false)
-
 
   const { isLoading, data } = useQuery({
     queryKey: ['revision'],
@@ -64,9 +60,8 @@ const InformeCamion = () => {
       {isLoading ? (
         "Loading..."
       ) : (
-        < DataTableInforme slug="registros" columns={columns} rows={data} />
+        < DataTableInforme slug="revision" columns={columns} rows={data} />
       )}
-      {open && <AddPI slug="registros" columns={columns} setOpen={setOpen} />}
     </div>
   )
 }

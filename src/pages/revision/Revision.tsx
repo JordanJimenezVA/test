@@ -1,8 +1,6 @@
 import { GridColDef } from "@mui/x-data-grid";
 import DataTableR from "../../components/dataTable/DatatableR";
 import "./revision.scss"
-import { useState } from "react";
-import AddPI from "../../components/add/AddPI";
 import { useQuery } from "@tanstack/react-query";
 
 const host_server = import.meta.env.VITE_SERVER_HOST;
@@ -49,11 +47,10 @@ const columns: GridColDef[] = [
 
 
 const Revision = () => {
-  const [open, setOpen] = useState(false)
 
 
   const { isLoading, data } = useQuery({
-    queryKey: ['revision'],
+    queryKey: ['registros'],
     queryFn: () =>
       fetch(`${host_server}/Revision`).then((res) =>
         res.json(),
@@ -71,7 +68,6 @@ const Revision = () => {
       ) : (
         <DataTableR slug="registros" columns={columns} rows={data} />
       )}
-      {open && <AddPI slug="registros" columns={columns} setOpen={setOpen} />}
     </div>
   )
 }

@@ -279,10 +279,13 @@ function FormularioCamiones() {
 
                 <select required onChange={(event) => { setTipoCA(event.target.value); }} value={TipoCA} className='form-select' id="tipoca-input" name={TipoCA}>
                   <option value="">Seleccionar una opción</option>
-                  <option value="Fumigación">Remolque Abierto</option>
-                  <option value="Camiones">Remolque Cerrado</option>
-                  <option value="Reciclaje">Remolque Refrigerado</option>
-                  <option value="Otros">Otros</option>
+                  <option value="SEMIREMOLQUE">SEMIREMOLQUE</option>
+                  <option value="CAMION">PEONETA</option>
+                  <option value="TRACTOCAMION">TRACTOCAMION</option>
+                  <option value="CHASIS CABINADO">CHASIS CABINADO</option>
+                  <option value="REMOLQUE">REMOLQUE</option>
+                  <option value="CHASIS CABINADO">CHASIS CABINADO</option>
+                  <option value="OtrosCA">Otros</option>
                 </select>
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setTipoCA)}>X</button>
               </div>

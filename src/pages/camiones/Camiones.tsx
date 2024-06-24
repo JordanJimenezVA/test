@@ -1,7 +1,5 @@
 import "./camiones.scss"
 import DataTableCA from "../../components/dataTable/DataTableCA"
-import { useState } from "react";
-import AddCA from "../../components/add/AddCA";
 import { useNavigate } from "react-router-dom";
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
@@ -79,7 +77,6 @@ const columns: GridColDef[] = [
 ];
 
 const Camiones = () => {
-  const [open, setOpen] = useState(false)
   const navigate = useNavigate();
 
   const { isLoading, data } = useQuery({
@@ -104,7 +101,7 @@ const Camiones = () => {
       ) : (
         <DataTableCA slug="camiones" columns={columns} rows={data}/>
       )}
-      {open && <AddCA slug="CAMIONES" columns={columns} setOpen={setOpen} />}
+
     </div>
   )
 }

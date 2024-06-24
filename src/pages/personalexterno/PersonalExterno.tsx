@@ -1,14 +1,12 @@
-import { useState } from "react";
 import "./personalExterno.scss";
 import DataTablePE from "../../components/dataTable/DataTablePE";
-import AddPE from "../../components/add/AddPE";
 import { useNavigate } from "react-router-dom";
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
-  { field: 'IDPE', headerName: 'ID', width: 45, type: 'number'},
+  { field: 'IDPE', headerName: 'ID', width: 45, type: 'number' },
   {
     field: 'RUTPE',
     headerName: 'Rut',
@@ -69,31 +67,32 @@ const columns: GridColDef[] = [
 ];
 
 const PersonalExterno = () => {
-  const [open, setOpen] = useState(false)
+
   const navigate = useNavigate();
+
   const { isLoading, data } = useQuery({
-    queryKey: ['personalexterno'],
+    queryKey: ['Personal Externo'],
     queryFn: () =>
-    fetch(`${host_server}/Personal%20Externo`).then((res) =>
+      fetch(`${host_server}/Personal%20Externo`).then((res) =>
         res.json(),
       ),
   })
+
 
   const handleIngresarPE = () => {
     navigate(`/AgregarPersonalExterno`);
   }
   return (
-    <div className="PersonalExterno">
+    <div className="PE">
       <div className="info">
-          <h1 className="h1d">Personal Externo</h1>
-          <button onClick={handleIngresarPE}>Ingresar Personal Externo</button>
+        <h1 className="h1d">Personal Externo</h1>
+        <button onClick={handleIngresarPE}>Ingresar Personal Externo</button>
       </div>
       {isLoading ? (
         "Loading..."
       ) : (
-        < DataTablePE slug="Personal Externo" columns={columns} rows={data}/>
+        < DataTablePE slug="Personal Externo" columns={columns} rows={data} />
       )}
-      {open && <AddPE slug="Personal Externo" columns={columns} setOpen={setOpen} />}
     </div>
   )
 }

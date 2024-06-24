@@ -4,11 +4,13 @@ import Axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useChileanTime from '../../hooks/UseChileanTime';
+import { useAuth } from '../../hooks/Auth';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
 function FormularioSalida() {
   const { IDR } = useParams();
+  const { nombreUsuario } = useAuth();
   const [rutValido, setRutValido] = React.useState(true);
   const chileanTime = useChileanTime();
   const [formValues, setFormValues] = useState({
@@ -99,12 +101,14 @@ function FormularioSalida() {
       [campo]: '',
     }));
   };
-
+  console.log(nombreUsuario);
+  console.log(formValues);
   const salidaCA = () => {
     Axios.post(`${host_server}/FormularioSalida/${IDR}`, {
       ...formValues,
-      FECHASALIDA: chileanTime
-     
+      FECHASALIDA: chileanTime,
+      NombreUsuario: nombreUsuario
+      
     }).then(() => {
       limpiarCampos();
       Swal.fire({
@@ -156,7 +160,7 @@ function FormularioSalida() {
                   placeholder='Ingrese Rut'
                   id='ruts-input'
                 />
-                <button className="btn btn-danger" type="button" id="button-addon1"  onClick={() => limpiarCampo('RUT')}>X</button>
+                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('RUT')}>X</button>
               </div>
             </div>
 
@@ -164,7 +168,7 @@ function FormularioSalida() {
               <label htmlFor='nombres-input'>Nombre</label>
               <div className="input-group mb-3">
                 <input type="text" name="PERSONAL" value={formValues.PERSONAL} onChange={handleChange} placeholder="Ingrese Nombre" id='nombres-input' className="form-control" ></input>
-                <button className="btn btn-danger" type="button" id="button-addon1"  onClick={() => limpiarCampo('PERSONAL')}>X</button>
+                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('PERSONAL')}>X</button>
               </div>
             </div>
 
@@ -172,7 +176,7 @@ function FormularioSalida() {
               <label htmlFor='apellidos-input'>Apellido</label>
               <div className="input-group mb-3">
                 <input type="text" name="APELLIDO" value={formValues.APELLIDO} onChange={handleChange} id='apellidos-input' placeholder='Ingrese Apellido' className='form-control' />
-                <button className="btn btn-danger" type="button" id="button-addon1"  onClick={() => limpiarCampo('APELLIDO')}>X</button>
+                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('APELLIDO')}>X</button>
               </div>
             </div>
 

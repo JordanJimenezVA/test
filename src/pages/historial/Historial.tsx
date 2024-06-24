@@ -7,13 +7,7 @@ const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
 const Historial = () => {
-  const { isLoading, data } = useQuery({
-    queryKey: ['Logs'],
-    queryFn: () =>
-      fetch(`${host_server}/Logs`).then((res) =>
-        res.json(),
-      ),
-  })
+  
   
   const columns: GridColDef[] = [
     { field: 'IDL', headerName: 'ID', width: 40, type: 'number' },
@@ -42,7 +36,14 @@ const Historial = () => {
     {
       field: 'ROL',
       headerName: 'Rol',
-      width: 180,
+      width: 150,
+      editable: false,
+      type: 'string',
+    },
+    {
+      field: 'GUARDIA',
+      headerName: 'Guardia',
+      width: 150,
       editable: false,
       type: 'string',
     },
@@ -56,7 +57,7 @@ const Historial = () => {
     {
       field: 'GUIADESPACHO',
       headerName: 'Planilla',
-      width: 210,
+      width: 150,
       editable: false,
       type: 'string',
     },
@@ -70,19 +71,27 @@ const Historial = () => {
     {
       field: 'FECHAINGRESO',
       headerName: 'Fecha Ingreso',
-      width: 180,
+      width: 150,
       editable: false,
       type: 'string',
     },
     {
       field: 'FECHASALIDA',
       headerName: 'Fecha Salida',
-      width: 180,
+      width: 150,
       editable: false,
       type: 'string',
     }
   ];
 
+  const { isLoading, data } = useQuery({
+    queryKey: ['Logs'],
+    queryFn: () =>
+      fetch(`${host_server}/Logs`).then((res) =>
+        res.json(),
+      ),
+  })
+  
   return (
     <div className="Camiones">
       <div className="info">

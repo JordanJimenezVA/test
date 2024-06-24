@@ -4,8 +4,10 @@ import Swal from 'sweetalert2';
 import Axios, { } from "axios";
 import Autosuggest from "react-autosuggest";
 import useChileanTime from "../../hooks/UseChileanTime";
+import { useAuth } from '../../hooks/Auth';
 
 function FormularioPersonalExterno() {
+  const { nombreUsuario } = useAuth();
   const chileanTime = useChileanTime();
   const [suggestions, setSuggestions] = useState([]);
   const [RutPE, setRutPE] = useState("");
@@ -119,7 +121,7 @@ function FormularioPersonalExterno() {
       ingresoformdPE();
     }
   };
-  
+
   const ingresoformdPE = () => {
     if (!validarRut(RutPE)) {
       Swal.fire({
@@ -140,7 +142,8 @@ function FormularioPersonalExterno() {
       EmpresaPE: EmpresaPE,
       RolPE: RolPE,
       ObservacionesPE: ObservacionesPE,
-      fechaActualChile: chileanTime
+      fechaActualChile: chileanTime,
+      NombreUsuario: nombreUsuario
     }).then(() => {
       limpiarcamposPE();
       Swal.fire({
@@ -192,7 +195,7 @@ function FormularioPersonalExterno() {
         <div className="card-header border-bottom bg-body">
           <div className="row g-3 justify-content-between align-items-center">
             <div className="col-12 col-md">
-            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">
+              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">
                 Datos Personal Externo
                 {mensajeEstado && (
                   <span style={{ color: mensajeEstado === 'PROHIBIDO EL ACCESO' ? 'red' : 'orange', marginLeft: '10px' }}>
@@ -222,7 +225,7 @@ function FormularioPersonalExterno() {
                   inputProps={{
                     placeholder: "Ingrese RUT",
                     value: RutPE,
-                    id:"rutpe-input",
+                    id: "rutpe-input",
                     onChange: handleRutChange,
                   }}
                   onSuggestionSelected={onSuggestionSelected}
@@ -261,12 +264,16 @@ function FormularioPersonalExterno() {
               <div className="input-group mb-3">
                 <select required onChange={(event) => { setRolPE(event.target.value); }} value={RolPE} placeholder="Seleccione una opcion" className='form-select ' id="rolpe-input" name={RolPE}>
                   <option value="">Seleccionar una opción</option>
-                  <option value="Jardines">Jardines</option>
-                  <option value="Fumigación">Fumigación</option>
-                  <option value="Camiones">Camiones</option>
-                  <option value="Reciclaje">Reciclaje</option>
+                  <option value="Especialista Trade">Especialista Trade</option>
                   <option value="Peoneta">Peoneta</option>
-                  <option value="Otros">Otros</option>
+                  <option value="Gestor Trade">Gestor Trade</option>
+                  <option value="Mantencion Cctv">Mantencion Cctv</option>
+                  <option value="Mantencion Gruas">Mantención Gruas</option>
+                  <option value="Mantencion Jardines">Mantención Jardines</option>
+                  <option value="Mantencion General">Mantencion General</option>
+                  <option value="Mantencion Bresler">Mantencion Bresler</option>
+                  <option value="Tecnico Fumigación">Tecnico Fumigación</option>
+                  <option value="OtrosEx">Otros</option>
                 </select>
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRolPE)}>X</button>
               </div>

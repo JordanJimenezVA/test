@@ -1,5 +1,6 @@
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-import { useState, useEffect  } from 'react';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface Row {
@@ -10,7 +11,7 @@ interface Row {
 
 type Props = {
     columns: GridColDef[],
-    rows: object[]; 
+    rows: object[];
     slug: string;
 }
 
@@ -18,9 +19,25 @@ const DataTableAll = (props: Props) => {
     const navigate = useNavigate();
     const [rows, setRows] = useState(props.rows);
 
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: (IDR: number) => {
+
+            return new Promise((resolve) => {
+                navigate(`/FormularioSalida/${IDR}`);
+                resolve(IDR);
+            });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [props.slug]
+            });
+        }
+    });
 
     const handleMarcarSalida = (IDR: number) => {
-        navigate(`/FormularioSalida/${IDR}`);
+        mutation.mutate(IDR);
     }
 
     useEffect(() => {

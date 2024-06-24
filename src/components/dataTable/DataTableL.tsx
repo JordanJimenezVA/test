@@ -13,7 +13,6 @@ type Props = {
 }
 
 const DataTableL = (props: Props) => {
-
     const [rows, setRows] = useState(props.rows);
 
     useEffect(() => {

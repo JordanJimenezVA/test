@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import "./dataTable.scss";
 import axios from "axios";
@@ -8,6 +8,7 @@ import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type Props = {
     columns: GridColDef[],
@@ -16,11 +17,32 @@ type Props = {
 }
 
 const DataTable = (props: Props) => {
-    const [rows, setRows] = useState(props.rows);
-    const navigate = useNavigate();
 
-    const handleDelete = async (IDPI: number) => {
-        const result = await Swal.fire({
+    const [rows, setRows] = useState<object[]>(props.rows);
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
+
+
+    const deleteMutationa = useMutation({
+
+        mutationFn: (IDPI: number) => {
+            return axios.delete(`${host_server}/${props.slug}/${IDPI}`);
+        },
+        onSuccess: (IDPI) => {
+            Swal.fire('Borrado!', 'El registro ha sido borrado.', 'success');
+            queryClient.invalidateQueries({
+                queryKey: [props.slug]
+            });
+            setRows(rows.filter((row: any) => row.IDPI !== IDPI));
+        },
+        onError: () => {
+            Swal.fire('Error!', 'No se pudo borrar el registro.', 'error');
+        }
+    });
+
+
+    const handleDelete = (IDPI: number) => {
+        Swal.fire({
             title: '¿Estás seguro de borrar?',
             text: "¡No podrás revertir esto!",
             icon: 'warning',
@@ -28,21 +50,17 @@ const DataTable = (props: Props) => {
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Sí, bórralo!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteMutationa.mutate(IDPI);
+            }
         });
-        if (result.isConfirmed) {
-            await axios.delete(`${host_server}/${props.slug}/${IDPI}`);
-            Swal.fire('Borrado!', 'El registro ha sido borrado.', 'success');
-            setRows(rows.filter((row: any) => row.IDPI !== IDPI));
-        }
     };
 
     const handleEditClick = (IDPI: number) => {
         navigate(`/EditarPersonalInterno/${IDPI}`);
     }
 
-    useEffect(() => {
-        setRows(props.rows);
-    }, [props.rows]);
 
     const actionColumn: GridColDef = {
         field: 'acciones',

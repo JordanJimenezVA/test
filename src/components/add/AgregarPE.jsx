@@ -153,12 +153,16 @@ function AgregarPE() {
                             <div className="input-group mb-3">
                                 <select onChange={(event) => { setRolPE(event.target.value); }} value={RolPE} className='form-select ' required id="rolpe-input" name={RolPE}>
                                     <option value="">Seleccionar una opción</option>
-                                    <option value="Jardines">Jardines</option>
-                                    <option value="Fumigación">Fumigación</option>
-                                    <option value="Camiones">Camiones</option>
-                                    <option value="Reciclaje">Reciclaje</option>
+                                    <option value="Especialista Trade">Especialista Trade</option>
                                     <option value="Peoneta">Peoneta</option>
-                                    <option value="Otros">Otros</option>
+                                    <option value="Gestor Trade">Gestor Trade</option>
+                                    <option value="Mantencion Cctv">Mantencion Cctv</option>
+                                    <option value="Mantencion Gruas">Mantención Gruas</option>
+                                    <option value="Mantencion Jardines">Mantención Jardines</option>
+                                    <option value="Mantencion General">Mantencion General</option>
+                                    <option value="Mantencion Bresler">Mantencion Bresler</option>
+                                    <option value="Tecnico Fumigación">Tecnico Fumigación</option>
+                                    <option value="OtrosEx">Otros</option>
                                 </select>
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRolPE)}>X</button>
                             </div>

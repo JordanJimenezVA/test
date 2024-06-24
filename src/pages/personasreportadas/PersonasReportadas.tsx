@@ -28,12 +28,13 @@ const PersonasReportadas = () => {
   const navigate = useNavigate();
 
   const { isLoading, data } = useQuery({
-    queryKey: ['personasng'],
+    queryKey: ['Personas Reportadas'],
     queryFn: () =>
       fetch(`${host_server}/PersonasReportadas`).then((res) =>
         res.json(),
       ),
   })
+
 
   const handleIngresarNG = () => {
     navigate(`/AgregarPersonaNG`);

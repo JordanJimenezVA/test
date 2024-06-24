@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 type UserType = 'Administrador' | 'Guardia' | 'Supervisor';
 
@@ -9,11 +9,20 @@ interface AuthContextType {
   setNombreUsuario: (nombreUsuario: string | null) => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [userType, setUserType] = useState<UserType | null>(null);
-  const [nombreUsuario, setNombreUsuario] = useState<string | null>(null);
+  const [userType, setUserType] = useState<UserType | null>(
+    () => localStorage.getItem('userType') as UserType | null
+  );
+  const [nombreUsuario, setNombreUsuario] = useState<string | null>(
+    () => localStorage.getItem('nombreUsuario')
+  );
+
+  useEffect(() => {
+    localStorage.setItem('userType', userType || '');
+    localStorage.setItem('nombreUsuario', nombreUsuario || '');
+  }, [userType, nombreUsuario]);
 
   return (
     <AuthContext.Provider value={{ userType, nombreUsuario, setUserType, setNombreUsuario }}>

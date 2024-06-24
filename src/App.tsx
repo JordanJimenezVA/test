@@ -98,59 +98,59 @@ function App() {
       children: [
         {
           path: "/Home",
-          element: <AuthProvider><Home /></AuthProvider>,
+          element:<Home />,
         },
         {
           path: "/Personal Interno",
-          element: <AuthProvider><PersonalInterno /></AuthProvider>,
+          element: <PersonalInterno />
         },
         {
           path: "/Personal Externo",
-          element: <AuthProvider><PersonalExterno /></AuthProvider>
+          element: <PersonalExterno />
         },
         {
           path: "/Camiones",
-          element: <AuthProvider><Camiones /></AuthProvider>
+          element: <Camiones />
         },
         {
           path: "/Personas Reportadas",
-          element: <AuthProvider><PersonasReportadas /></AuthProvider>
+          element: <PersonasReportadas />
         },
         {
           path: "/FormularioPersonalInterno",
-          element: <AuthProvider><FormularioPersonalInterno /></AuthProvider>
+          element: <FormularioPersonalInterno />
         },
         {
           path: "/FormularioPersonalExterno",
-          element: <AuthProvider><FormularioPersonalExterno /></AuthProvider>
+          element:<FormularioPersonalExterno />
         },
         {
           path: "/FormularioCamiones",
-          element: <AuthProvider><FormularioCamiones /></AuthProvider>
+          element: <FormularioCamiones />
         },
         {
           path: "/AgregarPersonalInterno",
-          element: <AuthProvider><AgregarPI /></AuthProvider>
+          element: <AgregarPI />
         },
         {
           path: "/AgregarPersonalExterno",
-          element: <AuthProvider><AgregarPE /></AuthProvider>
+          element: <AgregarPE />
         },
         {
           path: "/AgregarCamion",
-          element: <AuthProvider><AgregarCA /></AuthProvider>
+          element: <AgregarCA />
         },
         {
           path: "/AgregarPersonaNG",
-          element: <AuthProvider><AgregarNG /></AuthProvider>
+          element:<AgregarNG />
         },
         {
           path: "/TablaIngreso",
-          element: <AuthProvider><TablaIngreso /></AuthProvider>
+          element:<TablaIngreso />
         },
         {
           path: "/Logs",
-          element: <AuthProvider> <Historial /></AuthProvider>
+          element:<Historial />
         },
         {
           path: "/FormularioSalida/:IDR",
@@ -158,35 +158,35 @@ function App() {
         },
         {
           path: "/EditarPersonalInterno/:IDPI",
-          element: <AuthProvider><EditarPI /></AuthProvider>
+          element:<EditarPI />
         },
         {
           path: "/EditarPersonalExterno/:IDPE",
-          element: <AuthProvider><EditarPE /></AuthProvider>
+          element:<EditarPE />
         },
         {
           path: "/EditarCamiones/:IDCA",
-          element: <AuthProvider><EditarCA /></AuthProvider>
+          element:<EditarCA />
         },
         {
           path: "/EditarPersonasReportadas/:IDNG",
-          element: <AuthProvider><EditarNG /></AuthProvider>
+          element: <EditarNG />
         },
         {
           path: "/Revision",
-          element: <AuthProvider><Revision /></AuthProvider>
+          element: <Revision />
         },
         {
           path: "/RevisionCamion/:IDR",
-          element: <AuthProvider><RevisarCamion /></AuthProvider>
+          element: <RevisarCamion />
         },
         {
           path: "/InformeCamion/",
-          element: <AuthProvider><InformeCamion /> </AuthProvider>
+          element:<InformeCamion /> 
         },
         {
           path: "/VerInforme/:IDR",
-          element: <AuthProvider><VerInforme /></AuthProvider>
+          element: <VerInforme />
         }
       ],
     },

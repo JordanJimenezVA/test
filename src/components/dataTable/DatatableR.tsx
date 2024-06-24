@@ -1,6 +1,8 @@
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import "./dataTable.scss";
 import { useNavigate } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 
 type Props = {
     columns: GridColDef[],
@@ -10,9 +12,27 @@ type Props = {
 
 const DataTableR = (props: Props) => {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
+
+
+
+    const mutation = useMutation({
+        mutationFn: (IDR: number) => {
+           
+            return new Promise((resolve) => {
+                navigate(`/RevisionCamion/${IDR}`);
+                resolve(IDR);
+            });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [props.slug]
+            });
+        }
+    });
 
     const handleRevison = (IDR: number) => {
-        navigate(`/RevisionCamion/${IDR}`);
+        mutation.mutate(IDR);
     }
 
     const actionColumn: GridColDef = {

@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import Axios from "axios";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
-  
+
 function AgregarPI() {
     const [RutPI, setRutPI] = useState("");
     const [NombrePI, setNombrePI] = useState("");
@@ -64,8 +64,8 @@ function AgregarPI() {
             })
         }).catch((error) => {
             console.error('Error:', error); // Agrega este log para ver el error en detalle
-            const errorMessage = error.response && error.response.data && error.response.data.message 
-                ? error.response.data.message 
+            const errorMessage = error.response && error.response.data && error.response.data.message
+                ? error.response.data.message
                 : 'Error desconocido';
             Swal.fire({
                 icon: "error",
@@ -83,7 +83,7 @@ function AgregarPI() {
         setColorPI("");
         setRolPI("");
         setPatentePI("");
-  
+
     }
 
     const limpiarCampo = (setState) => {
@@ -144,7 +144,7 @@ function AgregarPI() {
                         <div className="col-md-3">
                             <label htmlFor="apellidopi-input">Apellido</label>
                             <div className="input-group mb-3">
-                            <input type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' required className='form-control' id="apellidopi-input" name={ApellidoPI} />
+                                <input type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' required className='form-control' id="apellidopi-input" name={ApellidoPI} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoPI)}>X</button>
                             </div>
                         </div>
@@ -154,8 +154,21 @@ function AgregarPI() {
                             <div className="input-group mb-3">
                                 <select onChange={(event) => { setRolPI(event.target.value); }} required value={RolPI} className='form-select ' id="rolpi-input" name={RolPI}>
                                     <option value="">Seleccionar una opción</option>
-                                    <option value="Administrativo">Administrativo</option>
-                                    <option value="Bodega">Bodega</option>
+                                    <option value="Administrativo Existencias">Administrativo Existencias</option>
+                                    <option value="Administrativo de Distribución">Administrativo de Distribución</option>
+                                    <option value="Administrativo Congelados">Administrativo Congelados</option>
+                                    <option value="Jefe de Sucursal">Jefe de Sucursal</option>
+                                    <option value="Jefe Comercial">Jefe Comercial</option>
+                                    <option value="Jefe de Distribución">Jefe de Distribución</option>
+                                    <option value="Coordinador Trade Marketing">Coordinador Trade Marketing</option>
+                                    <option value="Supervisor de Distribución">Supervisor de Distribución</option>
+                                    <option value="Supevisor Ventas">Supevisor Ventas</option>
+                                    <option value="Cajero">Cajero</option>
+                                    <option value="Secretaria">Secretaria</option>
+                                    <option value="Movilizador">Movilizador</option>
+                                    <option value="Gruero">Gruero</option>
+                                    <option value="Despachador">Despachador</option>
+                                    <option value="Recepcionista">Recepcionista</option>
                                 </select>
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRolPI)}>X</button>
                             </div>
