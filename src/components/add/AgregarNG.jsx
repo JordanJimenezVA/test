@@ -5,7 +5,7 @@ import Axios from "axios";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
   
-function AgregarPI() {
+function AgregarNG() {
     const [RutNG, setRutNG] = useState("");
     const [EstadoNG, setEstadoNG] = useState("");
     const [rutValido, setRutValido] = React.useState(true);
@@ -145,4 +145,4 @@ function AgregarPI() {
         </form>
     )
 }
-export default AgregarPI;
+export default AgregarNG;

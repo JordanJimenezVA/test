@@ -106,6 +106,19 @@ export const menu = [
       }
     ],
   },
+  {
+    id: 6,
+    title: "Novedades",
+    role: ["Administrador", "Guardia"],
+    listItems: [
+      {
+        id: 1,
+        title: "Registrar Novedad",
+        url: "/Novedades",
+        icon: "list3.svg",
+      }
+    ],
+  },
 ];
 
 

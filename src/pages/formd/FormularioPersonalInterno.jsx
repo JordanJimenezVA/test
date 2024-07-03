@@ -4,10 +4,11 @@ import Swal from 'sweetalert2';
 import Axios from "axios";
 import Autosuggest from 'react-autosuggest';
 import useChileanTime from "../../hooks/UseChileanTime";
-
+import { useAuth } from '../../hooks/Auth';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 function FormularioPersonalInterno() {
+  const { nombreUsuario } = useAuth();
   const chileanTime = useChileanTime();
   const [suggestions, setSuggestions] = useState([]);
   const [RutPI, setRutPI] = useState("");
@@ -112,7 +113,8 @@ function FormularioPersonalInterno() {
       PATENTEPI: PatentePI,
       OBSERVACIONESPI: ObservacionesPI,
       ROLPI: RolPI,
-      fechaActualChile: chileanTime
+      fechaActualChile: chileanTime,
+      NombreUsuario: nombreUsuario
 
 
     }).then(() => {

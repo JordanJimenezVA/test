@@ -21,6 +21,8 @@ import AgregarNG from "./components/add/AgregarNG"
 import AgregarPE from "./components/add/AgregarPE";
 // @ts-ignore
 import AgregarCA from "./components/add/AgregarCA";
+// @ts-ignore
+import AgregarNO from "./components/add/AgregarNO";
 
 
 import { AuthProvider } from './hooks/Auth';
@@ -44,10 +46,12 @@ import EditarPE from "./pages/editar/EditarPE";
 import EditarCA from "./pages/editar/EditarCA";
 // @ts-ignore
 import EditarNG from "./pages/editar/EditarNG";
-
-
+// @ts-ignore
+import VerNovedad from "./pages/viewnovedad/VerNovedad";
 
 import TablaIngreso from "./pages/tablaingreso/TablaIngreso";
+
+import TablaNovedad from "./pages/tablanovedad/TablaNovedad";
 
 import Historial from "./pages/historial/Historial";
 
@@ -62,6 +66,8 @@ import InformeCamion from './pages/informes/Informecamion';
 
 // @ts-ignore
 import VerInforme from './pages/viewinforme/VerInforme';
+
+
 
 const queryClient = new QueryClient();
 
@@ -187,6 +193,18 @@ function App() {
         {
           path: "/VerInforme/:IDR",
           element: <VerInforme />
+        },
+        {
+          path: "/Novedades",
+          element:<TablaNovedad />
+        },
+        {
+          path: "/AgregarNO",
+          element:<AgregarNO />
+        },
+        {
+          path: "/VerNO/:IDNO",
+          element:<VerNovedad />
         }
       ],
     },
