@@ -64,11 +64,11 @@ function VerNovedad() {
                 </div><br></br>
                 <div className="accion-observable-container">
                     <div className="accion-observable">
-                        <h3 className='guardia-h3'>Guardia</h3>
+                        <h4 className='guardia-h3'>Guardia</h4>
                         <p>{formValues.GUARDIANO}</p>
                     </div>
                     <div className="accion-observable">
-                        <h3 className='fecha-h3'>Fecha</h3>
+                        <h4 className='fecha-h3'>Fecha</h4>
                         <p>{formValues.HORANO}</p>
                     </div>
                 </div>
