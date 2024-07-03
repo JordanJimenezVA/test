@@ -79,52 +79,6 @@ function VerNovedad() {
         </form>
     );
 
-
-
-    // return (
-    //     <form onSubmit={(e) => {
-    //         e.preventDefault(); // Evita que se recargue la página
-    //     }}>
-    //         <h1 className='h1formd'>Ver Novedad</h1>
-    //         <div className="card shadow-none border my-4" data-component-card="data-component-card">
-    //             <div className="card-header border-bottom bg-body">
-    //                 <div className="row g-3 justify-content-between align-items-center">
-    //                     <div className="col-12 col-md">
-    //                         <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Novedad<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
-    //                     </div>
-    //                 </div>
-    //             </div>
-
-    //             <div className="card-body ">
-
-    //                 <div className="row g-3 needs-validation">
-
-    //                     <div className="col-auto-NO">
-
-
-    //                         <label className='descrip-label' htmlFor="descrip-input">Descripcion Novedad </label>
-    //                         <div className="input-group mb-3">
-
-    //                             <textarea
-
-    //                                 type="text"
-    //                                 className="form-control"
-    //                                 placeholder='Ingrese Descripcion'
-    //                                 id="descrip-label"
-    //                                 disabled
-    //                                 value={formValues.NOTANO}
-    //                                 required
-    //                                 style={{ height: 250 + "px" }}
-    //                             />
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     </form>
-
-    // );
-
 }
 
 export default VerNovedad;
