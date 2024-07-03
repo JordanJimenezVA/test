@@ -1,5 +1,5 @@
 import Swal from 'sweetalert2';
-import './vernovedad.scss'
+import './verNovedad.scss'
 import Axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
