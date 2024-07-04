@@ -26,7 +26,7 @@ function VerInforme() {
         KILOS: '',
         PALLETS: '',
         SUPERVISOR: '',
-        ER: '',
+        ENRE: '',
         JEFET: '',
         FOTOS: [],
         FECHAINICIO: '',
@@ -76,9 +76,9 @@ function VerInforme() {
     const getRegistros = (IDR) => {
         Axios.get(`${host_server}/VerInforme/${IDR}`)
             .then((res) => {
-                const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO, SELLO, ANDEN, KILOS, PALLETS, SUPERVISOR, ER, JEFET, FOTOS, FECHAINICIO, FECHAFIN } = res.data[0];
+                const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO, SELLO, ANDEN, KILOS, PALLETS, SUPERVISOR, ENRE, JEFET, FOTOS, FECHAINICIO, FECHAFIN } = res.data[0];
                 // Verificar si FOTOS es un array antes de mapearlo
-
+                console.log(res.data[0])
                 const fotosArray = FOTOS.split(', ').map(filename => `${host_server}/imagenes/${filename}`);
                 setFormValues({
                     PERSONAL,
@@ -93,7 +93,7 @@ function VerInforme() {
                     KILOS,
                     PALLETS,
                     SUPERVISOR,
-                    ER,
+                    ENRE,
                     JEFET,
                     FOTOS: fotosArray,
                     FECHAINICIO: (FECHAINICIO),
@@ -243,7 +243,7 @@ function VerInforme() {
                         <div className="col-md-3">
                             <label>Encargado de la Revision</label>
                             <div className="input-group mb-3">
-                                <input type="text" name="ER" value={formValues.ER} disabled="true" onChange={handleChange} placeholder='Ingrese Encargado de la Revision' className='form-control' />
+                                <input type="text" name="ER" value={formValues.ENRE} disabled="true" onChange={handleChange} placeholder='Ingrese Encargado de la Revision' className='form-control' />
                             </div>
                         </div>
 
