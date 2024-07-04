@@ -11,11 +11,10 @@ function FormularioCamiones() {
   const { nombreUsuario } = useAuth();
   const chileanTime = useChileanTime();
   const [suggestions, setSuggestions] = useState([]);
-  const [IDCA, setidCA] = useState(0);
+  const [IDCA, setIDCA] = useState(0);
   const [ChoferCA, setChoferCA] = useState("");
   const [ApellidoChoferCA, setApellidoChoferCA] = useState("");
   const [RutCA, setRutCA] = useState("");
-  const [PeonetaCA, setPeonetaCA] = useState("");
   const [PatenteCA, setPatenteCA] = useState("");
   const [MarcaCA, setMarcaCA] = useState("");
   const [TipoCA, setTipoCA] = useState("");
@@ -92,7 +91,6 @@ function FormularioCamiones() {
       setRutCA(data.RUTCA || ""),
         setChoferCA(data.CHOFERCA || ""),
         setApellidoChoferCA(data.APELLIDOCHOFERCA || ""),
-        setPeonetaCA(data.PEONETACA || ""),
         setPatenteCA(data.PATENTECA || ""),
         setMarcaCA(data.MARCACA || ""),
         setTipoCA(data.TIPOCA || ""),
@@ -126,7 +124,6 @@ function FormularioCamiones() {
       ChoferCA: ChoferCA,
       ApellidoChoferCA: ApellidoChoferCA,
       RutCA: RutCA,
-      PeonetaCA: PeonetaCA,
       PatenteCA: PatenteCA,
       MarcaCA: MarcaCA,
       TipoCA: TipoCA,
@@ -163,7 +160,6 @@ function FormularioCamiones() {
     setChoferCA("");
     setApellidoChoferCA("");
     setRutCA("");
-    setPeonetaCA("");
     setPatenteCA("");
     setMarcaCA("");
     setTipoCA("");
