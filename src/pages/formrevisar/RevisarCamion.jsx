@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useChileanTime from '../../hooks/UseChileanTime';
 import useCamionTime from '../../hooks/CamionTime';
+import { useAuth } from '../../hooks/Auth';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
@@ -29,6 +30,7 @@ function RevisarCamion() {
         FECHAINICIO: '',
         FECHAFIN: ''
     });
+    const { nombreUsuario } = useAuth();
     const [fechaInicio, setFechaInicio] = useState(null);
     const [fechaFin, setFechaFin] = useState(null);
     const [estado, setEstado] = useState("inicio");
@@ -233,7 +235,7 @@ function RevisarCamion() {
         });
         formData.append('fechaInicio', fechaInicio);
         formData.append('fechaFin', fechaFin);
-   
+        formData.append('NombreUsuario', nombreUsuario)
 
         Axios.post(`${host_server}/RevisionCamion/${IDR}`, formData, {
             headers: {
