@@ -8,6 +8,7 @@ import PersonalInterno from "./pages/personalinterno/PersonalInterno";
 import PersonalExterno from "./pages/personalexterno/PersonalExterno";
 import Camiones from "./pages/camiones/Camiones";
 import PersonasReportadas from "./pages/personasreportadas/PersonasReportadas";
+import Usuarios from "./pages/usuarios/Usuarios";
 
 import Navbar from "./components/navbar/Navbar";
 import Menu from "./components/menu/Menu";
@@ -23,6 +24,8 @@ import AgregarPE from "./components/add/AgregarPE";
 import AgregarCA from "./components/add/AgregarCA";
 // @ts-ignore
 import AgregarNO from "./components/add/AgregarNO";
+// @ts-ignore
+import AgregarU from "./components/add/AgregarU";
 
 
 import { AuthProvider } from './hooks/Auth';
@@ -46,6 +49,8 @@ import EditarPE from "./pages/editar/EditarPE";
 import EditarCA from "./pages/editar/EditarCA";
 // @ts-ignore
 import EditarNG from "./pages/editar/EditarNG";
+// @ts-ignore
+import EditarU from "./pages/editar/EditarU";
 // @ts-ignore
 import VerNovedad from "./pages/viewnovedad/VerNovedad";
 
@@ -123,6 +128,10 @@ function App() {
           element: <PersonasReportadas />
         },
         {
+          path: "/Usuarios",
+          element: <Usuarios />
+        },
+        {
           path: "/FormularioPersonalInterno",
           element: <FormularioPersonalInterno />
         },
@@ -151,6 +160,10 @@ function App() {
           element:<AgregarNG />
         },
         {
+          path: "/AgregarUsuario",
+          element:<AgregarU />
+        },
+        {
           path: "/TablaIngreso",
           element:<TablaIngreso />
         },
@@ -177,6 +190,10 @@ function App() {
         {
           path: "/EditarPersonasReportadas/:IDNG",
           element: <EditarNG />
+        },
+        {
+          path: "/EditarU/:IDU",
+          element: <EditarU />
         },
         {
           path: "/Revision",

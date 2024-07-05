@@ -16,7 +16,7 @@ type Props = {
     slug: string;
 }
 
-const DataTableNG = (props: Props) => {
+const DataTableU = (props: Props) => {
 
     const [rows, setRows] = useState<object[]>(props.rows);
     const navigate = useNavigate();
@@ -25,15 +25,15 @@ const DataTableNG = (props: Props) => {
 
     const deleteMutationa = useMutation({
 
-        mutationFn: (IDNG: number) => {
-            return axios.delete(`${host_server}/${props.slug}/${IDNG}`);
+        mutationFn: (IDU: number) => {
+            return axios.delete(`${host_server}/${props.slug}/${IDU}`);
         },
-        onSuccess: (IDNG) => {
+        onSuccess: (IDU) => {
             Swal.fire('Borrado!', 'El registro ha sido borrado.', 'success');
             queryClient.invalidateQueries({
                 queryKey: [props.slug]
             });
-            setRows(rows.filter((row: any) => row.IDNG !== IDNG));
+            setRows(rows.filter((row: any) => row.IDU !== IDU));
         },
         onError: () => {
             Swal.fire('Error!', 'No se pudo borrar el registro.', 'error');
@@ -41,7 +41,7 @@ const DataTableNG = (props: Props) => {
     });
 
 
-    const handleDelete = (IDNG: number) => {
+    const handleDelete = (IDU: number) => {
         Swal.fire({
             title: '¿Estás seguro de borrar?',
             text: "¡No podrás revertir esto!",
@@ -52,13 +52,13 @@ const DataTableNG = (props: Props) => {
             confirmButtonText: 'Sí, bórralo!'
         }).then((result) => {
             if (result.isConfirmed) {
-                deleteMutationa.mutate(IDNG);
+                deleteMutationa.mutate(IDU);
             }
         });
     };
 
-    const handleEditClick = (IDNG: number) => {
-        navigate(`/EditarPersonasReportadas/${IDNG}`);
+    const handleEditClick = (IDU: number) => {
+        navigate(`/EditarU/${IDU}`);
     }
 
 
@@ -71,14 +71,14 @@ const DataTableNG = (props: Props) => {
             return (
                 <div className="action">
                     <IconButton
-                        onClick={() => handleEditClick(params.row.IDNG)}
+                        onClick={() => handleEditClick(params.row.IDU)}
                         color="primary"
                         aria-label="Editar"
                     >
                         <EditIcon />
                     </IconButton>
                     <IconButton
-                        onClick={() => handleDelete(params.row.IDNG)}
+                        onClick={() => handleDelete(params.row.IDU)}
                         color="secondary"
                         aria-label="Eliminar"
                     >
@@ -96,7 +96,7 @@ const DataTableNG = (props: Props) => {
                 editMode="row"
                 columns={[...props.columns, actionColumn]}
 
-                getRowId={(row) => `${row.IDNG}`}
+                getRowId={(row) => `${row.IDU}`}
                 initialState={{
                     pagination: {
                         paginationModel: {
@@ -126,4 +126,4 @@ const DataTableNG = (props: Props) => {
     )
 }
 
-export default DataTableNG
+export default DataTableU

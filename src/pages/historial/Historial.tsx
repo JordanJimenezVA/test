@@ -41,13 +41,6 @@ const Historial = () => {
       type: 'string',
     },
     {
-      field: 'GUARDIA',
-      headerName: 'Guardia',
-      width: 150,
-      editable: false,
-      type: 'string',
-    },
-    {
       field: 'OBSERVACIONES',
       headerName: 'Observaciones',
       width: 200,

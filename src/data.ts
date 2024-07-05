@@ -41,6 +41,12 @@ export const menu = [
         url: "/Personas Reportadas",
         icon: "user1.svg",
       },
+      {
+        id: 5,
+        title: "Usuarios",
+        url: "/Usuarios",
+        icon: "user.svg",
+      },
     ],
   },
   {
