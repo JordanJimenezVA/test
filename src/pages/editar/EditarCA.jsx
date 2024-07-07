@@ -216,7 +216,7 @@ function EditarPE() {
                             <div className="input-group mb-3">
                                 <select name="TIPOCA" value={formValues.TIPOCA} onChange={handleChange} className='form-select '>
                                     <option value="SEMIREMOLQUE">SEMIREMOLQUE</option>
-                                    <option value="CAMION">PEONETA</option>
+                                    <option value="CAMION">CAMION</option>
                                     <option value="TRACTOCAMION">TRACTOCAMION</option>
                                     <option value="CHASIS CABINADO">CHASIS CABINADO</option>
                                     <option value="REMOLQUE">REMOLQUE</option>

@@ -77,8 +77,7 @@ function VerInforme() {
         Axios.get(`${host_server}/VerInforme/${IDR}`)
             .then((res) => {
                 const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO, SELLO, ANDEN, KILOS, PALLETS, SUPERVISOR, ENRE, JEFET, FOTOS, FECHAINICIO, FECHAFIN } = res.data[0];
-                // Verificar si FOTOS es un array antes de mapearlo
-                console.log(res.data[0])
+             
                 const fotosArray = FOTOS.split(', ').map(filename => `${host_server}/imagenes/${filename}`);
                 setFormValues({
                     PERSONAL,

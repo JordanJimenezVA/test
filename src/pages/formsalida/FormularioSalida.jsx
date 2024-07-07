@@ -101,8 +101,6 @@ function FormularioSalida() {
       [campo]: '',
     }));
   };
-  console.log(nombreUsuario);
-  console.log(formValues);
   const salidaCA = () => {
     Axios.post(`${host_server}/FormularioSalida/${IDR}`, {
       ...formValues,

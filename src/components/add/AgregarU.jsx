@@ -35,7 +35,7 @@ function AgregarU() {
     }
 
     const ingresoformdU = () => {
-        if (!validarRut(RutNG)) {
+        if (!validarRut(RutU)) {
             Swal.fire({
                 icon: "error",
                 title: "Error",

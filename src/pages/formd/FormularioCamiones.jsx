@@ -279,7 +279,7 @@ function FormularioCamiones() {
                 <select required onChange={(event) => { setTipoCA(event.target.value); }} value={TipoCA} className='form-select' id="tipoca-input" name={TipoCA}>
                   <option value="">Seleccionar una opción</option>
                   <option value="SEMIREMOLQUE">SEMIREMOLQUE</option>
-                  <option value="CAMION">PEONETA</option>
+                  <option value="CAMION">CAMION</option>
                   <option value="TRACTOCAMION">TRACTOCAMION</option>
                   <option value="CHASIS CABINADO">CHASIS CABINADO</option>
                   <option value="REMOLQUE">REMOLQUE</option>
