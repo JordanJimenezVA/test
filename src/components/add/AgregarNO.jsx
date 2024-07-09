@@ -46,6 +46,7 @@ function AgregarNO() {
         setNotaNO("");
     }
 
+
     return (
 
         <form onSubmit={(e) => {

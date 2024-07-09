@@ -114,7 +114,7 @@ function FormularioPersonalInterno() {
       OBSERVACIONESPI: ObservacionesPI,
       ROLPI: RolPI,
       fechaActualChile: chileanTime,
-      NombreUsuario: nombreUsuario
+      NombreUsuarioI: nombreUsuario
 
 
     }).then(() => {
@@ -154,7 +154,10 @@ function FormularioPersonalInterno() {
   };
 
 
-
+  const handlePatenteChange = (event) => {
+    const value = event.target.value.toUpperCase();
+    setPatentePI(value);
+  };
 
   return (
 
@@ -292,7 +295,7 @@ function FormularioPersonalInterno() {
             <div className="col-md-3">
               <label htmlFor='patentepi-input'>Patente</label>
               <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setPatentePI(event.target.value); }} value={PatentePI} placeholder='Ingrese Patente' className='form-control' id="patentepi-input" name={PatentePI} />
+                <input type="text" onChange={handlePatenteChange} value={PatentePI} placeholder='Ingrese Patente' className='form-control' id="patentepi-input" name={PatentePI} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatentePI)}>X</button>
               </div>
             </div>

@@ -134,7 +134,7 @@ function FormularioCamiones() {
       GuiaDespachoCA: GuiaDespachoCA,
       SelloCA: SelloCA,
       fechaActualChile: chileanTime,
-      NombreUsuario: nombreUsuario
+      NombreUsuarioCA: nombreUsuario
     }).then(() => {
       limpiarcamposCA();
       Swal.fire({
@@ -173,6 +173,12 @@ function FormularioCamiones() {
   const limpiarCampo = (setState) => {
     setState("");
   };
+
+  const handlePatenteChange = (event) => {
+    const value = event.target.value.toUpperCase();
+    setPatenteCA(value);
+  };
+
 
   return (
 
@@ -314,7 +320,7 @@ function FormularioCamiones() {
               <label htmlFor='patenteca-input'>Patente Rampa</label>
               <div className="input-group ">
 
-                <input required type="text" onChange={(event) => { setPatenteCA(event.target.value); }} value={PatenteCA} placeholder='Ingrese Patente' className='form-control' id="patenteca-input" name={PatenteCA} />
+                <input required type="text" onChange={handlePatenteChange} value={PatenteCA} placeholder='Ingrese Patente' className='form-control' id="patenteca-input" name={PatenteCA} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatenteCA)}>X</button>
               </div>
             </div>
@@ -368,7 +374,6 @@ function FormularioCamiones() {
             <div className="col-md-3">
               <label htmlFor='obsca-input'>Observaciones</label>
               <div className="input-group ">
-
                 <input type="text" required={mensajeEstado !== ''} onChange={(event) => { setObservacionesCA(event.target.value); }} value={ObservacionesCA} placeholder='Observaciones' className='form-control' id="obsca-input" name={ObservacionesCA} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setObservacionesCA)}>X</button>
               </div>

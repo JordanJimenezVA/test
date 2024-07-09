@@ -143,7 +143,7 @@ function FormularioPersonalExterno() {
       RolPE: RolPE,
       ObservacionesPE: ObservacionesPE,
       fechaActualChile: chileanTime,
-      NombreUsuario: nombreUsuario
+      NombreUsuarioEX: nombreUsuario
     }).then(() => {
       limpiarcamposPE();
       Swal.fire({
@@ -182,6 +182,11 @@ function FormularioPersonalExterno() {
   }
   const limpiarCampo = (setState) => {
     setState("");
+  };
+
+  const handlePatenteChange = (event) => {
+    const value = event.target.value.toUpperCase();
+    setPatentePE(value);
   };
 
 
@@ -314,7 +319,7 @@ function FormularioPersonalExterno() {
             <div className="col-md-3">
               <label htmlFor='patentepe-input'>Patente</label>
               <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setPatentePE(event.target.value); }} value={PatentePE} placeholder='Ingrese Patente' className='form-control' id="patentepe-input" name={PatentePE} />
+                <input type="text" onChange={handlePatenteChange} value={PatentePE} placeholder='Ingrese Patente' className='form-control' id="patentepe-input" name={PatentePE} />
                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatentePE)}>X</button>
               </div>
             </div>

@@ -97,7 +97,10 @@ function AgregarCA() {
     };
 
 
-
+    const handlePatenteChange = (event) => {
+        const value = event.target.value.toUpperCase();
+        setPatenteCA(value);
+      };
 
     return (
 
@@ -213,7 +216,7 @@ function AgregarCA() {
                             <label htmlFor='patenteca-input'>Patente Rampa</label>
                             <div className="input-group ">
 
-                                <input type="text" required onChange={(event) => { setPatenteCA(event.target.value); }} value={PatenteCA} placeholder='Ingrese Patente' className='form-control' id="patenteca-input" name={PatenteCA} />
+                                <input type="text" required onChange={handlePatenteChange} value={PatenteCA} placeholder='Ingrese Patente' className='form-control' id="patenteca-input" name={PatenteCA} />
                                 <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatenteCA)}>X</button>
                             </div>
                         </div>
