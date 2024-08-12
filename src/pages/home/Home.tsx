@@ -41,7 +41,7 @@ const Home = () => {
     'Mantencion General',
     'Mantencion Bresler',
     'Tecnico Fumigación',
-    'Otrosex'
+    'OtrosEx'
   ];
   const rolesInternos = [
     'Aseo',
