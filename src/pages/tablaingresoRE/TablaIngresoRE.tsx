@@ -1,4 +1,4 @@
-import "./tablaIngresoRE.scss"
+import "./tablaingresoRE.scss"
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 import DataTableRE from "../../components/dataTable/DataTableRE";
