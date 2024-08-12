@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import Axios from "axios";
+import { IconButton } from '@mui/material';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
@@ -10,11 +12,30 @@ function AgregarPI() {
     const [NombrePI, setNombrePI] = useState("");
     const [ApellidoPI, setApellidoPI] = useState("");
     const [VehiculoPI, setVehiculoPI] = useState("");
+    const [ModeloPI, setModeloPI] = useState("");
     const [ColorPI, setColorPI] = useState("");
     const [PatentePI, setPatentePI] = useState("");
     const [RolPI, setRolPI] = useState("");
     const [rutValido, setRutValido] = React.useState(true);
 
+    const handleRutChange = (event) => {
+        const value = event.target.value.replace(/[^0-9kK]/g, '');
+        const formattedValue = formatRut(value);
+        setRutPI(formattedValue);
+        if (formattedValue.length > 1) {
+            setRutValido(validarRut(formattedValue));
+        } else {
+            setRutValido(true);
+        }
+    };
+    const formatRut = (rut) => {
+        if (rut.length <= 1) {
+            return rut;
+        }
+        const body = rut.slice(0, -1);
+        const dv = rut.slice(-1).toUpperCase();
+        return `${body}-${dv}`;
+    };
     const validarRut = (rut) => {
         if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
         let tmp = rut.split('-');
@@ -32,10 +53,6 @@ function AgregarPI() {
         return S ? S - 1 : 'k';
     }
 
-    const handleRutChange = (event, { newValue }) => {
-        setRutPI(newValue);
-        setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
-    }
 
     const ingresoformdPI = () => {
         if (!validarRut(RutPI)) {
@@ -51,6 +68,7 @@ function AgregarPI() {
             NombrePI: NombrePI,
             ApellidoPI: ApellidoPI,
             VehiculoPI: VehiculoPI,
+            ModeloPI: ModeloPI,
             ColorPI: ColorPI,
             PatentePI: PatentePI,
             RolPI: RolPI
@@ -80,6 +98,7 @@ function AgregarPI() {
         setNombrePI("");
         setApellidoPI("");
         setVehiculoPI("");
+        setModeloPI("");
         setColorPI("");
         setRolPI("");
         setPatentePI("");
@@ -93,9 +112,9 @@ function AgregarPI() {
 
     const handlePatenteChange = (event) => {
         const value = event.target.value.toUpperCase();
-        setPatenteCA(value);
-      };
-    
+        setPatentePI(value);
+    };
+
 
     return (
 
@@ -103,130 +122,152 @@ function AgregarPI() {
             e.preventDefault(); // Evita que se recargue la página
             ingresoformdPI();
         }}>
-            <h1 className='h1formd'>Ingresar Personal Interno</h1>
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Personal Interno<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+            
+            <div className="container-form">
+                <header>Registro Personal Interno</header>
+                <div className='error-div'>
+
+                </div>
+                <br></br>
+                <div className="form first" style={{ paddingRight: "30px" }}>
+                    <div className="details personal">
+                        <span className="title">Datos Personal Interno</span>
+                        <div className="fields">
+
+                            <div className="input-field">
+                                <label>Rut</label>
+                                <div className="input-group">
+                                    
+                                    <input required type="text" onChange={(event) => handleRutChange(event, { newValue: event.target.value })} value={RutPI} placeholder='Ingreso Rut' className={`form-control ${rutValido ? '' : 'is-invalid'}`} id="rutpi-input" name={RutPI} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setRutPI)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Nombre</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} placeholder='Ingreso Nombre' className='form-control' id="nombrepi-input" name={NombrePI} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setNombrePI)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Apellido</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' className='form-control' id="apellidopi-input" name={ApellidoPI} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setApellidoPI)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+
+                            <div className="input-field">
+                                <label>Rol</label>
+                                <div className="input-group">
+                                    <select required onChange={(event) => { setRolPI(event.target.value); }} className='select-form-control' value={RolPI} id="rolpi-input" name={RolPI}>
+                                        <option value="">Seleccionar una opción</option>
+                                        <option value="Aseo">Aseo</option>
+                                        <option value="Administrativo Existencias">Administrativo Existencias</option>
+                                        <option value="Administrativo de Distribución">Administrativo de Distribución</option>
+                                        <option value="Administrativo Congelados">Administrativo Congelados</option>
+                                        <option value="Jefe de Sucursal">Jefe de Sucursal</option>
+                                        <option value="Jefe Comercial">Jefe Comercial</option>
+                                        <option value="Jefe de Distribución">Jefe de Distribución</option>
+                                        <option value="Coordinador Trade Marketing">Coordinador Trade Marketing</option>
+                                        <option value="Supervisor de Distribución">Supervisor de Distribución</option>
+                                        <option value="Supevisor Ventas">Supevisor Ventas</option>
+                                        <option value="Cajero">Cajero</option>
+                                        <option value="Secretaria">Secretaria</option>
+                                        <option value="Movilizador">Movilizador</option>
+                                        <option value="Gruero">Gruero</option>
+                                        <option value="Despachador">Despachador</option>
+                                        <option value="Recepcionista">Recepcionista</option>
+                                        <option value="Visita Carozzi">Visita Carozzi</option>
+                                        <option value="Vendedor">Vendedor</option>
+                                    </select>
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setRolPI)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+
+                                <div className="input-group">
+
+                                </div>
+                            </div>
+
+
+
                         </div>
                     </div>
-                </div>
+                    <br></br>
 
-                <div className="card-body ">
-
-                    <div className="row g-3 needs-validation">
-
-                        <div className="col-auto">
+                    <div className="details ID">
+                        <span className="title">Datos Vehiculos</span>
+                        <div className="fields">
 
 
-                            <label htmlFor="rutpi-input">Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
-                            <div className="input-group mb-3">
-
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
-                                    value={RutPI}
-                                    placeholder='Ingrese Rut'
-                                    id="rutpi-input"
-                                    name={RutPI}
-                                    required
-                                />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRutPI)}>X</button>
+                            <div className="input-field">
+                                <label>Vehiculo</label>
+                                <div className="input-group">
+                                    <input  type="text" className="form-control" onChange={(event) => { setVehiculoPI(event.target.value); }} value={VehiculoPI} placeholder='Ingrese Vehiculo' id="vehiculopi-input" name={VehiculoPI} ></input>
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setVehiculoPI)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="col-md-3">
-                            <label htmlFor="nombrepi-input">Nombre</label>
-                            <div className="input-group mb-3">
-                                <input type="text" className="form-control" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} required placeholder='Ingrese Nombre' id="nombrepi-input" name={NombrePI} ></input>
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setNombrePI)}>X</button>
+                            <div className="input-field">
+                                <label>Modelo</label>
+                                <div className="input-group">
+                                    <input  type="text" className="form-control" onChange={(event) => { setModeloPI(event.target.value); }} value={ModeloPI} placeholder='Ingrese Modelo' id="modelopi-input" name={ModeloPI} ></input>
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setModeloPI)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="col-md-3">
-                            <label htmlFor="apellidopi-input">Apellido</label>
-                            <div className="input-group mb-3">
-                                <input type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' required className='form-control' id="apellidopi-input" name={ApellidoPI} />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoPI)}>X</button>
+                            <div className="input-field">
+                                <label>Patente</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handlePatenteChange} value={PatentePI} placeholder='Ingrese Patente' className='form-control' id="patentepi-input" name={PatentePI}></input>
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setPatentePI)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="col-md-3">
-                            <label htmlFor="rolpi-input">Rol</label>
-                            <div className="input-group mb-3">
-                                <select onChange={(event) => { setRolPI(event.target.value); }} required value={RolPI} className='form-select ' id="rolpi-input" name={RolPI}>
-                                    <option value="">Seleccionar una opción</option>
-                                    <option value="Administrativo Existencias">Administrativo Existencias</option>
-                                    <option value="Administrativo de Distribución">Administrativo de Distribución</option>
-                                    <option value="Administrativo Congelados">Administrativo Congelados</option>
-                                    <option value="Jefe de Sucursal">Jefe de Sucursal</option>
-                                    <option value="Jefe Comercial">Jefe Comercial</option>
-                                    <option value="Jefe de Distribución">Jefe de Distribución</option>
-                                    <option value="Coordinador Trade Marketing">Coordinador Trade Marketing</option>
-                                    <option value="Supervisor de Distribución">Supervisor de Distribución</option>
-                                    <option value="Supevisor Ventas">Supevisor Ventas</option>
-                                    <option value="Cajero">Cajero</option>
-                                    <option value="Secretaria">Secretaria</option>
-                                    <option value="Movilizador">Movilizador</option>
-                                    <option value="Gruero">Gruero</option>
-                                    <option value="Despachador">Despachador</option>
-                                    <option value="Recepcionista">Recepcionista</option>
-                                </select>
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRolPI)}>X</button>
+                            <div className="input-field">
+                                <label>Color</label>
+                                <div className="input-group">
+                                    <input  type="text" onChange={(event) => { setColorPI(event.target.value); }} value={ColorPI} placeholder='Ingrese Color' className='form-control' id="colorpi-input" name={ColorPI} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setColorPI)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
                             </div>
-                        </div>
 
-
-                    </div>
-                </div>
-            </div>
-
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos del Vehículo<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="card-body ">
-
-                    <div className="row g-3 needs-validation">
-                        <div className="col-md-3">
-                            <label htmlFor="vepi-input">Vehiculo</label>
-                            <div className="input-group mb-3">
-                                <input type="text" onChange={(event) => { setVehiculoPI(event.target.value); }} value={VehiculoPI} placeholder='Ingrese Vehiculo' className='form-control' id="vepi-input" name={VehiculoPI} />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setVehiculoPI)}>X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label htmlFor="patentepi-input">Patente</label>
-                            <div className="input-group mb-3">
-                                <input type="text" onChange={handlePatenteChange} value={PatentePI} placeholder='Ingrese Patente' className='form-control' id="patentepi-input" name={PatentePI} />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatentePI)}>X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label htmlFor="colorpi-input">Color</label>
-                            <div className="input-group mb-3">
-                                <input type="text" onChange={(event) => { setColorPI(event.target.value); }} value={ColorPI} placeholder='Ingrese Color' className='form-control' id="colorpi-input" name={ColorPI} />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setColorPI)}>X</button>
-                            </div>
                         </div>
 
                     </div>
+                    <br></br>
+
+
                 </div>
-            </div>
 
-
-            <div className="div-btn-container">
-                <button className='btn btn-success' type='submit'>Agregar</button>
-
+                <div className="buttons">
+                    <button className="sumbit-entrada">
+                        <span className="btnText">Marcar Entrada</span>
+                        <i className="uil uil-navigator"></i>
+                    </button>
+                </div>
 
             </div>
         </form>

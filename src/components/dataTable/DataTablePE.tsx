@@ -16,7 +16,7 @@ type Props = {
     slug: string;
 }
 
-const DataTable = (props: Props) => {
+const DataTablePE = (props: Props) => {
 
     const [rows, setRows] = useState<object[]>(props.rows);
     const navigate = useNavigate();
@@ -126,4 +126,4 @@ const DataTable = (props: Props) => {
     )
 }
 
-export default DataTable
+export default DataTablePE

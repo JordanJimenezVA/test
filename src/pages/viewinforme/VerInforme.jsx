@@ -4,9 +4,10 @@ import Axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import Button from '@mui/material/Button';
 
-
-
+import { IconButton } from '@mui/material';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 function VerInforme() {
@@ -40,17 +41,17 @@ function VerInforme() {
     const formatDateTime = (dateString) => {
         const date = new Date(dateString);
         const pad = (num) => (num < 10 ? `0${num}` : num);
-    
+
         const year = date.getFullYear();
         const month = pad(date.getMonth() + 1);
         const day = pad(date.getDate());
         const hours = pad(date.getHours());
         const minutes = pad(date.getMinutes());
         const seconds = pad(date.getSeconds());
-    
+
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     };
-    
+
     const validarRut = (rut) => {
         if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
         let tmp = rut.split('-');
@@ -77,7 +78,7 @@ function VerInforme() {
         Axios.get(`${host_server}/VerInforme/${IDR}`)
             .then((res) => {
                 const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO, SELLO, ANDEN, KILOS, PALLETS, SUPERVISOR, ENRE, JEFET, FOTOS, FECHAINICIO, FECHAFIN } = res.data[0];
-             
+
                 const fotosArray = FOTOS.split(', ').map(filename => `${host_server}/imagenes/${filename}`);
                 setFormValues({
                     PERSONAL,
@@ -126,193 +127,228 @@ function VerInforme() {
         <form onSubmit={(e) => {
             e.preventDefault(); // Evita que se recargue la página
         }}>
-            <h1 className='h1formd'>Informe Camion</h1>
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Camion<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+           
+            <div className="container-form">
+                <header>Revisión Camión</header>
+                <br></br>
+                <div className="form first" style={{ paddingRight: "30px" }}>
+                    <div className="details personal">
+                        <span className="title">Datos Camión</span>
+                        <div className="fields">
+
+                            <div className="input-field">
+                                <label>Patente</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={handleChange} value={formValues.PATENTE} placeholder='INGRESE PATENTE' className='form-control' id="patenteca-input" name={'PATENTE'} />
+
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Tipo</label>
+                                <div className="input-group">
+                                    <select required onChange={handleChange} className='select-form-control' value={formValues.ROL} id="tipoca-input" name={'ROL'}>
+                                        <option value="">Seleccionar una opción</option>
+                                        <option value="SEMIREMOLQUE">SEMIREMOLQUE</option>
+                                        <option value="CAMION">CAMION</option>
+                                        <option value="TRACTOCAMION">TRACTOCAMION</option>
+                                        <option value="CHASIS CABINADO">CHASIS CABINADO</option>
+                                        <option value="REMOLQUE">REMOLQUE</option>
+                                        <option value="OtrosCA">Otros</option>
+                                    </select>
+
+                                </div>
+                            </div>
+
+
+
+                            <div className="input-field">
+                                <label>Modelo</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={handleChange} value={formValues.MODELO} placeholder='INGRESE MODELO' className='form-control' id="modeloca-input" name={'MODELO'} />
+
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Color</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={handleChange} value={formValues.COLOR} placeholder='INGRESE COLOR' className='form-control' id="colorca-input" name={'COLOR'} />
+
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
-                </div>
+                    <br></br>
 
-                <div className="card-body ">
+                    <div className="details ID">
+                        <span className="title">Datos Chofer</span>
+                        <div className="fields">
 
-                    <div className="row g-3 needs-validation">
+                            <div className="input-field">
+                                <label>Rut Chofer</label>
+                                <div className="input-group">
+                                    <input
+                                        required
+                                        type="text"
+                                        className={`form-control ${rutValido ? '' : 'is-invalid'}`}
+                                        onChange={handleRutChange}
+                                        value={formValues.RUT}
+                                        placeholder='INGRESE RUT'
+                                        id="rut-input"
+                                        name={'RUT'} >
+                                    </input>
 
-                        <div className="col-auto">
-                            <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
-                            <div className="input-group mb-3">
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
-                                    value={formValues.RUT}
-                                    placeholder='Ingrese Rut'
-                                    disabled="true"
+
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Nombre Chofer</label>
+                                <div className="input-group">
+                                    <input required type="text" className="form-control" onChange={handleChange} value={formValues.PERSONAL} placeholder='INGRESE NOMBRE' id="personal-input" name={'PERSONAL'} ></input>
+
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Apellido Chofer</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={handleChange} value={formValues.APELLIDO} placeholder='INGRESE APELLIDO' className='form-control' id="apellidoca-input" name={'APELLIDO'} />
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <br></br>
+                    <div className="details ID">
+                        <span className="title">Datos Revisión</span>
+                        <div className="fields">
+
+                            <div className="input-field">
+                                <label>Planilla Transporte</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={handleChange} value={formValues.GUIADESPACHO} placeholder='PLANILLA TRANSPORTE' className='form-control' id="guiaca-input" name={'GUIADESPACHO'} />
+
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Sello</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handleChange} value={formValues.SELLO} placeholder='INGRESE SELLO' className='form-control' id="sello-input" name={'SELLO'} />
+
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>N° Anden</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handleChange} value={formValues.ANDEN} placeholder='INGRESE ANDEN' className='form-control' id="anden-input" name={'ANDEN'} />
+
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Total Kilos</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handleChange} value={formValues.KILOS} placeholder='INGRESE KILOS' className='form-control' id="kilos-input" name={'KILOS'} />
+
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Cantidad Pallets</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handleChange} value={formValues.PALLETS} placeholder='INGRESE PALLETS' className='form-control' id="pallets-input" name={'PALLETS'} />
+
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Supervisor</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handleChange} value={formValues.SUPERVISOR} placeholder='INGRESE SUPERVISOR' className='form-control' id="supervisor-input" name={'SUPERVISOR'} />
+
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Jefe Turno CD</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handleChange} value={formValues.JEFET} placeholder='INGRESE JEFET' className='form-control' id="jefet-input" name={'JEFET'} />
+
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+
+                                <div className="input-group">
+
+                                </div>
+                            </div>
+
+
+
+                            <div className="input-field-obs">
+                                <label>Observaciones</label>
+                                <textarea type="text" required
+                                    onChange={handleChange}
+                                    value={formValues.OBSERVACIONES}
+                                    placeholder='INGRESE OBSERVACIONES'
+                                    className='form-control'
+                                    id="ob-input"
+                                    name={'OBSERVACIONES'}
                                 />
                             </div>
+
+                            
+
+                           
+
+
                         </div>
 
-                        <div className="col-md-3">
-                            <label>Nombre</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="PERSONAL" value={formValues.PERSONAL} onChange={handleChange} disabled="true" placeholder="Ingrese Nombre" className="form-control" />
+                        <Swiper
+                                spaceBetween={10}
+                                slidesPerView={5}
+                                navigation
+                                className="mySwiper"
+                            >
+                                {formValues.FOTOS && formValues.FOTOS.length > 0 ? (
+                                    formValues.FOTOS.map((foto, index) => (
+                                        <SwiperSlide key={index}>
+                                            <img src={foto} className="img-thumbnail" alt={`Foto ${index + 1}`} style={{ maxWidth: '100px', cursor: 'pointer' }} onClick={() => showImageModal(foto)} />
+                                        </SwiperSlide>
+                                    ))
+                                ) : (
+                                    <SwiperSlide>
+                                        <p>No hay fotos disponibles</p>
+                                    </SwiperSlide>
+                                )}
+                            </Swiper>
+                            <div className="modal fade" id="imageModal" tabIndex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                                <div className="modal-dialog modal-dialog-centered">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h5 className="modal-title" id="imageModalLabel">Imagen</h5>
+                                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div className="modal-body">
+                                            <img id="modalImage" src="" className="img-fluid" alt="Imagen grande" />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Apellido</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="APELLIDO" value={formValues.APELLIDO} onChange={handleChange} disabled="true" placeholder='Ingrese Apellido' className='form-control' />
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Rol</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="ROL" value={formValues.ROL} onChange={handleChange} disabled="true" placeholder='Ingrese Rol' className='form-control'></input>
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <label>Planilla de Transporte</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="GUIADESPACHO" value={formValues.GUIADESPACHO} disabled="true" onChange={handleChange} placeholder='Ingrese Planilla de Transporte' className='form-control' />
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Sello Cortado</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="SELLO" value={formValues.SELLO} disabled="true" onChange={handleChange} placeholder='Ingrese Sello' className='form-control' />
-                            </div>
-                        </div>
 
                     </div>
-                </div>
-            </div>
 
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Revision<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
-                        </div>
-                    </div>
                 </div>
 
-                <div className="card-body ">
-
-                    <div className="row g-3 needs-validation">
-                        <div className="col-md-3">
-                            <label>Observaciones</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="OBSERVACIONES" value={formValues.OBSERVACIONES} disabled="true" onChange={handleChange} placeholder='Ingrese Observaciones' className='form-control' />
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>N° Anden</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="ANDEN" value={formValues.ANDEN} disabled="true" onChange={handleChange} placeholder='Ingrese N°Anden' className='form-control' />
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Total Kilos</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="KILOS" value={formValues.KILOS} disabled="true" onChange={handleChange} placeholder='Ingrese Total Kilos' className='form-control' />
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Cantidad Pallets</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="PALLETS" value={formValues.PALLETS} disabled="true" onChange={handleChange} placeholder='Ingrese Cantidad Pallets' className='form-control' />
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Supervisor Interno</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="SUPERVISOR" value={formValues.SUPERVISOR} disabled="true" onChange={handleChange} placeholder='Ingrese Supervisor Interno' className='form-control' />
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Encargado de la Revision</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="ER" value={formValues.ENRE} disabled="true" onChange={handleChange} placeholder='Ingrese Encargado de la Revision' className='form-control' />
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Jefe de turno CD</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="JEFET" value={formValues.JEFET} disabled="true" onChange={handleChange} placeholder='Ingrese Jefe de Turno CD' className='form-control' />
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Fecha de Inicio</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="FECHAINICIO" value={formValues.FECHAINICIO} disabled="true" onChange={handleChange} placeholder='Ingrese Fecha de Inicio' className='form-control' />
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Fecha de Fin</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="FECHAFIN" value={formValues.FECHAFIN} disabled="true" onChange={handleChange} placeholder='Ingrese Fecha de Fin' className='form-control' />
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-
-            </div>
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Revision<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
-                        </div>
-                    </div>
-                </div>
-
-                <Swiper
-                    spaceBetween={10}
-                    slidesPerView={5}
-                    navigation
-                    className="mySwiper"
-                >
-                    {formValues.FOTOS && formValues.FOTOS.length > 0 ? (
-                        formValues.FOTOS.map((foto, index) => (
-                            <SwiperSlide key={index}>
-                                <img src={foto} className="img-thumbnail" alt={`Foto ${index + 1}`} style={{ maxWidth: '100px', cursor: 'pointer' }} onClick={() => showImageModal(foto)} />
-                            </SwiperSlide>
-                        ))
-                    ) : (
-                        <SwiperSlide>
-                            <p>No hay fotos disponibles</p>
-                        </SwiperSlide>
-                    )}
-                </Swiper>
-
-                <div className="modal fade" id="imageModal" tabIndex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="imageModalLabel">Imagen</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                <img id="modalImage" src="" className="img-fluid" alt="Imagen grande" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </form >
     );

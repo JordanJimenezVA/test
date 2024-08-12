@@ -2,14 +2,13 @@ import Swal from 'sweetalert2';
 import Axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import { IconButton } from '@mui/material';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
-
-
-
-function EditarPE() {
+function EditarCA() {
     const { IDCA } = useParams();
-    const [rutValido, setRutValido] = React.useState(true);
+    const [rutValido, setRutValido] = useState(true);
 
     const [formValues, setFormValues] = useState({
         RUTCA: '',
@@ -28,42 +27,64 @@ function EditarPE() {
         getCamiones(IDCA);
     }, [IDCA]);
 
-    const validarRut = (rut) => {
-        if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
-        let tmp = rut.split('-');
-        let digv = tmp[1];
-        rut = tmp[0];
-        if (digv == 'K') digv = 'k';
-        return (dv(rut) == digv);
-    }
-
-    const dv = (T) => {
-        let M = 0, S = 1;
-        for (; T; T = Math.floor(T / 10)) {
-            S = (S + T % 10 * (9 - M++ % 6)) % 11;
+    const formatRut = (rut) => {
+        rut = rut.replace(/[^0-9kK]/g, '');
+        if (rut.length <= 1) {
+            return rut;
         }
-        return S ? S - 1 : 'k';
-    }
-    const handleRutChange = (event, { newValue }) => {
-        setRutPI(newValue);
-        setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
-    }
+        const body = rut.slice(0, -1);
+        const dv = rut.slice(-1).toUpperCase();
+        return `${body}-${dv}`;
+    };
+
+    const validarRut = (rut) => {
+        if (!/^\d{1,8}-[\dkK]$/.test(rut)) return false;
+        const [body, dv] = rut.split('-');
+        return dv.toUpperCase() === calculateDV(body);
+    };
+
+    const calculateDV = (rut) => {
+        let sum = 0;
+        let multiplier = 2;
+        for (let i = rut.length - 1; i >= 0; i--) {
+            sum += rut[i] * multiplier;
+            multiplier = multiplier === 7 ? 2 : multiplier + 1;
+        }
+        const remainder = sum % 11;
+        if (remainder === 1) {
+            return 'K';
+        } else if (remainder === 0) {
+            return '0';
+        } else {
+            return String(11 - remainder);
+        }
+    };
+
+    const handleRutChange = (event) => {
+        const value = event.target.value;
+        const formattedValue = formatRut(value);
+        setFormValues((prevValues) => ({
+            ...prevValues,
+            RUTCA: formattedValue,
+        }));
+        setRutValido(validarRut(formattedValue));
+    };
 
     const getCamiones = (IDCA) => {
         Axios.get(`${host_server}/EditarCamiones/${IDCA}`)
             .then((res) => {
                 const { RUTCA, CHOFERCA, APELLIDOCHOFERCA, PATENTECA, MARCACA, TIPOCA, MODELOCA, COLORCA, EMPRESACA, ESTADOCA } = res.data[0];
                 setFormValues({
-                    RUTCA,
-                    CHOFERCA,
-                    APELLIDOCHOFERCA,
-                    PATENTECA,
-                    MARCACA,
-                    TIPOCA,
-                    MODELOCA,
-                    COLORCA,
-                    EMPRESACA,
-                    ESTADOCA,
+                    RUTCA: formatRut(RUTCA), // Asegúrate de aplicar el formato al recibir los datos
+                    CHOFERCA: CHOFERCA || '',
+                    APELLIDOCHOFERCA: APELLIDOCHOFERCA || '',
+                    PATENTECA: PATENTECA || '',
+                    MARCACA: MARCACA || '',
+                    TIPOCA: TIPOCA || '',
+                    MODELOCA: MODELOCA || '',
+                    COLORCA: COLORCA || '',
+                    EMPRESACA: EMPRESACA || '',
+                    ESTADOCA: ESTADOCA || '',
                 });
             })
             .catch((error) => {
@@ -83,7 +104,6 @@ function EditarPE() {
             [name]: value,
         }));
     };
-
 
     const limpiarCampos = () => {
         setFormValues({
@@ -126,160 +146,225 @@ function EditarPE() {
                 text: "Error al modificar, intente nuevamente más tarde",
             });
         });
-    }
+    };
+
+    const handlePatenteChange = (event) => {
+        const value = event.target.value.toUpperCase();
+        setFormValues((prevValues) => ({
+            ...prevValues,
+            PATENTECA: value,
+        }));
+    };
 
     return (
         <form onSubmit={(e) => {
             e.preventDefault(); // Evita que se recargue la página
-            editarCA();
+            if (rutValido) {
+                editarCA();
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "RUT no válido",
+                });
+            }
         }}>
-            <h1 className='h1formd'>Modificar Camion</h1>
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Chofer<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+            <div className="container-form">
+                <header>Editar Camión</header>
+                <br></br>
+                <div className="form first" style={{ paddingRight: "30px" }}>
+                    <div className="details personal">
+                        <span className="title">Datos Camión</span>
+                        <div className="fields">
+                            <div className="input-field">
+                                <label>Patente</label>
+                                <div className="input-group">
+                                    <input
+                                        required
+                                        type="text"
+                                        onChange={handlePatenteChange}
+                                        value={formValues.PATENTECA}
+                                        placeholder='INGRESE PATENTE'
+                                        className='form-control'
+                                        id="patenteca-input"
+                                        name='PATENTECA'
+                                    />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('PATENTECA')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+                            <div className="input-field">
+                                <label>Tipo</label>
+                                <div className="input-group">
+                                    <select
+                                        required
+                                        onChange={handleChange}
+                                        className='select-form-control'
+                                        value={formValues.TIPOCA}
+                                        id="tipoca-input"
+                                        name='TIPOCA'
+                                    >
+                                        <option value="">Seleccionar una opción</option>
+                                        <option value="SEMIREMOLQUE">SEMIREMOLQUE</option>
+                                        <option value="CAMION">CAMION</option>
+                                        <option value="TRACTOCAMION">TRACTOCAMION</option>
+                                        <option value="CHASIS CABINADO">CHASIS CABINADO</option>
+                                        <option value="REMOLQUE">REMOLQUE</option>
+                                        <option value="OtrosCA">Otros</option>
+                                    </select>
+                                    <IconButton color="primary" onClick={() => limpiarCampo('TIPOCA')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+                            <div className="input-field">
+                                <label>Modelo</label>
+                                <div className="input-group">
+                                    <input
+                                        required
+                                        type="text"
+                                        onChange={handleChange}
+                                        value={formValues.MODELOCA}
+                                        placeholder='INGRESE MODELO'
+                                        className='form-control'
+                                        id="modeloca-input"
+                                        name='MODELOCA'
+                                    />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('MODELOCA')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+                            <div className="input-field">
+                                <label>Color</label>
+                                <div className="input-group">
+                                    <input
+                                        required
+                                        type="text"
+                                        onChange={handleChange}
+                                        value={formValues.COLORCA}
+                                        placeholder='INGRESE COLOR'
+                                        className='form-control'
+                                        id="colorca-input"
+                                        name='COLORCA'
+                                    />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('COLORCA')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+                            <div className="input-field">
+                                <label>Marca</label>
+                                <div className="input-group">
+                                    <input
+                                        required
+                                        type="text"
+                                        onChange={handleChange}
+                                        value={formValues.MARCACA}
+                                        placeholder='INGRESE MARCA'
+                                        className='form-control'
+                                        id="marcaca-input"
+                                        name='MARCACA'
+                                    />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('MARCACA')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+                            <div className="input-field">
+                                <label>Empresa</label>
+                                <div className="input-group">
+                                    <input
+                                        required
+                                        type="text"
+                                        onChange={handleChange}
+                                        value={formValues.EMPRESACA}
+                                        placeholder='INGRESE EMPRESA'
+                                        className='form-control'
+                                        id="empresape-input"
+                                        name='EMPRESACA'
+                                    />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('EMPRESACA')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br></br>
+                    <div className="details ID">
+                        <span className="title">Datos Chofer</span>
+                        <div className="fields">
+                            <div className="input-field">
+                                <label>Rut Chofer</label>
+                                <div className="input-group">
+                                    <input
+                                        required
+                                        type="text"
+                                        className={`form-control ${rutValido ? '' : 'is-invalid'}`}
+                                        onChange={handleRutChange}
+                                        value={formValues.RUTCA}
+                                        placeholder='INGRESE RUT'
+                                        id="rutca-input"
+                                        name='RUTCA'
+                                    />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('RUTCA')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                                {!rutValido && (
+                                    <div className="invalid-feedback">RUT no válido</div>
+                                )}
+                            </div>
+                            <div className="input-field">
+                                <label>Nombre Chofer</label>
+                                <div className="input-group">
+                                    <input
+                                        required
+                                        type="text"
+                                        className="form-control"
+                                        onChange={handleChange}
+                                        value={formValues.CHOFERCA}
+                                        placeholder='INGRESE NOMBRE'
+                                        id="choferca-input"
+                                        name='CHOFERCA'
+                                    />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('CHOFERCA')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+                            <div className="input-field">
+                                <label>Apellido Chofer</label>
+                                <div className="input-group">
+                                    <input
+                                        required
+                                        type="text"
+                                        onChange={handleChange}
+                                        value={formValues.APELLIDOCHOFERCA}
+                                        placeholder='INGRESE APELLIDO'
+                                        className='form-control'
+                                        id="apellidoca-input"
+                                        name='APELLIDOCHOFERCA'
+                                    />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('APELLIDOCHOFERCA')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div className="card-body ">
-
-                    <div className="row g-3 needs-validation">
-
-                        <div className="col-auto">
-
-
-                            <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
-                            <div className="input-group mb-3">
-
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
-                                    value={formValues.RUTCA}
-                                    placeholder='Ingrese Rut'
-                                />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('RUTCA')}>X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Nombre</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="CHOFERCA" value={formValues.CHOFERCA} onChange={handleChange} placeholder="Ingrese Nombre" className="form-control" ></input>
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('CHOFERCA')}>X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Apellido</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="APELLIDOCHOFERCA" value={formValues.APELLIDOCHOFERCA} onChange={handleChange} placeholder='Ingrese Apellido' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('APELLIDOCHOFERCA')}>X</button>
-                            </div>
-                        </div>
-
-
-
-
-                        <div className="col-md-3">
-                            <label>Estado</label>
-                            <div className="input-group mb-3">
-                                <select name="ESTADOPE" value={formValues.ESTADOPE} onChange={handleChange} className='form-select '>
-                                    <option value="VIGENTE">VIGENTE</option>
-                                    <option value="NOVIGENTE">NO VIGENTE</option>
-                                    <option value="NOAPTO">NO APTO</option>
-                                </select>
-                            </div>
-                        </div>
-
-
-                    </div>
+                <div className="buttons">
+                    <button className="sumbit-entrada">
+                        <span className="btnText">Confirmar Registro</span>
+                        <i className="uil uil-navigator"></i>
+                    </button>
                 </div>
-            </div>
-
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Vehiculo<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="card-body ">
-
-                    <div className="row g-3 needs-validation">
-                        <div className="col-md-3">
-                            <label>Tipo</label>
-                            <div className="input-group mb-3">
-                                <select name="TIPOCA" value={formValues.TIPOCA} onChange={handleChange} className='form-select '>
-                                    <option value="SEMIREMOLQUE">SEMIREMOLQUE</option>
-                                    <option value="CAMION">CAMION</option>
-                                    <option value="TRACTOCAMION">TRACTOCAMION</option>
-                                    <option value="CHASIS CABINADO">CHASIS CABINADO</option>
-                                    <option value="REMOLQUE">REMOLQUE</option>
-                                    <option value="CHASIS CABINADO">CHASIS CABINADO</option>
-                                    <option value="OtrosCA">Otros</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Modelo</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="MODELOCA" value={formValues.MODELOCA} onChange={handleChange} placeholder='Ingrese Modelo' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('MODELOCA')}>X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Color</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="COLORCA" value={formValues.COLORCA} onChange={handleChange} placeholder='Ingrese Color' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('COLORCA')}>X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Patente Rampa</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="PATENTECA" value={formValues.PATENTECA} onChange={handleChange} placeholder='Ingrese Patente' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('PATENTECA')}>X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Marca</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="MARCACA" value={formValues.MARCACA} onChange={handleChange} placeholder='Ingrese Marca' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('MARCACA')}>X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Empresa</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="EMPRESACA" value={formValues.EMPRESACA} onChange={handleChange} placeholder='Ingrese Empresa' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('EMPRESACA')}>X</button>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-            </div>
-
-
-            <div className="div-btn-container">
-                <button className='btn btn-success' type='submit'>Modificar</button>
-
-
             </div>
         </form>
-
     );
 }
 
-export default EditarPE;
+export default EditarCA;

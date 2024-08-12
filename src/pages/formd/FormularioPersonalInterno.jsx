@@ -5,6 +5,8 @@ import Axios from "axios";
 import Autosuggest from 'react-autosuggest';
 import useChileanTime from "../../hooks/UseChileanTime";
 import { useAuth } from '../../hooks/Auth';
+import { IconButton } from '@mui/material';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 function FormularioPersonalInterno() {
@@ -15,6 +17,7 @@ function FormularioPersonalInterno() {
   const [NombrePI, setNombrePI] = useState("");
   const [ApellidoPI, setApellidoPI] = useState("");
   const [VehiculoPI, setVehiculoPI] = useState("");
+  const [ModeloPI, setModeloPI] = useState("");
   const [ColorPI, setColorPI] = useState("");
   const [PatentePI, setPatentePI] = useState("");
   const [RolPI, setRolPI] = useState("");
@@ -86,6 +89,7 @@ function FormularioPersonalInterno() {
       setNombrePI(data.NOMBREPI);
       setApellidoPI(data.APELLIDOPI);
       setVehiculoPI(data.VEHICULOPI);
+      setModeloPI(data.MODELOPI);
       setColorPI(data.COLORPI);
       setPatentePI(data.PATENTEPI);
       setRolPI(data.ROLPI);
@@ -109,6 +113,7 @@ function FormularioPersonalInterno() {
       NOMBREPI: NombrePI,
       APELLIDOPI: ApellidoPI,
       VEHICULOPI: VehiculoPI,
+      MODELOPI: ModeloPI,
       COLORPI: ColorPI,
       PATENTEPI: PatentePI,
       OBSERVACIONESPI: ObservacionesPI,
@@ -143,6 +148,7 @@ function FormularioPersonalInterno() {
     setNombrePI("");
     setApellidoPI("");
     setVehiculoPI("");
+    setModeloPI("");
     setColorPI("");
     setPatentePI("");
     setObservacionesPI("");
@@ -173,151 +179,182 @@ function FormularioPersonalInterno() {
         ingresoformdPI();
       }
     }}>
-      <h1 className='h1formd'>Entrada Personal Interno</h1>
-      <div className="card shadow-none border my-4" data-component-card="data-component-card">
-        <div className="card-header border-bottom bg-body">
-          <div className="row g-3 justify-content-between align-items-center">
-            <div className="col-12 col-md">
-              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">
-                Datos Personal Interno
-                {mensajeEstado && (
-                  <span style={{ color: mensajeEstado === 'PROHIBIDO EL ACCESO' ? 'red' : 'orange', marginLeft: '10px' }}>
-                    {mensajeEstado}
-                  </span>
-                )}
-                <a className="anchorjs-link" aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a>
-              </h4>
-            </div>
-          </div>
+      <div className="container-form">
+        <header>Marcar Entrada Personal Interno</header>
+        <div className='error-div'>
+          {mensajeEstado && (
+            <span style={{ color: mensajeEstado === 'PROHIBIDO EL ACCESO' ? 'red' : 'orange', marginLeft: '10px' }}>
+              {mensajeEstado}
+            </span>
+          )}
         </div>
+        <br></br>
+        <div className="form first" style={{ paddingRight: "30px" }}>
+          <div className="details personal">
+            <span className="title">Datos Personal Interno</span>
+            <div className="fields">
+              <div className="input-field">
 
-        <div className="card-body ">
+                <label>Rut</label>
+                <div className='input-group'>
 
-          <div className="row g-3 needs-validation">
+                  <Autosuggest
 
-            <div className="col-auto">
+                    suggestions={suggestions}
+                    onSuggestionsFetchRequested={({ value }) => getSuggestions(value)}
+                    onSuggestionsClearRequested={() => setSuggestions([])}
+                    getSuggestionValue={(suggestion) => suggestion}
+                    renderSuggestion={(suggestion) => <div>{suggestion}</div>}
+                    inputProps={{
+                      placeholder: "Ingrese Rut",
+                      value: RutPI,
+                      id: "rutpe-input",
+                      onChange: handleRutChange,
+                    }}
+                    onSuggestionSelected={onSuggestionSelected}
+                  />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setRutPI)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Nombre</label>
+                <div className="input-group">
+                  <input required type="text" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} placeholder='Ingreso Nombre' className='form-control' id="nombrepi-input" name={NombrePI} />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setNombrePI)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Apellido</label>
+                <div className="input-group">
+                  <input required type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' className='form-control' id="apellidopi-input" name={ApellidoPI} />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setApellidoPI)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
 
 
-              <label htmlFor='rutformpi-input'>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
-              <div className="input-group mb-3">
+              <div className="input-field">
+                <label>Rol</label>
+                <div className="input-group">
+                  <select required onChange={(event) => { setRolPI(event.target.value); }} className='select-form-control' value={RolPI} id="rolpi-input" name={RolPI}>
+                    <option value="">Seleccionar una opción</option>
+                    <option value="Aseo">Aseo</option>
+                    <option value="Administrativo Existencias">Administrativo Existencias</option>
+                    <option value="Administrativo de Distribución">Administrativo de Distribución</option>
+                    <option value="Administrativo Congelados">Administrativo Congelados</option>
+                    <option value="Jefe de Sucursal">Jefe de Sucursal</option>
+                    <option value="Jefe Comercial">Jefe Comercial</option>
+                    <option value="Jefe de Distribución">Jefe de Distribución</option>
+                    <option value="Coordinador Trade Marketing">Coordinador Trade Marketing</option>
+                    <option value="Supervisor de Distribución">Supervisor de Distribución</option>
+                    <option value="Supevisor Ventas">Supevisor Ventas</option>
+                    <option value="Cajero">Cajero</option>
+                    <option value="Secretaria">Secretaria</option>
+                    <option value="Movilizador">Movilizador</option>
+                    <option value="Gruero">Gruero</option>
+                    <option value="Despachador">Despachador</option>
+                    <option value="Recepcionista">Recepcionista</option>
+                    <option value="Visita Carozzi">Visita Carozzi</option>
+                    <option value="Vendedor">Vendedor</option>
+                  </select>
+                  <IconButton color="primary" onClick={() => limpiarCampo(setRolPI)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
 
-                <Autosuggest
-                  suggestions={suggestions}
-                  onSuggestionsFetchRequested={({ value }) => getSuggestions(value)}
-                  onSuggestionsClearRequested={() => setSuggestions([])}
-                  getSuggestionValue={(suggestion) => suggestion}
-                  renderSuggestion={(suggestion) => <div>{suggestion}</div>}
-                  inputProps={{
-                    placeholder: "Ingrese RUT",
-                    value: RutPI,
-                    id: "rutformpi-input",
-                    onChange: handleRutChange,
-                  }}
-                  onSuggestionSelected={onSuggestionSelected}
+              <div className="input-field">
+
+                <div className="input-group">
+
+                </div>
+              </div>
+
+              <div className="input-field-obs">
+                <label>Observaciones</label>
+                <textarea type="text" required={mensajeEstado !== ''}
+                  onChange={(event) => { setObservacionesPI(event.target.value); }}
+                  value={ObservacionesPI}
+                  placeholder='Ingrese Observaciones'
+                  className='form-control'
+                  id="obspi-input"
+                  name={ObservacionesPI}
                 />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRutPI)}>X</button>
               </div>
-            </div>
 
-            <div className="col-md-3">
-              <label htmlFor='nombrepi-input'>Nombre</label>
-              <div className="input-group mb-3">
-                <input required type="text" className="form-control" onChange={(event) => { setNombrePI(event.target.value); }} value={NombrePI} placeholder='Ingrese Nombre' id="nombrepi-input" name={NombrePI} ></input>
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setNombrePI)}>X</button>
-              </div>
             </div>
+          </div>
+          <br></br>
 
-            <div className="col-md-3">
-              <label htmlFor='apellidopi-input'>Apellido</label>
-              <div className="input-group mb-3">
-                <input required type="text" onChange={(event) => { setApellidoPI(event.target.value); }} value={ApellidoPI} placeholder='Ingrese Apellido' className='form-control' id="apellidopi-input" name={ApellidoPI} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoPI)}>X</button>
-              </div>
-            </div>
+          <div className="details ID">
+            <span className="title">Datos Vehiculos</span>
+            <div className="fields">
 
-            <div className="col-md-3">
-              <label htmlFor='rolpi-input'>Rol</label>
-              <div className="input-group mb-3">
-                <select required onChange={(event) => { setRolPI(event.target.value); }} value={RolPI} className='form-select ' id="rolpi-input" name={RolPI}>
-                  <option value="">Seleccionar una opción</option>
-                  <option value="Administrativo Existencias">Administrativo Existencias</option>
-                  <option value="Administrativo de Distribución">Administrativo de Distribución</option>
-                  <option value="Administrativo Congelados">Administrativo Congelados</option>
-                  <option value="Jefe de Sucursal">Jefe de Sucursal</option>
-                  <option value="Jefe Comercial">Jefe Comercial</option>
-                  <option value="Jefe de Distribución">Jefe de Distribución</option>
-                  <option value="Coordinador Trade Marketing">Coordinador Trade Marketing</option>
-                  <option value="Supervisor de Distribución">Supervisor de Distribución</option>
-                  <option value="Supevisor Ventas">Supevisor Ventas</option>
-                  <option value="Cajero">Cajero</option>
-                  <option value="Secretaria">Secretaria</option>
-                  <option value="Movilizador">Movilizador</option>
-                  <option value="Gruero">Gruero</option>
-                  <option value="Despachador">Despachador</option>
-                  <option value="Recepcionista">Recepcionista</option>
-                </select>
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRolPI)}>X</button>
-              </div>
-            </div>
 
-            <div className="col-md-3">
-              <label htmlFor='observacionespi-input'>Observaciones</label>
-              <div className="input-group mb-3">
-                <input type="text" required={mensajeEstado !== ''} onChange={(event) => { setObservacionesPI(event.target.value); }} value={ObservacionesPI} placeholder='Ingrese Observaciones' className='form-control' id="observacionespi-input" name={ObservacionesPI} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setObservacionesPI)}>X</button>
+              <div className="input-field">
+                <label>Vehiculo</label>
+                <div className="input-group">
+                  <input  type="text" className="form-control" onChange={(event) => { setVehiculoPI(event.target.value); }} value={VehiculoPI} placeholder='Ingrese Vehiculo' id="vehiculopi-input" name={VehiculoPI} ></input>
+                  <IconButton color="primary" onClick={() => limpiarCampo(setVehiculoPI)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
               </div>
+
+              <div className="input-field">
+                <label>Modelo</label>
+                <div className="input-group">
+                  <input  type="text" className="form-control" onChange={(event) => { setModeloPI(event.target.value); }} value={ModeloPI} placeholder='Ingrese Modelo' id="modelopi-input" name={ModeloPI} ></input>
+                  <IconButton color="primary" onClick={() => limpiarCampo(setModeloPI)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Patente</label>
+                <div className="input-group">
+                  <input  type="text" onChange={handlePatenteChange} value={PatentePI} placeholder='Ingrese Patente' className='form-control' id="patentepi-input" name={PatentePI} />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setPatentePI)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Color</label>
+                <div className="input-group">
+                  <input  type="text" onChange={(event) => { setColorPI(event.target.value); }} value={ColorPI} placeholder='Ingrese Color' className='form-control' id="colorpi-input" name={ColorPI} />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setColorPI)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
             </div>
 
           </div>
-        </div>
-      </div>
+          <br></br>
 
-      <div className="card shadow-none border my-4" data-component-card="data-component-card">
-        <div className="card-header border-bottom bg-body">
-          <div className="row g-3 justify-content-between align-items-center">
-            <div className="col-12 col-md">
-              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos del Vehículo<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
-            </div>
-          </div>
+
         </div>
 
-        <div className="card-body ">
-
-          <div className="row g-3 needs-validation">
-            <div className="col-md-3">
-              <label htmlFor='vehiculopi-input'>Vehiculo</label>
-              <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setVehiculoPI(event.target.value); }} value={VehiculoPI} placeholder='Ingrese Vehiculo' className='form-control' id="vehiculopi-input" name={VehiculoPI} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setVehiculoPI)}>X</button>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label htmlFor='patentepi-input'>Patente</label>
-              <div className="input-group mb-3">
-                <input type="text" onChange={handlePatenteChange} value={PatentePI} placeholder='Ingrese Patente' className='form-control' id="patentepi-input" name={PatentePI} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatentePI)}>X</button>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label htmlFor='colorpi-input'>Color</label>
-              <div className="input-group mb-3">
-                <input type="text" onChange={(event) => { setColorPI(event.target.value); }} value={ColorPI} placeholder='Ingrese Color' className='form-control' id="colorpi-input" name={ColorPI} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setColorPI)}>X</button>
-              </div>
-            </div>
-
-          </div>
+        <div className="buttons">
+          <button className="sumbit-entrada">
+            <span className="btnText">Marcar Entrada</span>
+            <i className="uil uil-navigator"></i>
+          </button>
         </div>
-      </div>
-
-
-      <div className="div-btn-container">
-        <button className='btn btn-success' type='submit'>Marcar Ingreso</button>
-
 
       </div>
+
     </form>
   )
 }

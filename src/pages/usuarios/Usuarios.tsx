@@ -3,6 +3,8 @@ import "./usuarios.scss"
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import DataTableU from "../../components/dataTable/DataTableU"
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { Button } from "@mui/material";
 
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
@@ -38,7 +40,7 @@ const Usuarios = () => {
       <div className="info">
         <h1 className="h1d">Usuarios</h1>
 
-        <button onClick={handleIngresarU}>Ingresar Usuarios</button>
+        <Button onClick={handleIngresarU} variant="contained" endIcon={<PersonAddIcon />} >Ingresar Usuario </Button>
       </div>
       {isLoading ? (
         "Loading..."

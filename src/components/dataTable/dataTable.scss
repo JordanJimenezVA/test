@@ -1,19 +1,19 @@
 @import "../../styles/responsive.scss";
 .dataTable{
     @include sm{
-        width: 1000px;
+        width: auto;
     }
     @include lg{
-        width: 1000px;
+        width: auto;
     }
     @include md{
-        width: 1000px;
+        width: auto;
     }
     @include xl{
-        width: 1000px;
+        width: auto;
     }
     @include xxl{
-        width: 1000px;
+        width: auto;
     }
     .dataGrid{
         background-color: white;
@@ -71,4 +71,34 @@
         color: white;
         cursor: pointer;
     }
+}
+
+.centered-cell {
+    justify-content: center !important;
+}
+
+.css-rqglhn-MuiTable-root {
+    display: table;
+    width: 100%;
+    border-collapse: separate !important;
+    border-spacing: 0;
+    border-radius: 8px !important;
+    border: 1px solid black;
+}
+
+.tr{
+    width: 25% !important;
+}
+
+.css-1ex1afd-MuiTableCell-root{
+    font-family: "Poppins", sans-serif !important;
+    width: 50% !important;
+}
+
+.css-2ulfj5-MuiTypography-root {
+    font-family: "Poppins", sans-serif !important;
+}
+
+.css-bdhsul-MuiTypography-root-MuiDialogTitle-root{
+    font-family: "Poppins", sans-serif !important;
 }

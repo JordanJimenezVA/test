@@ -5,6 +5,8 @@ import Axios, { } from "axios";
 import Autosuggest from 'react-autosuggest';
 import useChileanTime from "../../hooks/UseChileanTime";
 import { useAuth } from '../../hooks/Auth';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import { IconButton } from '@mui/material';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 function FormularioCamiones() {
@@ -16,6 +18,7 @@ function FormularioCamiones() {
   const [ApellidoChoferCA, setApellidoChoferCA] = useState("");
   const [RutCA, setRutCA] = useState("");
   const [PatenteCA, setPatenteCA] = useState("");
+  const [PatenteRACA, setPatenteRACA] = useState("");
   const [MarcaCA, setMarcaCA] = useState("");
   const [TipoCA, setTipoCA] = useState("");
   const [ModeloCA, setModeloCA] = useState("");
@@ -25,38 +28,60 @@ function FormularioCamiones() {
   const [GuiaDespachoCA, setGuiaDespachoCA] = useState("");
   const [SelloCA, setSelloCA] = useState("");
   const [mensajeEstado, setMensajeEstado] = useState('');
-  const [rutValido, setRutValido] = React.useState(true);
+  const [rutValido, setRutValido] = useState(true);
+
+
+
+  const handleRutChange = (event) => {
+    const value = event.target.value.replace(/[^0-9kK]/g, '');
+    const formattedValue = formatRut(value);
+    setRutCA(formattedValue);
+    if (formattedValue.length > 1) {
+      setRutValido(validarRut(formattedValue));
+    } else {
+      setRutValido(true);
+    }
+  };
+
+  const formatRut = (rut) => {
+    if (rut.length <= 1) {
+      return rut;
+    }
+    const body = rut.slice(0, -1);
+    const dv = rut.slice(-1).toUpperCase();
+    return `${body}-${dv}`;
+  };
 
   const validarRut = (rut) => {
-    if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
-    let tmp = rut.split('-');
-    let digv = tmp[1];
-    rut = tmp[0];
-    if (digv == 'K') digv = 'k';
-    return (dv(rut) == digv);
-  }
+    if (!/^[0-9]+[-|‐][0-9kK]$/.test(rut)) return false;
+    const [body, dv] = rut.split('-');
+    return dv.toUpperCase() === calculateDV(body);
+  };
 
-  const dv = (T) => {
-    let M = 0, S = 1;
-    for (; T; T = Math.floor(T / 10)) {
-      S = (S + T % 10 * (9 - M++ % 6)) % 11;
+  const calculateDV = (rut) => {
+    let sum = 0;
+    let multiplier = 2;
+    for (let i = rut.length - 1; i >= 0; i--) {
+      sum += rut[i] * multiplier;
+      multiplier = multiplier === 7 ? 2 : multiplier + 1;
     }
-    return S ? S - 1 : 'k';
-  }
-
-  const handleRutChange = (event, { newValue }) => {
-    setRutCA(newValue);
-    setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
-  }
-
+    const remainder = sum % 11;
+    if (remainder === 1) {
+      return 'K';
+    } else if (remainder === 0) {
+      return '0';
+    } else {
+      return String(11 - remainder);
+    }
+  };
 
   const getSuggestions = async (value) => {
     try {
       const response = await fetch(`${host_server}/FormularioCamiones/suggestions?query=${value}`);
       const data = await response.json();
       if (data.results && data.results.length > 0) {
-        const ruts = data.results[0].map(obj => obj.RUTCA);
-        setSuggestions(ruts);
+        const patente = data.results[0].map(obj => obj.PATENTECA);
+        setSuggestions(patente);
       } else {
         setSuggestions([]);
       }
@@ -71,27 +96,11 @@ function FormularioCamiones() {
       const response = await Axios.get(`${host_server}/FormularioCamiones/suggestion/${suggestion}`);
       const data = response.data;
 
-      let mensajeEstado = '';
-      if (data.ESTADONG) {
-        switch (data.ESTADONG) {
-          case 'PERMS1':
-            mensajeEstado = 'DEBE TENER PRECAUCIÓN PARA ENTRAR';
-            break;
-          case 'PERMS2':
-            mensajeEstado = 'SOLICITAR PERMISO PARA ENTRAR';
-            break;
-          case 'NOACCESO':
-            mensajeEstado = 'PROHIBIDO EL ACCESO';
-            break;
-          default:
-            mensajeEstado = '';
-        }
-      }
-
       setRutCA(data.RUTCA || ""),
         setChoferCA(data.CHOFERCA || ""),
         setApellidoChoferCA(data.APELLIDOCHOFERCA || ""),
         setPatenteCA(data.PATENTECA || ""),
+        setPatenteRACA(data.PATENTERACA || ""),
         setMarcaCA(data.MARCACA || ""),
         setTipoCA(data.TIPOCA || ""),
         setModeloCA(data.MODELOCA || ""),
@@ -106,9 +115,9 @@ function FormularioCamiones() {
   };
 
   const inputProps = {
-    placeholder: "Ingrese RUT",
-    value: RutCA,
-    onChange: (_, { newValue }) => setRutCA(newValue),
+    placeholder: "INGRESE PATENTE",
+    value: PatenteCA,
+    onChange: (_, { newValue }) => setPatenteCA(newValue),
   };
 
   const ingresoformdCA = () => {
@@ -125,6 +134,7 @@ function FormularioCamiones() {
       ApellidoChoferCA: ApellidoChoferCA,
       RutCA: RutCA,
       PatenteCA: PatenteCA,
+      PatenteRACA: PatenteRACA,
       MarcaCA: MarcaCA,
       TipoCA: TipoCA,
       ModeloCA: ModeloCA,
@@ -161,6 +171,7 @@ function FormularioCamiones() {
     setApellidoChoferCA("");
     setRutCA("");
     setPatenteCA("");
+    setPatenteRACA("");
     setMarcaCA("");
     setTipoCA("");
     setModeloCA("");
@@ -174,17 +185,17 @@ function FormularioCamiones() {
     setState("");
   };
 
-  const handlePatenteChange = (event) => {
-    const value = event.target.value.toUpperCase();
-    setPatenteCA(value);
+  const handlePatenteChange = (event, { newValue }) => {
+    if (newValue !== undefined) {
+      setPatenteCA(newValue.toUpperCase());
+    }
   };
-
 
   return (
 
 
     <form onSubmit={(e) => {
-      e.preventDefault(); // Evita que se recargue la página
+      e.preventDefault();
       if (mensajeEstado === 'PROHIBIDO EL ACCESO') {
         Swal.fire({
           icon: 'error',
@@ -195,211 +206,226 @@ function FormularioCamiones() {
         ingresoformdCA();
       }
     }}>
-      <h1 className='h1formd'>Entrada Camión</h1>
-      <div className="card shadow-none border my-4" data-component-card="data-component-card">
-        <div className="card-header border-bottom bg-body">
-          <div className="row g-3 justify-content-between align-items-center">
-            <div className="col-12 col-md">
-            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">
-                Datos Camión
-                {mensajeEstado && (
-                  <span style={{ color: mensajeEstado === 'PROHIBIDO EL ACCESO' ? 'red' : 'orange', marginLeft: '10px' }}>
-                    {mensajeEstado}
-                  </span>
-                )}
-                <a className="anchorjs-link" aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a>
-              </h4>
-            </div>
-          </div>
-        </div>
 
-        <div className="card-body">
-          <div className="row g-3 needs-validation">
+      <div className="container-form">
+        <header>Marcar Entrada Camión</header>
+        <br></br>
+        <div className="form first" style={{ paddingRight: "30px" }}>
+          <div className="details personal">
+            <span className="title">Datos Camión</span>
+            <div className="fields">
+              <div className="input-field">
 
+                <label>Patente</label>
+                <div className='input-group'>
 
-            <div className="col-auto">
+                  <Autosuggest
 
-
-              <label htmlFor='rutca-input'>Rut Chofer{rutValido ? null : <span style={{ color: "red" }}> RUT inválido</span>}</label>
-              <div className="input-group ">
-
-                <Autosuggest
-                  suggestions={suggestions}
-                  onSuggestionsFetchRequested={({ value }) => getSuggestions(value)}
-                  onSuggestionsClearRequested={() => setSuggestions([])}
-                  getSuggestionValue={(suggestion) => suggestion}
-                  renderSuggestion={(suggestion) => <div>{suggestion}</div>}
-                  inputProps={{
-                    placeholder: "Ingrese RUT",
-                    value: RutCA,
-                    id:"rutca-input",
-                    onChange: handleRutChange,
-                  }}
-                  onSuggestionSelected={onSuggestionSelected}
-                />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRutCA)}>X</button>
-              </div>
-
-            </div>
-
-            <div className="col-md-3">
-              <label htmlFor='choferca-input'>Nombre Chofer</label>
-              <div className="input-group ">
-                <input required type="text" className="form-control" onChange={(event) => { setChoferCA(event.target.value); }} value={ChoferCA} placeholder='Ingrese Nombre' id="choferca-input" name={ChoferCA} ></input>
-                <div className="invalid-feedback">
-                  Please choose a username.
+                    suggestions={suggestions}
+                    onSuggestionsFetchRequested={({ value }) => getSuggestions(value)}
+                    onSuggestionsClearRequested={() => setSuggestions([])}
+                    getSuggestionValue={(suggestion) => suggestion}
+                    renderSuggestion={(suggestion) => <div>{suggestion}</div>}
+                    inputProps={{
+                      placeholder: "INGRESE PATENTE",
+                      value: PatenteCA,
+                      id: "patenteca-input",
+                      onChange: handlePatenteChange,
+                    }}
+                    onSuggestionSelected={onSuggestionSelected}
+                  />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setPatenteCA)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
                 </div>
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setChoferCA)}>X</button>
               </div>
+
+              <div className="input-field">
+                <label>Tipo</label>
+                <div className="input-group">
+                  <select required onChange={(event) => { setTipoCA(event.target.value); }} className='select-form-control' value={TipoCA} id="tipoca-input" name={TipoCA}>
+                    <option value="">Seleccionar una opción</option>
+                    <option value="SEMIREMOLQUE">SEMIREMOLQUE</option>
+                    <option value="CAMION">CAMION</option>
+                    <option value="TRACTOCAMION">TRACTOCAMION</option>
+                    <option value="CHASIS CABINADO">CHASIS CABINADO</option>
+                    <option value="REMOLQUE">REMOLQUE</option>
+                    <option value="OtrosCA">Otros</option>
+                  </select>
+                  <IconButton color="primary" onClick={() => limpiarCampo(setTipoCA)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+
+
+              <div className="input-field">
+                <label>Modelo</label>
+                <div className="input-group">
+                  <input required type="text" onChange={(event) => { setModeloCA(event.target.value); }} value={ModeloCA} placeholder='INGRESE MODELO' className='form-control' id="modeloca-input" name={ModeloCA} />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setModeloCA)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Color</label>
+                <div className="input-group">
+                  <input required type="text" onChange={(event) => { setColorCA(event.target.value); }} value={ColorCA} placeholder='INGRESE COLOR' className='form-control' id="colorca-input" name={ColorCA} />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setColorCA)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Marca</label>
+                <div className="input-group">
+                  <input required type="text" onChange={(event) => { setMarcaCA(event.target.value); }} value={MarcaCA} placeholder='INGRESE MARCA' className='form-control' id="marcaca-input" name={MarcaCA} />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setMarcaCA)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+
+              <div className="input-field">
+                <label>Empresa</label>
+                <div className="input-group">
+                  <input required type="text" onChange={(event) => { setEmpresaCA(event.target.value); }} value={EmpresaCA} placeholder='INGRESE EMPRESA' className='form-control' id="empresape-input" name={EmpresaCA} />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setEmpresaCA)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
             </div>
+          </div>
+          <br></br>
 
-            <div className="col-md-3">
-              <label htmlFor='apellidoca-input'>Apellido Chofer</label>
-              <div className="input-group ">
+          <div className="details ID">
+            <span className="title">Datos Chofer</span>
+            <div className="fields">
 
-                <input required type="text" onChange={(event) => { setApellidoChoferCA(event.target.value); }} value={ApellidoChoferCA} placeholder='Ingrese Apellido' className='form-control' id="apellidoca-input" name={ApellidoChoferCA} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setApellidoChoferCA)}>X</button>
+              <div className="input-field">
+                <label>Rut Chofer</label>
+                <div className="input-group">
+                  <input
+                    required
+                    type="text"
+                    className={`form-control ${rutValido ? '' : 'is-invalid'}`}
+                    onChange={handleRutChange}
+                    value={RutCA}
+                    placeholder='INGRESE RUT'
+                    id="rutca-input"
+                    name={RutCA} >
+                  </input>
+
+                  <IconButton color="primary" onClick={() => limpiarCampo(setRutCA)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
               </div>
+
+              <div className="input-field">
+                <label>Nombre Chofer</label>
+                <div className="input-group">
+                  <input required type="text" className="form-control" onChange={(event) => { setChoferCA(event.target.value); }} value={ChoferCA} placeholder='INGRESE NOMBRE' id="choferca-input" name={ChoferCA} ></input>
+                  <IconButton color="primary" onClick={() => limpiarCampo(setChoferCA)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Apellido Chofer</label>
+                <div className="input-group">
+                  <input required type="text" onChange={(event) => { setApellidoChoferCA(event.target.value); }} value={ApellidoChoferCA} placeholder='INGRESE APELLIDO' className='form-control' id="apellidoca-input" name={ApellidoChoferCA} />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setApellidoChoferCA)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
             </div>
 
           </div>
+          <br></br>
+          <div className="details ID">
+            <span className="title">Datos Extras</span>
+            <div className="fields">
+
+              <div className="input-field">
+                <label>Planilla Transporte</label>
+                <div className="input-group">
+                  <input required type="text" onChange={(event) => { setGuiaDespachoCA(event.target.value); }} value={GuiaDespachoCA} placeholder='PLANILLA TRANSPORTE' className='form-control' id="guiaca-input" name={GuiaDespachoCA} />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setGuiaDespachoCA)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Sello</label>
+                <div className="input-group">
+                  <input type="text" onChange={(event) => { setSelloCA(event.target.value); }} value={SelloCA} placeholder='INGRESE SELLO' className='form-control' id="selloca-input" name={SelloCA} />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setSelloCA)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Patente Rampa</label>
+                <div className="input-group">
+                  <input required type="text"
+                    onChange={(event) => { setPatenteRACA(event.target.value); }}
+                    value={PatenteRACA}
+                    placeholder='Ingrese RAMPA'
+                    className='form-control'
+                    id="patenteraca-input"
+                    name={PatenteRACA}
+                    style={{ textTransform: 'uppercase' }}
+                  />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setPatenteRACA)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field-obs">
+                <label>Observaciones</label>
+                <textarea type="text" required={mensajeEstado !== ''}
+                  onChange={(event) => { setObservacionesCA(event.target.value); }}
+                  value={ObservacionesCA}
+                  placeholder='INGRESE OBSERVACIONES'
+                  className='form-control'
+                  id="obsca-input"
+                  name={ObservacionesCA}
+                />
+              </div>
+
+            </div>
+
+
+          </div>
+
         </div>
+
+        <div className="buttons">
+          <button className="sumbit-entrada">
+            <span className="btnText">Marcar Entrada</span>
+            <i className="uil uil-navigator"></i>
+          </button>
+        </div>
+
       </div>
 
-      <div className="card shadow-none border my-4" data-component-card="data-component-card">
-        <div className="card-header border-bottom bg-body">
-          <div className="row g-3 justify-content-between align-items-center">
-            <div className="col-12 col-md">
-              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos del Camión<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
-            </div>
-          </div>
-        </div>
-
-        <div className="card-body ">
-          <div className="row g-3 needs-validation">
-
-            <div className="col-md-3">
-              <label htmlFor='tipoca-input'>Tipo</label>
-              <div className="input-group mb-3">
-
-                <select required onChange={(event) => { setTipoCA(event.target.value); }} value={TipoCA} className='form-select' id="tipoca-input" name={TipoCA}>
-                  <option value="">Seleccionar una opción</option>
-                  <option value="SEMIREMOLQUE">SEMIREMOLQUE</option>
-                  <option value="CAMION">CAMION</option>
-                  <option value="TRACTOCAMION">TRACTOCAMION</option>
-                  <option value="CHASIS CABINADO">CHASIS CABINADO</option>
-                  <option value="REMOLQUE">REMOLQUE</option>
-                  <option value="CHASIS CABINADO">CHASIS CABINADO</option>
-                  <option value="OtrosCA">Otros</option>
-                </select>
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setTipoCA)}>X</button>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label htmlFor='modeloca-input'>Modelo</label>
-              <div className="input-group mb-3">
-                <input required type="text" onChange={(event) => { setModeloCA(event.target.value); }} value={ModeloCA} placeholder='Ingrese Modelo' className='form-control' id="modeloca-input" name={ModeloCA} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setModeloCA)}>X</button>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label htmlFor='colorca-input'>Color</label>
-              <div className="input-group mb-3">
-
-                <input required type="text" onChange={(event) => { setColorCA(event.target.value); }} value={ColorCA} placeholder='Ingrese Color' className='form-control' id="colorca-input" name={ColorCA} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setColorCA)}>X</button>
-              </div>
-            </div>
-          </div>
 
 
-          <div className="row g-3 needs-validation">
-            <div className="col-md-3">
-              <label htmlFor='patenteca-input'>Patente Rampa</label>
-              <div className="input-group ">
-
-                <input required type="text" onChange={handlePatenteChange} value={PatenteCA} placeholder='Ingrese Patente' className='form-control' id="patenteca-input" name={PatenteCA} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPatenteCA)}>X</button>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label htmlFor='marcaca-input'>Marca</label>
-              <div className="input-group ">
-
-                <input required type="text" onChange={(event) => { setMarcaCA(event.target.value); }} value={MarcaCA} placeholder='Ingrese Marca' className='form-control' id="marcaca-input" name={MarcaCA} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setMarcaCA)}>X</button>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label htmlFor='empresape-input'>Empresa</label>
-              <div className="input-group ">
-
-                <input required type="text" onChange={(event) => { setEmpresaCA(event.target.value); }} value={EmpresaCA} placeholder='Ingrese Empresa' className='form-control' id="empresape-input" name={EmpresaCA} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setEmpresaCA)}>X</button>
-              </div>
-            </div>
-
-
-
-
-          </div>
-        </div>
-      </div>
-
-      <div className="card shadow-none border my-4" data-component-card="data-component-card">
-        <div className="card-header border-bottom bg-body">
-          <div className="row g-3 justify-content-between align-items-center">
-            <div className="col-12 col-md">
-              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Despacho<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
-            </div>
-          </div>
-        </div>
-
-        <div className="card-body ">
-          <div className="row g-3 needs-validation">
-
-            <div className="col-md-3">
-              <label htmlFor='guiaca-input'>N° Planilla Transporte</label>
-              <div className="input-group ">
-
-                <input required type="text" onChange={(event) => { setGuiaDespachoCA(event.target.value); }} value={GuiaDespachoCA} placeholder='Planilla Transporte' className='form-control' id="guiaca-input" name={GuiaDespachoCA} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setGuiaDespachoCA)}>X</button>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label htmlFor='obsca-input'>Observaciones</label>
-              <div className="input-group ">
-                <input type="text" required={mensajeEstado !== ''} onChange={(event) => { setObservacionesCA(event.target.value); }} value={ObservacionesCA} placeholder='Observaciones' className='form-control' id="obsca-input" name={ObservacionesCA} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setObservacionesCA)}>X</button>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label htmlFor='selloca-input'>Sello</label>
-              <div className="input-group ">
-
-                <input type="text" onChange={(event) => { setSelloCA(event.target.value); }} value={SelloCA} placeholder='Ingrese Sello' className='form-control' required id="selloca-input" name={SelloCA} />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setSelloCA)}>X</button>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div className="div-btn-container">
-        <button className='btn btn-success' type='submit'>Marcar Ingreso</button>
-
-      </div>
-    </form>
+    </form >
 
 
   )

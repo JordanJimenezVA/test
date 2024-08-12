@@ -1,12 +1,11 @@
-
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import Axios from "axios";
 import "./addNO.scss";
 import useChileanTime from "../../hooks/UseChileanTime";
 import { useAuth } from '../../hooks/Auth';
+import { Button } from '@mui/material';
 const host_server = import.meta.env.VITE_SERVER_HOST;
-
 
 function AgregarNO() {
     const { nombreUsuario } = useAuth();
@@ -14,13 +13,23 @@ function AgregarNO() {
     const [NotaNO, setNotaNO] = useState('');
     const [GuardiaNO, setGuardiaNO] = useState("");
     const [HoraNO, setHoraNO] = useState("");
-
+    const [FOTOSNO, setFOTOSNO] = useState([]);
 
     const ingresoformdNO = () => {
-        Axios.post(`${host_server}/AgregarNO`, {
-            NotaNO: NotaNO,
-            GuardiaNO: nombreUsuario,
-            HoraNO: chileanTime
+        const formData = new FormData();
+        formData.append("NotaNO", NotaNO);
+        formData.append("GuardiaNO", nombreUsuario);
+        formData.append("HoraNO", chileanTime);
+
+        FOTOSNO.forEach((file, index) => {
+            formData.append(`FOTOSNO`, file);
+        });
+
+        Axios.post(`${host_server}/AgregarNO`, formData, {
+        
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
         }).then((response) => {
             limpiarcamposNO();
             Swal.fire({
@@ -28,7 +37,7 @@ function AgregarNO() {
                 icon: 'success',
                 text: 'Novedad ingresada con Exito',
                 timer: 1500
-            })
+            });
         }).catch((error) => {
             console.error('Error:', error);
             const errorMessage = error.response && error.response.data && error.response.data.message
@@ -40,66 +49,79 @@ function AgregarNO() {
                 text: errorMessage,
             });
         });
-    }
+    };
 
     const limpiarcamposNO = () => {
         setNotaNO("");
-    }
+        setFOTOSNO([]);
+    };
 
+    const handleFileChange = (event) => {
+        const files = event.target.files;
+        if (!files || files.length === 0) return;
+
+        const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+        const newPhotos = Array.from(files).filter(file => allowedTypes.includes(file.type));
+
+        setFOTOSNO(newPhotos);  
+    };
 
     return (
-
-        <form onSubmit={(e) => {
+        <form className='form-novedad' onSubmit={(e) => {
             e.preventDefault();
             ingresoformdNO();
         }}>
-            <h1 className='h1formd'>Reportar Novedad</h1>
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Novedad<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
-                        </div>
-                    </div>
-                </div>
+           
+            <div className="container-form">
+                <header>Reportar Novedad</header>
+                <br></br>
+                <div className="form first" style={{ paddingRight: "30px" }}>
+                    <div className="details personal">
 
-                <div className="card-body ">
+                        <div className="details ID">
+                            <span className="title">Datos Novedad</span>
+                            <div className="fields">
 
-                    <div className="row g-3 needs-validation">
+                                <div className="input-field" style={{ width: "100%" }}>
+                                    <label>Fotos</label>
+                                    <div className="input-group">
+                                        <input type="file" onChange={handleFileChange} placeholder='INGRESE FOTOS' style={{ alignContent: "center" }} multiple accept=".jpg, .jpeg, .png" className='form-control' id="fotos-input" name={'FOTOS'} />
+                                    </div>
+                                </div>
 
-                        <div className="col-auto-NO">
+                                <div className="input-field-obs">
+                                    <label>Descripcion Novedad</label>
+                                    <textarea type="text" required
+                                        onChange={(event) => { setNotaNO(event.target.value); }}
+                                        value={NotaNO}
+                                        placeholder='Descripcion Novedad'
+                                        className='form-control'
+                                        id="ob-input"
+                                   
+                                        name={NotaNO}
+                                    />
+                                </div>
 
-
-                            <label className='descrip-label' htmlFor="descrip-input">Descripcion Novedad </label>
-                            <div className="input-group mb-3">
-
-                                <textarea
-                                    onChange={(event) => {setNotaNO(event.target.value); }}
-                                    type="text"
-                                    className="form-control"
-                                    placeholder='Ingrese Descripcion'
-                                    id="descrip-label"
-                                    value={NotaNO}
-                                    name={NotaNO}
-                                    required
-                                    style={{ height: 250 + "px" }}
-                                />
                             </div>
+
+
                         </div>
-
-
 
                     </div>
                 </div>
-            </div>
+                <br></br>
+                <div className="buttons-container">
+
+                    <div className="buttons-left">
+                        <Button variant="contained" type='submit'>Reportar Novedad</Button>
 
 
-            <div className="div-btn-container">
-                <button className='btn btn-success' type='submit'>Reportar</button>
+                    </div>
 
+                </div>
 
             </div>
         </form>
-    )
+    );
 }
 export default AgregarNO;

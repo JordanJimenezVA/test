@@ -1,127 +1,125 @@
 export const menu = [
   {
     id: 1,
-    title: "Principal",
-    role: ["Administrador", "Guardia", "Supervisor"],
-    listItems: [
-      {
-        id: 1,
-        title: "Monitoreo",
-        url: "/Home",
-        icon: "home.svg",
-      }
-    ],
-  },
-  {
-    id: 2,
     title: "Gestión",
+    icon: "lni lni-clipboard",
     role: ["Administrador", "Supervisor"],
     listItems: [
       {
         id: 1,
         title: "Personal Externo",
         url: "/Personal Externo",
-        icon: "user.svg",
+        icon: "ti ti-users",
       },
       {
         id: 2,
         title: "Personal Interno",
         url: "/Personal Interno",
-        icon: "user1.svg",
+        icon: "ti ti-user",
       },
       {
         id: 3,
         title: "Camiones",
         url: "/Camiones",
-        icon: "truck2.svg",
+        icon: "lni lni-delivery",
       },
       {
         id: 4,
         title: "Reportar Persona",
         url: "/Personas Reportadas",
-        icon: "user1.svg",
+        icon: "ti ti-user-exclamation",
       },
       {
         id: 5,
         title: "Usuarios",
         url: "/Usuarios",
-        icon: "user.svg",
+        icon: "ti ti-users",
       },
     ],
   },
   {
-    id: 3,
+    id: 2,
     title: "Marcar Entrada",
+    icon: "ti ti-list-check",
     role: ["Administrador", "Guardia"],
     listItems: [
       {
         id: 1,
         title: "Personal Externo",
         url: "/FormularioPersonalExterno",
-        icon: "form3.svg",
+        icon: "ti ti-users",
       },
       {
         id: 2,
         title: "Personal Interno",
         url: "/FormularioPersonalInterno",
-        icon: "form3.svg",
+        icon: "ti ti-user",
       },
       {
         id: 3,
         title: "Camiones",
         url: "/FormularioCamiones",
-        icon: "form3.svg",
+        icon: "lni lni-delivery",
       },
     ],
   },
   {
-    id: 4,
+    id: 3,
     title: "Revision",
+    icon: "ti ti-file-description",
     role: ["Administrador", "Supervisor"],
     listItems: [
       {
         id: 1,
         title: "Revisión Camiones",
         url: "/Revision",
-        icon: "form3.svg",
+        icon: "lni lni-delivery",
       },
       {
-        id: 1,
+        id: 2,
         title: "Informe Camiones",
         url: "/InformeCamion",
-        icon: "form3.svg",
+        icon: "ti ti-file-description",
+      }
+    ],
+  },
+  {
+    id: 4,
+    title: "Marcar Salida",
+    icon: "ti ti-clipboard-x",
+    role: ["Administrador", "Guardia"],
+    listItems: [
+      {
+        id: 1,
+        title: "Marcar Salida Camión",
+        url: "/TablaIngreso",
+        icon: "lni lni-delivery",
+      },
+      {
+        id: 2,
+        title: "Marcar Salida",
+        url: "/TablaIngresoRE",
+        icon: "ti ti-clipboard-text",
+      },
+      {
+        id: 3,
+        title: "Historial",
+        url: "/Logs",
+        icon: "ti ti-file-description",
       }
     ],
   },
   {
     id: 5,
-    title: "Ver Personas/Camiones",
-    role: ["Administrador", "Guardia"],
-    listItems: [
-      {
-        id: 1,
-        title: "Lista de Ingreso",
-        url: "/TablaIngreso",
-        icon: "list3.svg",
-      },
-      {
-        id: 2,
-        title: "Logs",
-        url: "/Logs",
-        icon: "log.svg",
-      }
-    ],
-  },
-  {
-    id: 6,
     title: "Novedades",
+    icon: "lni lni-list",
     role: ["Administrador", "Guardia"],
     listItems: [
       {
         id: 1,
         title: "Registrar Novedad",
         url: "/Novedades",
-        icon: "list3.svg",
+        icon: "ti ti-file-description",
       }
     ],
   },

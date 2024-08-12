@@ -5,6 +5,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import useChileanTime from '../../hooks/UseChileanTime';
 import { useAuth } from '../../hooks/Auth';
+import { useNavigate } from 'react-router-dom';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import { IconButton } from '@mui/material';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
@@ -13,6 +16,7 @@ function FormularioSalida() {
   const { nombreUsuario } = useAuth();
   const [rutValido, setRutValido] = React.useState(true);
   const chileanTime = useChileanTime();
+  const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
     PERSONAL: '',
     APELLIDO: '',
@@ -22,36 +26,63 @@ function FormularioSalida() {
     OBSERVACIONES: '',
     GUIADESPACHO: '',
     SELLO: '',
+    PATENTERACA: '',
+    MODELO: '',
+    COLOR: '',
+    MARCA: '',
+
   });
 
   useEffect(() => {
     getRegistros(IDR);
   }, [IDR]);
 
-  const validarRut = (rut) => {
-    if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
-    let tmp = rut.split('-');
-    let digv = tmp[1];
-    rut = tmp[0];
-    if (digv == 'K') digv = 'k';
-    return (dv(rut) == digv);
-  }
-
-  const dv = (T) => {
-    let M = 0, S = 1;
-    for (; T; T = Math.floor(T / 10)) {
-      S = (S + T % 10 * (9 - M++ % 6)) % 11;
+  const formatRut = (rut) => {
+    rut = rut.replace(/[^0-9kK]/g, '');
+    if (rut.length <= 1) {
+      return rut;
     }
-    return S ? S - 1 : 'k';
-  }
-  const handleRutChange = (event, { newValue }) => {
-    setRutPI(newValue);
-    setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
-  }
+    const body = rut.slice(0, -1);
+    const dv = rut.slice(-1).toUpperCase();
+    return `${body}-${dv}`;
+  };
+
+  const validarRut = (rut) => {
+    if (!/^\d{1,8}-[\dkK]$/.test(rut)) return false;
+    const [body, dv] = rut.split('-');
+    return dv.toUpperCase() === calculateDV(body);
+  };
+
+  const calculateDV = (rut) => {
+    let sum = 0;
+    let multiplier = 2;
+    for (let i = rut.length - 1; i >= 0; i--) {
+      sum += rut[i] * multiplier;
+      multiplier = multiplier === 7 ? 2 : multiplier + 1;
+    }
+    const remainder = sum % 11;
+    if (remainder === 1) {
+      return 'K';
+    } else if (remainder === 0) {
+      return '0';
+    } else {
+      return String(11 - remainder);
+    }
+  };
+
+  const handleRutChange = (event) => {
+    const value = event.target.value;
+    const formattedValue = formatRut(value);
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      RUT: formattedValue,
+    }));
+    setRutValido(validarRut(formattedValue));
+  };
   const getRegistros = (IDR) => {
     Axios.get(`${host_server}/FormularioSalida/${IDR}`)
       .then((res) => {
-        const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO, SELLO } = res.data[0];
+        const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO, SELLO, PATENTERACA, MODELO, COLOR, MARCA } = res.data[0];
         setFormValues({
           PERSONAL,
           APELLIDO,
@@ -60,7 +91,11 @@ function FormularioSalida() {
           ROL,
           OBSERVACIONES,
           GUIADESPACHO,
-          SELLO
+          SELLO,
+          PATENTERACA,
+          MODELO,
+          COLOR,
+          MARCA,
         });
       })
       .catch((error) => {
@@ -92,6 +127,10 @@ function FormularioSalida() {
       OBSERVACIONES: '',
       GUIADESPACHO: '',
       SELLO: '',
+      PATENTERACA: '',
+      MODELO: '',
+      COLOR: '',
+      MARCA: '',
     });
   };
 
@@ -106,7 +145,7 @@ function FormularioSalida() {
       ...formValues,
       FECHASALIDA: chileanTime,
       NombreUsuario: nombreUsuario
-      
+
     }).then(() => {
       limpiarCampos();
       Swal.fire({
@@ -114,6 +153,8 @@ function FormularioSalida() {
         icon: 'success',
         text: 'Salida registrada correctamente',
         timer: 1500
+      }).then(() => {
+        navigate('/TablaIngreso');
       });
     }).catch((error) => {
       console.error("Error al marcar salida:", error);
@@ -130,113 +171,205 @@ function FormularioSalida() {
       e.preventDefault(); // Evita que se recargue la página
       salidaCA();
     }}>
-      <h1 className='h1formd'>Marcar Salida</h1>
-      <div className="card shadow-none border my-4" data-component-card="data-component-card">
-        <div className="card-header border-bottom bg-body">
-          <div className="row g-3 justify-content-between align-items-center">
-            <div className="col-12 col-md">
-              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Personal<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+
+      <div className="container-form">
+        <header>Marcar Salida Camión</header>
+        <br></br>
+        <div className="form first" style={{ paddingRight: "30px" }}>
+          <div className="details personal">
+            <span className="title">Datos Camión</span>
+            <div className="fields">
+              <div className="input-field">
+
+                <label>Patente</label>
+                <div className="input-group">
+                  <input required type="text" onChange={handleChange} value={formValues.PATENTE} placeholder='INGRESE PATENTE' className='form-control' id="patente-input" name={'PATENTE'} />
+                  <IconButton color="primary" onClick={() => limpiarCampo('PATENTE')} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Tipo</label>
+                <div className="input-group">
+                  <select required onChange={handleChange} className='select-form-control' value={formValues.ROL} id="tipoca-input" name={'ROL'}>
+                    <option value="">Seleccionar una opción</option>
+                    <option value="SEMIREMOLQUE">SEMIREMOLQUE</option>
+                    <option value="CAMION">CAMION</option>
+                    <option value="TRACTOCAMION">TRACTOCAMION</option>
+                    <option value="CHASIS CABINADO">CHASIS CABINADO</option>
+                    <option value="REMOLQUE">REMOLQUE</option>
+                    <option value="OtrosCA">Otros</option>
+                  </select>
+                  <IconButton color="primary" onClick={() => limpiarCampo('ROL')} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+
+
+              <div className="input-field">
+                <label>Modelo</label>
+                <div className="input-group">
+                  <input required type="text" onChange={handleChange} value={formValues.MODELO} placeholder='INGRESE MODELO' className='form-control' id="modeloca-input" name={'MODELO'} />
+                  <IconButton color="primary" onClick={() => limpiarCampo('MODELO')} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Color</label>
+                <div className="input-group">
+                  <input required type="text" onChange={handleChange} value={formValues.COLOR} placeholder='INGRESE COLOR' className='form-control' id="colorca-input" name={'COLOR'} />
+                  <IconButton color="primary" onClick={() => limpiarCampo('COLOR')} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Marca</label>
+                <div className="input-group">
+                  <input required type="text" onChange={handleChange} value={formValues.MARCA} placeholder='INGRESE MARCA' className='form-control' id="marcaca-input" name={'MARCA'} />
+                  <IconButton color="primary" onClick={() => limpiarCampo('MARCA')} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+
+                <div className="input-group">
+
+                </div>
+              </div>
+
+
             </div>
           </div>
-        </div>
+          <br></br>
 
-        <div className="card-body ">
+          <div className="details ID">
+            <span className="title">Datos Chofer</span>
+            <div className="fields">
 
-          <div className="row g-3 needs-validation">
+              <div className="input-field">
+                <label>Rut Chofer</label>
+                <div className="input-group">
+                  <input
+                    required
+                    type="text"
+                    className={`form-control ${rutValido ? '' : 'is-invalid'}`}
+                    onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
+                    value={formValues.RUT}
+                    placeholder='INGRESE RUT'
+                    id="rut-input"
+                    name={'RIT'} >
+                  </input>
 
-            <div className="col-auto">
+                  <IconButton color="primary" onClick={() => limpiarCampo('RUT')} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
 
+              <div className="input-field">
+                <label>Nombre Chofer</label>
+                <div className="input-group">
+                  <input required type="text" className="form-control" onChange={handleChange} value={formValues.PERSONAL} placeholder='INGRESE NOMBRE' id="choferca-input" name={'PERSONAL'} ></input>
+                  <IconButton color="primary" onClick={() => limpiarCampo('PERSONAL')} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
 
-              <label htmlFor='ruts-input'>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
-              <div className="input-group mb-3">
+              <div className="input-field">
+                <label>Apellido Chofer</label>
+                <div className="input-group">
+                  <input required type="text" onChange={handleChange} value={formValues.APELLIDO} placeholder='INGRESE APELLIDO' className='form-control' id="apellidoca-input" name={'APELLIDO'} />
+                  <IconButton color="primary" onClick={() => limpiarCampo('APELLIDO')} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
 
-                <input
-                  type="text"
-                  className="form-control"
-                  onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
-                  value={formValues.RUT}
-                  placeholder='Ingrese Rut'
-                  id='ruts-input'
+            </div>
+
+          </div>
+          <br></br>
+          <div className="details ID">
+            <span className="title">Datos Extras</span>
+            <div className="fields">
+
+              <div className="input-field">
+                <label>Planilla Transporte</label>
+                <div className="input-group">
+                  <input required type="text" onChange={handleChange} value={formValues.GUIADESPACHO} placeholder='PLANILLA TRANSPORTE' className='form-control' id="guiaca-input" name={'GUIADESPACHO'} />
+                  <IconButton color="primary" onClick={() => limpiarCampo('GUIADESPACHO')} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Sello</label>
+                <div className="input-group">
+                  <input type="text" onChange={handleChange} value={formValues.SELLO} placeholder='INGRESE SELLO' className='form-control' id="selloca-input" name={'SELLO'} />
+                  <IconButton color="primary" onClick={() => limpiarCampo('SELLO')} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Patente Rampa</label>
+                <div className="input-group">
+                  <input required type="text"
+                    onChange={handleChange}
+                    value={formValues.PATENTERACA}
+                    placeholder='Ingrese RAMPA'
+                    className='form-control'
+                    id="patenteraca-input"
+                    name={'PATENTERACA'}
+                    style={{ textTransform: 'uppercase' }}
+                  />
+                  <IconButton color="primary" onClick={() => limpiarCampo('PATENTERACA')} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field-obs">
+                <label>Observaciones</label>
+                <textarea type="text" required
+                  onChange={handleChange}
+                  value={formValues.OBSERVACIONES}
+                  placeholder='INGRESE OBSERVACIONES'
+                  className='form-control'
+                  id="obsca-input"
+                  name={'OBSERVACIONES'}
                 />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('RUT')}>X</button>
               </div>
-            </div>
 
-            <div className="col-md-3">
-              <label htmlFor='nombres-input'>Nombre</label>
-              <div className="input-group mb-3">
-                <input type="text" name="PERSONAL" value={formValues.PERSONAL} onChange={handleChange} placeholder="Ingrese Nombre" id='nombres-input' className="form-control" ></input>
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('PERSONAL')}>X</button>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label htmlFor='apellidos-input'>Apellido</label>
-              <div className="input-group mb-3">
-                <input type="text" name="APELLIDO" value={formValues.APELLIDO} onChange={handleChange} id='apellidos-input' placeholder='Ingrese Apellido' className='form-control' />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('APELLIDO')}>X</button>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label htmlFor='rols-input'>Rol</label>
-              <div className="input-group mb-3">
-                <input type="text" name="ROL" value={formValues.ROL} onChange={handleChange} id='rols-input' placeholder='Ingrese Rol' className='form-control'></input>
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('ROL')}>X</button>
-              </div>
             </div>
 
 
           </div>
-        </div>
-      </div>
 
-      <div className="card shadow-none border my-4" data-component-card="data-component-card">
-        <div className="card-header border-bottom bg-body">
-          <div className="row g-3 justify-content-between align-items-center">
-            <div className="col-12 col-md">
-              <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Extras<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
-            </div>
-          </div>
         </div>
 
-        <div className="card-body ">
-
-          <div className="row g-3 needs-validation">
-            <div className="col-md-3">
-              <label htmlFor='obss-input'>Observaciones</label>
-              <div className="input-group mb-3">
-                <input type="text" name="OBSERVACIONES" value={formValues.OBSERVACIONES} id='obss-input' onChange={handleChange} placeholder='Ingrese Observaciones' className='form-control' />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('OBSERVACIONES')}>X</button>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label htmlFor='planillas-input'>Planilla de Transporte</label>
-              <div className="input-group mb-3">
-                <input type="text" name="GUIADESPACHO" value={formValues.GUIADESPACHO} id='planillas-input' onChange={handleChange} placeholder='Ingrese Planilla de Transporte' className='form-control' />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('GUIADESPACHO')}>X</button>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <label htmlFor='sellos-input'>Sello</label>
-              <div className="input-group mb-3">
-                <input type="text" name="SELLO" value={formValues.SELLO} onChange={handleChange} id='sellos-input' placeholder='Ingrese Sello' className='form-control' />
-                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('SELLO')}>X</button>
-              </div>
-            </div>
-
-          </div>
+        <div className="buttons">
+          <button className="sumbit-entrada">
+            <span className="btnText">Marcar Salida</span>
+            <i className="uil uil-navigator"></i>
+          </button>
         </div>
-      </div>
-
-
-      <div className="div-btn-container">
-        <button className='btn btn-success' type='submit'>Confirmar Salida</button>
-
 
       </div>
+
     </form>
 
   );

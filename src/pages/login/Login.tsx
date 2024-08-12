@@ -22,7 +22,6 @@ export default function Login() {
 
     try {
       const isRUT = values.rut;
-      console.log(isRUT);
       const res = await axios.post(`${host_server}/Login`, { rutU: isRUT, passwordU: values.password });
 
       if (res.data.Status === 'Success') {

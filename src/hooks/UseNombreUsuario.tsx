@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Axios from 'axios';
+const host_server = import.meta.env.VITE_SERVER_HOST;
 
 interface Usuario {
   nombre: string;
@@ -12,7 +13,7 @@ const useNombreApellidoUsuario = (): Usuario | null => {
   useEffect(() => {
     const obtenerDatosUsuario = async () => {
       try {
-        const response = await Axios.get('/ruta/para/obtener/usuario');
+        const response = await Axios.get(`${host_server}/NombreUser`);
         const { nombre, apellido } = response.data;
         setUsuario({ nombre, apellido });
       } catch (error) {

@@ -2,6 +2,8 @@ import Swal from 'sweetalert2';
 import Axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { IconButton } from '@mui/material';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
@@ -20,34 +22,56 @@ function EditarNG() {
         getPersonaReportada(IDNG);
     }, [IDNG]);
 
-    const validarRut = (rut) => {
-        if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
-        let tmp = rut.split('-');
-        let digv = tmp[1];
-        rut = tmp[0];
-        if (digv == 'K') digv = 'k';
-        return (dv(rut) == digv);
-    }
-
-    const dv = (T) => {
-        let M = 0, S = 1;
-        for (; T; T = Math.floor(T / 10)) {
-            S = (S + T % 10 * (9 - M++ % 6)) % 11;
+    const formatRut = (rut) => {
+        rut = rut.replace(/[^0-9kK]/g, '');
+        if (rut.length <= 1) {
+            return rut;
         }
-        return S ? S - 1 : 'k';
-    }
-    const handleRutChange = (event, { newValue }) => {
-        setRutNG(newValue);
-        setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
-    }
+        const body = rut.slice(0, -1);
+        const dv = rut.slice(-1).toUpperCase();
+        return `${body}-${dv}`;
+    };
+
+    const validarRut = (rut) => {
+        if (!/^\d{1,8}-[\dkK]$/.test(rut)) return false;
+        const [body, dv] = rut.split('-');
+        return dv.toUpperCase() === calculateDV(body);
+    };
+
+    const calculateDV = (rut) => {
+        let sum = 0;
+        let multiplier = 2;
+        for (let i = rut.length - 1; i >= 0; i--) {
+            sum += rut[i] * multiplier;
+            multiplier = multiplier === 7 ? 2 : multiplier + 1;
+        }
+        const remainder = sum % 11;
+        if (remainder === 1) {
+            return 'K';
+        } else if (remainder === 0) {
+            return '0';
+        } else {
+            return String(11 - remainder);
+        }
+    };
+
+    const handleRutChange = (event) => {
+        const value = event.target.value;
+        const formattedValue = formatRut(value);
+        setFormValues((prevValues) => ({
+            ...prevValues,
+            RUTNG: formattedValue,
+        }));
+        setRutValido(validarRut(formattedValue));
+    };
 
     const getPersonaReportada = (IDNG) => {
         Axios.get(`${host_server}/EditarPersonasReportadas/${IDNG}`)
             .then((res) => {
                 const { RUTNG, ESTADONG } = res.data[0];
                 setFormValues({
-                    RUTNG,
-                    ESTADONG,
+                    RUTNG: RUTNG || '',
+                    ESTADONG: ESTADONG || '',
                 });
             })
             .catch((error) => {
@@ -105,62 +129,61 @@ function EditarNG() {
     }
 
     return (
-        <form onSubmit={(e) => {
+        <form className='form-ng' onSubmit={(e) => {
             e.preventDefault(); // Evita que se recargue la página
             editarNG();
         }}>
-            <h1 className='h1formd'>Modificar Datos</h1>
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Persona Reportada<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
-                        </div>
-                    </div>
-                </div>
+           
+            <div className="container-form">
+                <header>Editar Persona</header>
 
-                <div className="card-body ">
+                <div className="form first" style={{ paddingRight: "30px" }}>
+                    <div className="details personal">
+                        <span className="title">Datos Personal</span>
+                        <div className="fields">
 
-                    <div className="row g-3 needs-validation">
+                            <div className="input-field">
+                                <label>Rut</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={(event) => handleRutChange(event, { newValue: event.target.value })} value={formValues.RUTNG} placeholder='Ingreso Rut' className={`form-control ${rutValido ? '' : 'is-invalid'}`} id="rutng-input" name={'RUTNG'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('RUTNG')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
 
-                        <div className="col-auto">
+                            <div className="input-field">
+                                <label>Estado</label>
+                                <div className="input-group">
+                                    <select required onChange={handleChange} className='select-form-control' value={formValues.ESTADONG} id="rolpi-input" name={'ESTADONG'}>
+                                        <option value="">Seleccionar una opción</option>
+                                        <option value="PERMS1">Permiso con precaución</option>
+                                        <option value="PERMS2">Solicitar permiso</option>
+                                        <option value="NOACCESO">Prohibido el acceso</option>
+                                    </select>
+                                    <IconButton color="primary" onClick={() => limpiarCampo('ESTADONG')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
 
+                            <div className="input-field">
 
-                            <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
-                            <div className="input-group mb-3">
+                                <div className="input-group">
 
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
-                                    value={formValues.RUTNG}
-                                    placeholder='Ingrese Rut'
-                                />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('RUTNG')}>X</button>
+                                </div>
+
                             </div>
                         </div>
+                    </div>
 
-                        <div className="col-md-3">
-                            <label>Estado</label>
-                            <div className="input-group mb-3">
-                                <select name="ESTADONG" value={formValues.ESTADONG} onChange={handleChange} className='form-select '>
-                                    <option value="">Seleccionar una opción</option>
-                                    <option value="PERMS1">Permiso con precaución</option>
-                                    <option value="PERMS2">Solicitar permiso</option>
-                                    <option value="NOACCESO">Prohibido el acceso</option>
-                                </select>
-                            </div>
-                        </div>
-
-
+                    <div className="buttons">
+                        <button className="sumbit-entrada">
+                            <span className="btnText">Reportar Persona</span>
+                            <i className="uil uil-navigator"></i>
+                        </button>
                     </div>
                 </div>
-            </div>
-
-            <div className="div-btn-container">
-                <button className='btn btn-success' type='submit'>Modificar</button>
-
-
             </div>
         </form>
 

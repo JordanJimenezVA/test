@@ -2,6 +2,8 @@ import Swal from 'sweetalert2';
 import Axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { IconButton } from '@mui/material';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
@@ -18,6 +20,7 @@ function EditarPI() {
         ROLPI: '',
         ESTADOPI: '',
         VEHICULOPI: '',
+        MODELOPI: '',
         PATENTEPI: '',
         COLORPI: '',
     });
@@ -26,40 +29,71 @@ function EditarPI() {
         getPersonalInterno(IDPI);
     }, [IDPI]);
 
-    const validarRut = (rut) => {
-        if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
-        let tmp = rut.split('-');
-        let digv = tmp[1];
-        rut = tmp[0];
-        if (digv == 'K') digv = 'k';
-        return (dv(rut) == digv);
-    }
-
-    const dv = (T) => {
-        let M = 0, S = 1;
-        for (; T; T = Math.floor(T / 10)) {
-            S = (S + T % 10 * (9 - M++ % 6)) % 11;
+    const formatRut = (rut) => {
+        rut = rut.replace(/[^0-9kK]/g, '');
+        if (rut.length <= 1) {
+            return rut;
         }
-        return S ? S - 1 : 'k';
-    }
-    const handleRutChange = (event, { newValue }) => {
-        setRutPI(newValue);
-        setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
-    }
+        const body = rut.slice(0, -1);
+        const dv = rut.slice(-1).toUpperCase();
+        return `${body}-${dv}`;
+    };
+
+    const validarRut = (rut) => {
+        if (!/^\d{1,8}-[\dkK]$/.test(rut)) return false;
+        const [body, dv] = rut.split('-');
+        return dv.toUpperCase() === calculateDV(body);
+    };
+
+    const calculateDV = (rut) => {
+        let sum = 0;
+        let multiplier = 2;
+        for (let i = rut.length - 1; i >= 0; i--) {
+            sum += rut[i] * multiplier;
+            multiplier = multiplier === 7 ? 2 : multiplier + 1;
+        }
+        const remainder = sum % 11;
+        if (remainder === 1) {
+            return 'K';
+        } else if (remainder === 0) {
+            return '0';
+        } else {
+            return String(11 - remainder);
+        }
+    };
+
+    const handleRutChange = (event) => {
+        const value = event.target.value;
+        const formattedValue = formatRut(value);
+        setFormValues((prevValues) => ({
+            ...prevValues,
+            RUTPI: formattedValue,
+        }));
+        setRutValido(validarRut(formattedValue));
+    };
+
+    const handlePatenteChange = (event) => {
+        const value = event.target.value.toUpperCase();
+        setFormValues((prevValues) => ({
+            ...prevValues,
+            PATENTEPI: value,
+        }));
+    };
 
     const getPersonalInterno = (IDPI) => {
         Axios.get(`${host_server}/EditarPersonalInterno/${IDPI}`)
             .then((res) => {
-                const { RUTPI, NOMBREPI, APELLIDOPI, ROLPI, ESTADOPI, VEHICULOPI, PATENTEPI, COLORPI } = res.data[0];
+                const { RUTPI, NOMBREPI, APELLIDOPI, ROLPI, ESTADOPI, VEHICULOPI, MODELOPI, PATENTEPI, COLORPI } = res.data[0];
                 setFormValues({
-                    RUTPI,
-                    NOMBREPI,
-                    APELLIDOPI,
-                    ROLPI,
-                    ESTADOPI,
-                    VEHICULOPI,
-                    PATENTEPI,
-                    COLORPI,
+                    RUTPI: RUTPI || '',
+                    NOMBREPI: NOMBREPI || '',
+                    APELLIDOPI: APELLIDOPI || '',
+                    ROLPI: ROLPI || '',
+                    ESTADOPI: ESTADOPI || '',
+                    VEHICULOPI: VEHICULOPI || '',
+                    MODELOPI: MODELOPI || '',
+                    PATENTEPI: PATENTEPI || '',
+                    COLORPI: COLORPI || '',
                 });
             })
             .catch((error) => {
@@ -89,6 +123,7 @@ function EditarPI() {
             ROLPI: '',
             ESTADOPI: '',
             VEHICULOPI: '',
+            MODELOPI: '',
             PATENTEPI: '',
             COLORPI: '',
         });
@@ -127,136 +162,152 @@ function EditarPI() {
             e.preventDefault(); // Evita que se recargue la página
             editarPI();
         }}>
-            <h1 className='h1formd'>Modificar Personal Interno</h1>
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Personal Interno<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+            
+            <div className="container-form">
+                <header>Editar Personal Interno</header>
+                <div className='error-div'>
+
+                </div>
+                <br></br>
+                <div className="form first" style={{ paddingRight: "30px" }}>
+                    <div className="details personal">
+                        <span className="title">Datos Personal Interno</span>
+                        <div className="fields">
+
+                            <div className="input-field">
+                                <label>Rut</label>
+                                <div className="input-group">
+
+                                    <input required type="text" onChange={(event) => handleRutChange(event, { newValue: event.target.value })} value={formValues.RUTPI} placeholder='Ingreso Rut' className={`form-control ${rutValido ? '' : 'is-invalid'}`} id="rutpi-input" name={'RUTPI'} />
+                                <IconButton color="primary" onClick={() => limpiarCampo('RUTPI')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Nombre</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={handleChange} value={formValues.NOMBREPI} placeholder='Ingreso Nombre' className='form-control' id="nombrepi-input" name={'NOMBREPI'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('NOMBREPI')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Apellido</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={handleChange} value={formValues.APELLIDOPI} placeholder='Ingrese Apellido' className='form-control' id="apellidopi-input" name={'APELLIDOPI'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('APELLIDOPI')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+
+                            <div className="input-field">
+                                <label>Rol</label>
+                                <div className="input-group">
+                                    <select required onChange={handleChange} className='select-form-control' value={formValues.ROLPI} id="rolpi-input" name={'ROLPI'}>
+                                        <option value="">Seleccionar una opción</option>
+                                        <option value="Aseo">Aseo</option>
+                                        <option value="Administrativo Existencias">Administrativo Existencias</option>
+                                        <option value="Administrativo de Distribución">Administrativo de Distribución</option>
+                                        <option value="Administrativo Congelados">Administrativo Congelados</option>
+                                        <option value="Jefe de Sucursal">Jefe de Sucursal</option>
+                                        <option value="Jefe Comercial">Jefe Comercial</option>
+                                        <option value="Jefe de Distribución">Jefe de Distribución</option>
+                                        <option value="Coordinador Trade Marketing">Coordinador Trade Marketing</option>
+                                        <option value="Supervisor de Distribución">Supervisor de Distribución</option>
+                                        <option value="Supevisor Ventas">Supevisor Ventas</option>
+                                        <option value="Cajero">Cajero</option>
+                                        <option value="Secretaria">Secretaria</option>
+                                        <option value="Movilizador">Movilizador</option>
+                                        <option value="Gruero">Gruero</option>
+                                        <option value="Despachador">Despachador</option>
+                                        <option value="Recepcionista">Recepcionista</option>
+                                        <option value="Visita Carozzi">Visita Carozzi</option>
+                                        <option value="Vendedor">Vendedor</option>
+                                    </select>
+                                    <IconButton color="primary" onClick={() => limpiarCampo('ROLPI')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+
+                                <div className="input-group">
+
+                                </div>
+                            </div>
+
+
+
                         </div>
                     </div>
-                </div>
+                    <br></br>
 
-                <div className="card-body ">
-
-                    <div className="row g-3 needs-validation">
-
-                        <div className="col-auto">
+                    <div className="details ID">
+                        <span className="title">Datos Vehiculos</span>
+                        <div className="fields">
 
 
-                            <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
-                            <div className="input-group mb-3">
-
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
-                                    value={formValues.RUTPI}
-                                    placeholder='Ingrese Rut'
-                                />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('RUTPI')}>X</button>
+                            <div className="input-field">
+                                <label>Vehiculo</label>
+                                <div className="input-group">
+                                    <input  type="text" className="form-control" onChange={handleChange} value={formValues.VEHICULOPI} placeholder='Ingrese Vehiculo' id="vehiculopi-input" name={'VEHICULOPI'} ></input>
+                                    <IconButton color="primary" onClick={() => limpiarCampo('VEHICULOPI')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="col-md-3">
-                            <label>Nombre</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="NOMBREPI" value={formValues.NOMBREPI} onChange={handleChange} placeholder="Ingrese Nombre" className="form-control" ></input>
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('NOMBREPI')}>X</button>
+                            <div className="input-field">
+                                <label>Modelo</label>
+                                <div className="input-group">
+                                    <input  type="text" className="form-control" onChange={handleChange} value={formValues.MODELOPI} placeholder='Ingrese Modelo' id="modelopi-input" name={'MODELOPI'} ></input>
+                                    <IconButton color="primary" onClick={() => limpiarCampo('MODELOPI')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="col-md-3">
-                            <label>Apellido</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="APELLIDOPI" value={formValues.APELLIDOPI} onChange={handleChange} placeholder='Ingrese Apellido' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('APELLIDOPI')}>X</button>
+                            <div className="input-field">
+                                <label>Patente</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handlePatenteChange} value={formValues.PATENTEPI} placeholder='Ingrese Patente' className='form-control' id="patentepi-input" name={'PATENTEPI'}></input>
+                                    <IconButton color="primary" onClick={() => limpiarCampo('PATENTEPI')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="col-md-3">
-                            <label>Rol</label>
-                            <div className="input-group mb-3">
-                                <select name="ROLPI" value={formValues.ROLPI} onChange={handleChange} className='form-select '>
-                                    <option value="Administrativo Existencias">Administrativo Existencias</option>
-                                    <option value="Administrativo de Distribución">Administrativo de Distribución</option>
-                                    <option value="Administrativo Congelados">Administrativo Congelados</option>
-                                    <option value="Jefe de Sucursal">Jefe de Sucursal</option>
-                                    <option value="Jefe Comercial">Jefe Comercial</option>
-                                    <option value="Jefe de Distribución">Jefe de Distribución</option>
-                                    <option value="Coordinador Trade Marketing">Coordinador Trade Marketing</option>
-                                    <option value="Supervisor de Distribución">Supervisor de Distribución</option>
-                                    <option value="Supevisor Ventas">Supevisor Ventas</option>
-                                    <option value="Cajero">Cajero</option>
-                                    <option value="Secretaria">Secretaria</option>
-                                    <option value="Movilizador">Movilizador</option>
-                                    <option value="Gruero">Gruero</option>
-                                    <option value="Despachador">Despachador</option>
-                                    <option value="Recepcionista">Recepcionista</option>
-                                </select>
+                            <div className="input-field">
+                                <label>Color</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handleChange} value={formValues.COLORPI} placeholder='Ingrese Color' className='form-control' id="colorpi-input" name={'COLORPI'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('COLORPI')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
                             </div>
-                        </div>
 
-                        <div className="col-md-3">
-                            <label>Estado</label>
-                            <div className="input-group mb-3">
-                                <select name="ESTADOPI" value={formValues.ESTADOPI} onChange={handleChange} className='form-select '>
-                                    <option value="VIGENTE">VIGENTE</option>
-                                    <option value="NO VIGENTE">NO VIGENTE</option>
-                                    <option value="NO APTO">NO APTO</option>
-                                </select>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-            </div>
-
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Vehiculo<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="card-body ">
-
-                    <div className="row g-3 needs-validation">
-                        <div className="col-md-3">
-                            <label>Vehiculo</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="VEHICULOPI" value={formValues.VEHICULOPI} onChange={handleChange} placeholder='Ingrese Vehiculo' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('VEHICULOPI')}>X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Patente</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="PATENTEPI" value={formValues.PATENTEPI} onChange={handleChange} placeholder='Ingrese Patente' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('PATENTEPI')}>X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label>Color</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="COLORPI" value={formValues.COLORPI} onChange={handleChange} placeholder='Ingrese Color' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('COLORPI')}>X</button>
-                            </div>
                         </div>
 
                     </div>
+                    <br></br>
+
+
                 </div>
-            </div>
 
-
-            <div className="div-btn-container">
-                <button className='btn btn-success' type='submit'>Modificar</button>
-
+                <div className="buttons">
+                    <button className="sumbit-entrada">
+                        <span className="btnText">Marcar Entrada</span>
+                        <i className="uil uil-navigator"></i>
+                    </button>
+                </div>
 
             </div>
         </form>

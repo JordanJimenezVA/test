@@ -2,6 +2,8 @@ import Swal from 'sweetalert2';
 import Axios from "axios";
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { IconButton } from '@mui/material';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
@@ -22,36 +24,73 @@ function EditarU() {
         getUsuarios(IDU);
     }, [IDU]);
 
-    const validarRut = (rut) => {
-        if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
-        let tmp = rut.split('-');
-        let digv = tmp[1];
-        rut = tmp[0];
-        if (digv == 'K') digv = 'k';
-        return (dv(rut) == digv);
-    }
-
-    const dv = (T) => {
-        let M = 0, S = 1;
-        for (; T; T = Math.floor(T / 10)) {
-            S = (S + T % 10 * (9 - M++ % 6)) % 11;
+    const formatRut = (rut) => {
+        rut = rut.replace(/[^0-9kK]/g, ''); // Eliminar caracteres no válidos
+        if (rut.length <= 1) {
+            return rut;
         }
-        return S ? S - 1 : 'k';
-    }
-    const handleRutChange = (event, { newValue }) => {
-        setRutU(newValue);
-        setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
-    }
+    
+        // Dividir el RUT en cuerpo y dígito verificador
+        const body = rut.slice(0, -1);
+        const dv = rut.slice(-1).toUpperCase();
+    
+        // Aplicar formato de puntos
+        const formattedBody = body.split('').reverse().join('').match(/.{1,3}/g).join('.').split('').reverse().join('');
+        
+        return `${formattedBody}-${dv}`;
+    };
+    const validarRut = (rut) => {
+        // Eliminar puntos y guion para validar
+        const cleanRut = rut.replace(/[^0-9kK]/g, ''); // Eliminar puntos y guion
+        
+        // Verificar el formato del RUT limpio
+        if (!/^\d{1,8}[\dkK]$/.test(cleanRut)) return false;
+        
+        // Separar el cuerpo del dígito verificador
+        const body = cleanRut.slice(0, -1);
+        const dv = cleanRut.slice(-1);
+        
+        // Comparar el dígito verificador calculado con el proporcionado
+        return dv.toUpperCase() === calculateDV(body);
+    };
+
+    const calculateDV = (rut) => {
+        let sum = 0;
+        let multiplier = 2;
+        for (let i = rut.length - 1; i >= 0; i--) {
+            sum += rut[i] * multiplier;
+            multiplier = multiplier === 7 ? 2 : multiplier + 1;
+        }
+        const remainder = sum % 11;
+        if (remainder === 1) {
+            return 'K';
+        } else if (remainder === 0) {
+            return '0';
+        } else {
+            return String(11 - remainder);
+        }
+    };
+
+    const handleRutChange = (event) => {
+        const value = event.target.value;
+        const formattedValue = formatRut(value); // Formatear el valor del RUT
+        setFormValues((prevValues) => ({
+            ...prevValues,
+            RUTU: formattedValue,
+        }));
+        setRutValido(validarRut(formattedValue)); // Validar el RUT formateado
+    };
+
 
     const getUsuarios = (IDU) => {
         Axios.get(`${host_server}/EditarUsuarios/${IDU}`)
             .then((res) => {
                 const { RUTU, NOMBREU, TIPOU, PASSWORDU } = res.data[0];
                 setFormValues({
-                    RUTU,
-                    NOMBREU,
-                    TIPOU,
-                    PASSWORDU,
+                    RUTU: RUTU || '',
+                    NOMBREU: NOMBREU || '',
+                    TIPOU: TIPOU || '',
+                    PASSWORDU: PASSWORDU || '',
                 });
             })
             .catch((error) => {
@@ -111,76 +150,81 @@ function EditarU() {
     }
 
     return (
-        <form onSubmit={(e) => {
+        <form className='form-ng' onSubmit={(e) => {
             e.preventDefault(); // Evita que se recargue la página
             editarU();
         }}>
-            <h1 className='h1formd'>Modificar Datos</h1>
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Usuario<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+
+            <div className="container-form">
+                <header>Editar Usuario</header>
+
+                <div className="form first" style={{ paddingRight: "30px" }}>
+                    <div className="details personal">
+                        <span className="title">Datos Usuario</span>
+                        <div className="fields">
+
+                            <div className="input-field">
+                                <label>Rut</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={(event) => handleRutChange(event, { newValue: event.target.value })} value={formValues.RUTU} placeholder='Ingreso Rut' className={`form-control ${rutValido ? '' : 'is-invalid'}`} id="rutu-input" name={'RUTU'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('RUTU')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Nombre Usuario</label>
+                                <div className="input-group">
+                                    <input required type="text" className="form-control" onChange={handleChange} value={formValues.NOMBREU} placeholder='Ingrese Nombre' id="nombreu-input" name={'NOMBREU'} ></input>
+                                    <IconButton color="primary" onClick={() => limpiarCampo('NOMBREU')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Tipo Usuario</label>
+                                <div className="input-group">
+                                    <select required onChange={handleChange} className='select-form-control' value={formValues.TIPOU} id="tipou-input" name={'TIPOU'}>
+                                        <option value="">Seleccionar una opción</option>
+                                        <option value="Guardia">Guardia</option>
+                                        <option value="Supervisor">Supervisor</option>
+                                        <option value="Administrador">Administrador</option>
+                                    </select>
+                                    <IconButton color="primary" onClick={() => limpiarCampo('TIPOU')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Password</label>
+                                <div className="input-group">
+                                    <input required type="text" className="form-control" onChange={handleChange} value={formValues.PASSWORDU} placeholder='Ingrese Password' id="passwordu-input" name={'PASSWORDU'} ></input>
+                                    <IconButton color="primary" onClick={() => limpiarCampo('PASSWORDU')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+
+                                <div className="input-group">
+
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className="card-body ">
-
-                    <div className="row g-3 needs-validation">
-
-                        <div className="col-auto">
-
-
-                            <label>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
-                            <div className="input-group mb-3">
-
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
-                                    value={formValues.RUTU}
-                                    placeholder='Ingrese Rut'
-                                />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('RUTU')}>X</button>
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <label>Nombre</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="NOMBREU" value={formValues.NOMBREU} onChange={handleChange} placeholder="Ingrese Nombre" className="form-control" ></input>
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('NOMBREU')}>X</button>
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <label htmlFor="rolpi-input">Tipo Usuario</label>
-                            <div className="input-group mb-3">
-                                <select name='TIPOU' onChange={handleChange} required value={formValues.TIPOU} className='form-select ' id="tipou-input" >
-                                    <option value="">Seleccionar una opción</option>
-                                    <option value="Guardia">Guardia</option>
-                                    <option value="Supervisor">Supervisor</option>
-                                    <option value="Administrador">Administrador</option>
-                                </select>
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('TIPOU')}>X</button>
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <label htmlFor="apellidopi-input">Password</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name='PASSWORDU' onChange={handleChange} value={formValues.PASSWORDU} placeholder='Ingrese Password' required className='form-control' id="passwordu-input" />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('PASSWORDU')}>X</button>
-                            </div>
-                        </div>
-
-
+                    <div className="buttons">
+                        <button className="sumbit-entrada">
+                            <span className="btnText">Registrar Usuario</span>
+                            <i className="uil uil-navigator"></i>
+                        </button>
                     </div>
                 </div>
-            </div>
-
-            <div className="div-btn-container">
-                <button className='btn btn-success' type='submit'>Modificar</button>
-
-
             </div>
         </form>
 

@@ -1,23 +1,31 @@
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
-import "./dataTable.scss";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+interface Row {
+    IDR: number;
+    Rol: string;
+    estadoRevision: string;
+}
 
 type Props = {
     columns: GridColDef[],
-    rows: object[]
+    rows: object[];
     slug: string;
 }
 
-const DataTableInforme = (props: Props) => {
+const DataTableRE = (props: Props) => {
     const navigate = useNavigate();
+    const [rows, setRows] = useState(props.rows);
+
     const queryClient = useQueryClient();
-    
+
     const mutation = useMutation({
         mutationFn: (IDR: number) => {
-           
+
             return new Promise((resolve) => {
-                navigate(`/VerInforme/${IDR}`);
+                navigate(`/FormularioSalidaRE/${IDR}`);
                 resolve(IDR);
             });
         },
@@ -28,36 +36,38 @@ const DataTableInforme = (props: Props) => {
         }
     });
 
-    const handleRevison = (IDR: number) => {
+    const handleMarcarSalida = (IDR: number) => {
         mutation.mutate(IDR);
     }
-    // const handleRevison = (IDR: number) => {
-    //     navigate(`/VerInforme/${IDR}`);
-    // }
+
+    useEffect(() => {
+        setRows(props.rows);
+    }, [props.rows]);
 
     const actionColumn: GridColDef = {
         field: 'acciones',
-        headerName: 'Acciones',
+        headerName: 'Marcar Salida',
         sortable: false,
-        width: 200,
+        width: 130,
         renderCell: (params) => {
+            const row = params.row as Row; // Castear params.row como Row
+           
             return (
                 <div className="action">
-                  <div className="marcar-salida" onClick={() => handleRevison(params.row.IDR)}>
-                    <button type="button" className="btn-revision-datatable">Ver</button>
-                </div>
+                    <div className={`marcar-salida}`} onClick={() => handleMarcarSalida(row.IDR)}>
+                        <button type="button" className="btn-salida-datatable">
+                            SALIDA
+                        </button>
+                    </div>
                 </div>
             );
-        },
-    };
-
+        }
+    }
     return (
         <div className="dataTable">
             <DataGrid className="dataGrid"
-                rows={props.rows}
-                editMode="row"
-                columns={[...props.columns, actionColumn]}
-
+                rows={rows}
+                columns={[props.columns[0], actionColumn, ...props.columns.slice(2)]}
                 getRowId={(row) => `${row.IDR}`}
                 initialState={{
                     pagination: {
@@ -76,7 +86,6 @@ const DataTableInforme = (props: Props) => {
                         quickFilterProps: { debounceMs: 500 },
                     }
                 }}
-
                 pageSizeOptions={[10]}
                 disableColumnMenu
                 disableRowSelectionOnClick
@@ -88,4 +97,4 @@ const DataTableInforme = (props: Props) => {
     )
 }
 
-export default DataTableInforme
+export default DataTableRE;

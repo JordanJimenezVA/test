@@ -3,7 +3,8 @@ import DataTableNG from "../../components/dataTable/DataTableNG"
 import "./personasreportadas.scss"
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-
+import { Button } from "@mui/material";
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
@@ -49,7 +50,7 @@ const PersonasReportadas = () => {
       <div className="info">
         <h1 className="h1d">Personas Reportadas</h1>
 
-        <button onClick={handleIngresarNG}>Reportar Persona</button>
+        <Button onClick={handleIngresarNG} variant="contained" endIcon={<PersonAddIcon />} >Reportar Persona </Button>
       </div>
       {isLoading ? (
         "Loading..."

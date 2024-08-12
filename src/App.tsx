@@ -9,8 +9,6 @@ import PersonalExterno from "./pages/personalexterno/PersonalExterno";
 import Camiones from "./pages/camiones/Camiones";
 import PersonasReportadas from "./pages/personasreportadas/PersonasReportadas";
 import Usuarios from "./pages/usuarios/Usuarios";
-
-import Navbar from "./components/navbar/Navbar";
 import Menu from "./components/menu/Menu";
 import Login from "./pages/login/Login";
 
@@ -39,6 +37,8 @@ import FormularioPersonalExterno from "./pages/formd/FormularioPersonalExterno";
 import FormularioCamiones from "./pages/formd/FormularioCamiones";
 // @ts-ignore
 import FormularioSalida from "./pages/formsalida/FormularioSalida";
+// @ts-ignore
+import FormularioSalidaRE from "./pages/formsalidare/FormularioSalidaRE";
 
 
 // @ts-ignore
@@ -56,11 +56,11 @@ import VerNovedad from "./pages/viewnovedad/VerNovedad";
 
 import TablaIngreso from "./pages/tablaingreso/TablaIngreso";
 
+import TablaIngresoRE from "./pages/tablaingresoRE/TablaIngresoRE";
+
 import TablaNovedad from "./pages/tablanovedad/TablaNovedad";
 
 import Historial from "./pages/historial/Historial";
-
-import { useAuth } from './hooks/Auth';
 
 import Revision from './pages/revision/Revision';
 
@@ -74,15 +74,15 @@ import VerInforme from './pages/viewinforme/VerInforme';
 
 
 
+
 const queryClient = new QueryClient();
 
 function App() {
 
   const Layout = () => {
-    const { nombreUsuario } = useAuth();
+    
     return (
-      <div className="main">
-        <Navbar nombreUsuario={nombreUsuario ? nombreUsuario : ''} />
+      <div className="main"><br></br>
         <div className="container">
           <div className="menuContainer">
             <Menu />
@@ -168,12 +168,20 @@ function App() {
           element:<TablaIngreso />
         },
         {
+          path: "/TablaIngresoRE",
+          element:<TablaIngresoRE />
+        },
+        {
           path: "/Logs",
           element:<Historial />
         },
         {
           path: "/FormularioSalida/:IDR",
           element: <FormularioSalida />
+        },
+        {
+          path: "/FormularioSalidaRE/:IDR",
+          element: <FormularioSalidaRE />
         },
         {
           path: "/EditarPersonalInterno/:IDPI",

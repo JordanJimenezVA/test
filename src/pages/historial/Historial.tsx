@@ -36,42 +36,21 @@ const Historial = () => {
     {
       field: 'ROL',
       headerName: 'Rol',
-      width: 150,
-      editable: false,
-      type: 'string',
-    },
-    {
-      field: 'OBSERVACIONES',
-      headerName: 'Observaciones',
-      width: 200,
-      editable: false,
-      type: 'string',
-    },
-    {
-      field: 'GUIADESPACHO',
-      headerName: 'Planilla',
-      width: 150,
-      editable: false,
-      type: 'string',
-    },
-    {
-      field: 'SELLO',
-      headerName: 'Sello',
-      width: 90,
+      width: 180,
       editable: false,
       type: 'string',
     },
     {
       field: 'FECHAINGRESO',
       headerName: 'Fecha Ingreso',
-      width: 150,
+      width: 180,
       editable: false,
       type: 'string',
     },
     {
       field: 'FECHASALIDA',
       headerName: 'Fecha Salida',
-      width: 150,
+      width: 180,
       editable: false,
       type: 'string',
     }
@@ -88,7 +67,7 @@ const Historial = () => {
   return (
     <div className="Camiones">
       <div className="info">
-        <h1 className="h1d">REVISION DE LOGS</h1>
+        <h1 className="h1d">HISTORIAL</h1>
       </div>
       {isLoading ? (
         "Loading..."

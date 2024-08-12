@@ -1,9 +1,7 @@
-// import { useState } from "react"
-import "./tablaIngreso.scss"
-// import AddR from "../../components/add/AddR"
+import "./tablaIngresoRE.scss"
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
-import DataTableAll from "../../components/dataTable/DataTableAll";
+import DataTableRE from "../../components/dataTable/DataTableRE";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
@@ -54,20 +52,13 @@ const columns: GridColDef[] = [
     width: 220,
     editable: false,
     type: 'string',
-  },
-  {
-    field: 'estadoRevision',
-    headerName: 'Estado',
-    width: 140,
-    editable: false,
-    type: 'string',
-}
+  }
 ];
-const TablaIngreso = () => {
+const TablaIngresoRE = () => {
   const { isLoading, data } = useQuery({
     queryKey: ['registros'],
     queryFn: () =>
-      fetch(`${host_server}/TablaIngreso`).then((res) =>
+      fetch(`${host_server}/TablaIngresoRE`).then((res) =>
         res.json(),
 
       ),
@@ -77,16 +68,16 @@ const TablaIngreso = () => {
   return (
     <div className="Camiones">
       <div className="info">
-        <h1 className="h1d">MARCAR SALIDA CAMIÓN</h1>
+        <h1 className="h1d">MARCAR SALIDA PERSONAL</h1>
       </div>
       {isLoading ? (
         "Loading..."
       ) : (
-        < DataTableAll slug="registros" columns={columns} rows={data} />
+        < DataTableRE slug="registros" columns={columns} rows={data} />
       )}
 
     </div>
   )
 }
 
-export default TablaIngreso
+export default TablaIngresoRE

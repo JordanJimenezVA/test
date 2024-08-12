@@ -3,6 +3,8 @@ import DataTableCA from "../../components/dataTable/DataTableCA"
 import { useNavigate } from "react-router-dom";
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { Button } from "@mui/material";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
@@ -29,13 +31,6 @@ const columns: GridColDef[] = [
     width: 150,
     editable: false,
   },
-  // {
-  //   field: 'ROLCA',
-  //   headerName: 'Rol',
-  //   type: 'string',
-  //   width: 150,
-  //   editable: false,
-  // },
   {
     field: 'MARCACA',
     headerName: 'Marca',
@@ -94,7 +89,7 @@ const Camiones = () => {
     <div className="Camiones">
       <div className="info">
           <h1 className="h1d">Camiones</h1>
-          <button onClick={handleIngresarCA}>Ingresar Camiones</button>
+          <Button onClick={handleIngresarCA} variant="contained" endIcon={<PersonAddIcon />} >Ingresar Camión </Button>
       </div>
       {isLoading ? (
         "Loading..."

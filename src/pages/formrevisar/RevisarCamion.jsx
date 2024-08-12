@@ -6,6 +6,9 @@ import { useParams } from 'react-router-dom';
 import useChileanTime from '../../hooks/UseChileanTime';
 import useCamionTime from '../../hooks/CamionTime';
 import { useAuth } from '../../hooks/Auth';
+import { IconButton } from '@mui/material';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import Button from '@mui/material/Button';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
@@ -28,7 +31,9 @@ function RevisarCamion() {
         JEFET: '',
         FOTOS: [],
         FECHAINICIO: '',
-        FECHAFIN: ''
+        FECHAFIN: '',
+        MODELO: '',
+        COLOR: '',
     });
     const { nombreUsuario } = useAuth();
     const [fechaInicio, setFechaInicio] = useState(null);
@@ -44,13 +49,13 @@ function RevisarCamion() {
     useEffect(() => {
         if (isFirstOpen) {
             getRegistros(IDR);
-            setIsFirstOpen(false); 
+            setIsFirstOpen(false);
             getProgresoRevision(IDR);
         }
     }, [IDR, isFirstOpen]);
 
     const handleFechaInicio = async () => {
-        const horaInicio = await useCamionTime(); 
+        const horaInicio = await useCamionTime();
         setFechaInicio(horaInicio);
 
         setFormValues(prevValues => ({
@@ -60,18 +65,18 @@ function RevisarCamion() {
         setEstado('fin');
         setFormDisabled(false);
         setGuardarProgresoDisabled(false);
-        setConfirmDisabled(true); 
+        setConfirmDisabled(true);
     };
 
     const handleFechaFin = async () => {
-        const horaFin = await useCamionTime(); 
+        const horaFin = await useCamionTime();
         setFechaFin(horaFin);
         setFormValues(prevValues => ({
             ...prevValues,
             FECHAFIN: horaFin,
         }));
- 
-        setConfirmDisabled(false); 
+
+        setConfirmDisabled(false);
     };
 
     const validarRut = (rut) => {
@@ -93,7 +98,7 @@ function RevisarCamion() {
 
     const handleRutChange = (event, { newValue }) => {
         setRutPI(newValue);
-        setRutValido(validarRut(newValue)); 
+        setRutValido(validarRut(newValue));
     }
 
     const getProgresoRevision = (IDR) => {
@@ -117,6 +122,8 @@ function RevisarCamion() {
                         JEFET: progreso.JEFET,
                         FOTOS: Array.isArray(progreso.FOTOS) ? progreso.FOTOS : [],
                         FECHAINICIO: progreso.FECHAINICIO,
+                        MODELO: progreso.MODELO,
+                        COLOR: progreso.COLOR
                     });
                     setFechaInicio(progreso.FECHAINICIO);
                     setEstado("fin");
@@ -142,7 +149,7 @@ function RevisarCamion() {
     const getRegistros = (IDR) => {
         Axios.get(`${host_server}/FormularioSalida/${IDR}`)
             .then((res) => {
-                const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO, SELLO } = res.data[0];
+                const { PERSONAL, APELLIDO, RUT, PATENTE, ROL, OBSERVACIONES, GUIADESPACHO, SELLO, MODELO, COLOR } = res.data[0];
                 setFormValues({
                     PERSONAL,
                     APELLIDO,
@@ -152,7 +159,9 @@ function RevisarCamion() {
                     OBSERVACIONES,
                     GUIADESPACHO,
                     SELLO,
-                    FOTOS: []
+                    FOTOS: [],
+                    MODELO,
+                    COLOR
                 });
             })
             .catch((error) => {
@@ -203,7 +212,9 @@ function RevisarCamion() {
             PALLETS: '',
             SUPERVISOR: '',
             JEFET: '',
-            FOTOS: []
+            FOTOS: [],
+            MODELO: '',
+            COLOR: ''
         });
         setFechaInicio(null);
         setFechaFin(null);
@@ -264,7 +275,7 @@ function RevisarCamion() {
             if (key === 'FOTOS') {
                 if (Array.isArray(formValues[key])) {
                     formValues[key].forEach(photo => {
-                        formData.append('FOTOS', photo); 
+                        formData.append('FOTOS', photo);
                     });
                 }
             } else {
@@ -296,168 +307,247 @@ function RevisarCamion() {
 
     return (
         <form onSubmit={(e) => {
-            e.preventDefault(); 
+            e.preventDefault();
             revisionCA();
         }}>
-            <h1 className='h1formd'>Revision Camion</h1>
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Camion<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+
+            <div className="container-form">
+                <header>Revisión Camión</header>
+                <br></br>
+                <div className="form first" style={{ paddingRight: "30px" }}>
+                    <div className="details personal">
+                        <span className="title">Datos Camión</span>
+                        <div className="fields">
+
+                            <div className="input-field">
+                                <label>Patente</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={handleChange} value={formValues.PATENTE} disabled={formDisabled} placeholder='INGRESE PATENTE' className='form-control' id="patenteca-input" name={'PATENTE'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('PATENTE')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Tipo</label>
+                                <div className="input-group">
+                                    <select required onChange={handleChange} className='select-form-control' disabled={formDisabled} value={formValues.ROL} id="tipoca-input" name={'ROL'}>
+                                        <option value="">Seleccionar una opción</option>
+                                        <option value="SEMIREMOLQUE">SEMIREMOLQUE</option>
+                                        <option value="CAMION">CAMION</option>
+                                        <option value="TRACTOCAMION">TRACTOCAMION</option>
+                                        <option value="CHASIS CABINADO">CHASIS CABINADO</option>
+                                        <option value="REMOLQUE">REMOLQUE</option>
+                                        <option value="OtrosCA">Otros</option>
+                                    </select>
+                                    <IconButton color="primary" onClick={() => limpiarCampo('ROL')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+
+
+                            <div className="input-field">
+                                <label>Modelo</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={handleChange} disabled={formDisabled} value={formValues.MODELO} placeholder='INGRESE MODELO' className='form-control' id="modeloca-input" name={'MODELO'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('MODELO')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Color</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={handleChange} disabled={formDisabled} value={formValues.COLOR} placeholder='INGRESE COLOR' className='form-control' id="colorca-input" name={'COLOR'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('COLOR')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
-                </div>
+                    <br></br>
 
-                <div className="card-body ">
+                    <div className="details ID">
+                        <span className="title">Datos Chofer</span>
+                        <div className="fields">
 
-                    <div className="row g-3 needs-validation">
+                            <div className="input-field">
+                                <label>Rut Chofer</label>
+                                <div className="input-group">
+                                    <input
+                                        required
+                                        type="text"
+                                        className={`form-control ${rutValido ? '' : 'is-invalid'}`}
+                                        onChange={handleRutChange}
+                                        value={formValues.RUT}
+                                        disabled={formDisabled}
+                                        placeholder='INGRESE RUT'
+                                        id="rut-input"
+                                        name={'RUT'} >
+                                    </input>
 
-                        <div className="col-auto">
+                                    <IconButton color="primary" onClick={() => limpiarCampo('RUT')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Nombre Chofer</label>
+                                <div className="input-group">
+                                    <input required type="text" className="form-control" disabled={formDisabled} onChange={handleChange} value={formValues.PERSONAL} placeholder='INGRESE NOMBRE' id="personal-input" name={'PERSONAL'} ></input>
+                                    <IconButton color="primary" onClick={() => limpiarCampo('PERSONAL')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Apellido Chofer</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={handleChange} disabled={formDisabled} value={formValues.APELLIDO} placeholder='INGRESE APELLIDO' className='form-control' id="apellidoca-input" name={'APELLIDO'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('APELLIDO')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <br></br>
+                    <div className="details ID">
+                        <span className="title">Datos Revisión</span>
+                        <div className="fields">
+
+                            <div className="input-field">
+                                <label>Planilla Transporte</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={handleChange} disabled={formDisabled} value={formValues.GUIADESPACHO} placeholder='PLANILLA TRANSPORTE' className='form-control' id="guiaca-input" name={'GUIADESPACHO'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('GUIADESPACHO')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Sello</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handleChange} disabled={formDisabled} value={formValues.SELLO} placeholder='INGRESE SELLO' className='form-control' id="sello-input" name={'SELLO'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('SELLO')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>N° Anden</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handleChange} disabled={formDisabled} value={formValues.ANDEN} placeholder='INGRESE ANDEN' className='form-control' id="anden-input" name={'ANDEN'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('ANDEN')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Total Kilos</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handleChange} disabled={formDisabled} value={formValues.KILOS} placeholder='INGRESE KILOS' className='form-control' id="kilos-input" name={'KILOS'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('KILOS')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Cantidad Pallets</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handleChange} disabled={formDisabled} value={formValues.PALLETS} placeholder='INGRESE PALLETS' className='form-control' id="pallets-input" name={'PALLETS'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('PALLETS')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Supervisor</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handleChange} disabled={formDisabled} value={formValues.SUPERVISOR} placeholder='INGRESE SUPERVISOR' className='form-control' id="supervisor-input" name={'SUPERVISOR'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('SUPERVISOR')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Jefe Turno CD</label>
+                                <div className="input-group">
+                                    <input type="text" onChange={handleChange} disabled={formDisabled} value={formValues.JEFET} placeholder='INGRESE JEFET' className='form-control' id="jefet-input" name={'JEFET'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('JEFET')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Fotos</label>
+                                <div className="input-group">
+                                    <input type="file" onChange={handleFileChange} disabled={formDisabled} placeholder='INGRESE FOTOS' style={{ alignContent: "center" }} multiple accept=".jpg, .jpeg, .png" className='form-control' id="fotos-input" name={'FOTOS'} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo('FOTOS')} disabled={formDisabled} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+
+                                <div className="input-group">
+
+                                </div>
+                            </div>
 
 
-                            <label htmlFor='rutr-input'>Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
-                            <div className="input-group mb-3">
 
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
-                                    value={formValues.RUT}
-                                    placeholder='Ingrese Rut'
+                            <div className="input-field-obs">
+                                <label>Observaciones</label>
+                                <textarea type="text" required
+                                    onChange={handleChange}
+                                    value={formValues.OBSERVACIONES}
+                                    placeholder='INGRESE OBSERVACIONES'
+                                    className='form-control'
+                                    id="ob-input"
                                     disabled={formDisabled}
-                                    id='rutr-input'
+                                    name={'OBSERVACIONES'}
                                 />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('RUT')} disabled={formDisabled}>X</button>
                             </div>
-                        </div>
 
-                        <div className="col-md-3">
-                            <label htmlFor='nombrer-input'>Nombre</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="PERSONAL" value={formValues.PERSONAL} onChange={handleChange} placeholder="Ingrese Nombre" disabled={formDisabled} id='nombrer-input' className="form-control" ></input>
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('PERSONAL')} disabled={formDisabled} >X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label htmlFor='apellidor-input'>Apellido</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="APELLIDO" value={formValues.APELLIDO} onChange={handleChange} placeholder='Ingrese Apellido' disabled={formDisabled} id='apellidor-input' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('APELLIDO')} disabled={formDisabled}>X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label htmlFor='rolr-input'>Rol</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="ROL" value={formValues.ROL} onChange={handleChange} placeholder='Ingrese Rol' disabled={formDisabled} id='rolr-input' className='form-control'></input>
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('ROL')} disabled={formDisabled} >X</button>
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <label htmlFor='planillar-input'>Planilla de Transporte</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="GUIADESPACHO" value={formValues.GUIADESPACHO} onChange={handleChange} placeholder='Ingrese Planilla de Transporte' id='planillar-input' disabled={formDisabled} className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('GUIADESPACHO')} disabled={formDisabled} >X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label htmlFor='sellor-input'>Sello Cortado</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="SELLO" value={formValues.SELLO} onChange={handleChange} placeholder='Ingrese Sello' disabled={formDisabled} id='sellor-input' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('SELLO')} disabled={formDisabled} >X</button>
-                            </div>
                         </div>
 
 
                     </div>
+
                 </div>
-            </div>
+                <br></br>
+                <div className="buttons-container">
 
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Revision<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="card-body ">
-
-                    <div className="row g-3 needs-validation">
-                        <div className="col-md-3">
-                            <label htmlFor='obsr-input'>Observaciones</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="OBSERVACIONES" value={formValues.OBSERVACIONES} onChange={handleChange} placeholder='Ingrese Observaciones' disabled={formDisabled} id='obsr-input' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('OBSERVACIONES')} disabled={formDisabled} >X</button>
-                            </div>
-                        </div>
-
-
-                        <div className="col-md-3">
-                            <label htmlFor='anden-input'>N° Anden</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="ANDEN" value={formValues.ANDEN} onChange={handleChange} placeholder='Ingrese N°Anden' disabled={formDisabled} id='anden-input' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('ANDEN')} disabled={formDisabled} >X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label htmlFor='kilos-input'>Total Kilos</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="KILOS" value={formValues.KILOS} onChange={handleChange} placeholder='Ingrese Total Kilos' disabled={formDisabled} id='kilos-input' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('KILOS')} disabled={formDisabled} >X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label htmlFor='pallets-input'>Cantidad Pallets</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="PALLETS" value={formValues.PALLETS} onChange={handleChange} placeholder='Ingrese Cantidad Pallets' disabled={formDisabled} id='pallets-input' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('PALLETS')} disabled={formDisabled} >X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label htmlFor='superv-input'>Supervisor</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="SUPERVISOR" value={formValues.SUPERVISOR} onChange={handleChange} placeholder='Ingrese Supervisor' disabled={formDisabled} id='superv-input' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('SUPERVISOR')} disabled={formDisabled} >X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label htmlFor='jefer-input'>Jefe de turno CD</label>
-                            <div className="input-group mb-3">
-                                <input type="text" name="JEFET" value={formValues.JEFET} onChange={handleChange} placeholder='Ingrese Jefe de turno CD' disabled={formDisabled} id='jefer-input' className='form-control' />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo('JEFET')} disabled={formDisabled} >X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label htmlFor='fotosr-input'>Fotos</label>
-                            <div>
-                                <input type="file" name="FOTOS" onChange={handleFileChange} disabled={formDisabled} id='fotosr-input' multiple accept=".jpg, .jpeg, .png" />
-                            </div>
-                        </div>
+                    <div className="buttons-left">
+                        <Button variant="contained" onClick={handleFechaInicio} >Dar Inicio</Button>
+                        <Button variant="contained" disabled={GuardarProgresoDisabled} onClick={guardarProgreso} color="success">Guardar Progreso</Button>
 
                     </div>
+                    <div className="buttons-right">
+                        <Button variant="contained" onClick={handleFechaFin} >Dar Fin</Button>
+                        <Button variant="contained" disabled={confirmDisabled} color="success">Confirmar Revisión</Button>
+                    </div>
                 </div>
-            </div>
-
-            <div className="buttons-container">
-                <div className="buttons-left">
-                    <button type="button" onClick={handleFechaInicio} className="btn btn-warning me-2">Dar Inicio</button>
-                    <button type='button' className='btn btn-primary me-2' disabled={GuardarProgresoDisabled} onClick={guardarProgreso}>Guardar Progreso</button>
-                    /</div>
-                <div className="buttons-right">
-                    <button type="button" onClick={handleFechaFin} className="btn btn-warning me-2">Dar Fin</button>
-                    <button className='btn btn-success' disabled={confirmDisabled} type='submit'>Confirmar Revision</button>
-                </div>
-
 
             </div>
         </form>

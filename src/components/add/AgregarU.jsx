@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import Axios from "axios";
+import { IconButton } from '@mui/material';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
@@ -12,6 +14,26 @@ function AgregarU() {
     const [PasswordU, setPasswordU] = useState("");
     const [rutValido, setRutValido] = React.useState(true);
     const [showPassword, setShowPassword] = useState(false);
+
+    const handleRutChange = (event) => {
+        const value = event.target.value.replace(/[^0-9kK]/g, '');
+        const formattedValue = formatRut(value);
+        setRutU(formattedValue);
+        if (formattedValue.length > 1) {
+            setRutValido(validarRut(formattedValue));
+        } else {
+            setRutValido(true);
+        }
+    };
+    const formatRut = (rut) => {
+        if (rut.length <= 1) {
+            return rut;
+        }
+        const body = rut.slice(0, -1);
+        const dv = rut.slice(-1).toUpperCase();
+        return `${body}-${dv}`;
+    };
+
     const validarRut = (rut) => {
         if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
         let tmp = rut.split('-');
@@ -29,10 +51,6 @@ function AgregarU() {
         return S ? S - 1 : 'k';
     }
 
-    const handleRutChange = (event, { newValue }) => {
-        setRutU(newValue);
-        setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
-    }
 
     const ingresoformdU = () => {
         if (!validarRut(RutU)) {
@@ -49,7 +67,7 @@ function AgregarU() {
             TipoU: TipoU,
             PasswordU: PasswordU,
         }).then((response) => {
-            limpiarcamposNG();
+            limpiarcamposU();
             Swal.fire({
                 title: 'Ingreso Exitoso!',
                 icon: 'success',
@@ -86,89 +104,81 @@ function AgregarU() {
 
     return (
 
-        <form onSubmit={(e) => {
+        <form className='form-ng' onSubmit={(e) => {
             e.preventDefault(); // Evita que se recargue la página
             ingresoformdU();
         }}>
-            <h1 className='h1formd'>Ingresar Usuario</h1>
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Usuario<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+            
+            <div className="container-form">
+                <header>Registrar Usuario</header>
+
+                <div className="form first" style={{ paddingRight: "30px" }}>
+                    <div className="details personal">
+                        <span className="title">Datos Usuario</span>
+                        <div className="fields">
+
+                            <div className="input-field">
+                                <label>Rut</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={(event) => handleRutChange(event, { newValue: event.target.value })} value={RutU} placeholder='Ingreso Rut' className={`form-control ${rutValido ? '' : 'is-invalid'}`} id="rutu-input" name={RutU} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setRutU)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Nombre Usuario</label>
+                                <div className="input-group">
+                                    <input required type="text" className="form-control" onChange={(event) => { setNombreU(event.target.value); }} value={NombreU} placeholder='Ingrese Nombre' id="nombreu-input" name={NombreU} ></input>
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setNombreU)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Tipo Usuario</label>
+                                <div className="input-group">
+                                    <select required onChange={(event) => { setTipoU(event.target.value); }} className='select-form-control' value={TipoU} id="tipou-input" name={TipoU}>
+                                        <option value="">Seleccionar una opción</option>
+                                        <option value="Guardia">Guardia</option>
+                                        <option value="Supervisor">Supervisor</option>
+                                        <option value="Administrador">Administrador</option>
+                                    </select>
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setTipoU)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Password</label>
+                                <div className="input-group">
+                                    <input required type="text" className="form-control" onChange={(event) => { setPasswordU(event.target.value); }} value={PasswordU} placeholder='Ingrese Password' id="passwordu-input" name={PasswordU} ></input>
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setPasswordU)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+
+                                <div className="input-group">
+
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className="card-body ">
-
-                    <div className="row g-3 needs-validation">
-
-                        <div className="col-auto">
-
-
-                            <label htmlFor="rutpi-input">Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
-                            <div className="input-group mb-3">
-
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
-                                    value={RutU}
-                                    placeholder='Ingrese Rut'
-                                    id="rutu-input"
-                                    name={RutU}
-                                    required
-                                />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRutU)}>X</button>
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <label htmlFor="apellidopi-input">Nombre Usuario</label>
-                            <div className="input-group mb-3">
-                                <input type="text" onChange={(event) => { setNombreU(event.target.value); }} value={NombreU} placeholder='Ingrese Nombre' required className='form-control' id="nombreu-input" name={NombreU} />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setNombreU)}>X</button>
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <label htmlFor="rolpi-input">Tipo Usuario</label>
-                            <div className="input-group mb-3">
-                                <select onChange={(event) => { setTipoU(event.target.value); }} required value={TipoU} className='form-select ' id="tipou-input" name={TipoU}>
-                                    <option value="">Seleccionar una opción</option>
-                                    <option value="Guardia">Guardia</option>
-                                    <option value="Supervisor">Supervisor</option>
-                                    <option value="Administrador">Administrador</option>
-                                </select>
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setTipoU)}>X</button>
-                            </div>
-                        </div>
-                        <div className="col-md-3">
-                            <label htmlFor="apellidopi-input">Password</label>
-                            <div className="input-group mb-3">
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    onChange={(event) => { setPasswordU(event.target.value); }}
-                                    value={PasswordU}
-                                    placeholder="Ingrese Password"
-                                    required
-                                    className="form-control"
-                                    id="passwordu-input"
-                                    name="password"
-                                />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setPasswordU)}>X</button>
-                         
-                            </div>
-                        </div>
-
+                    <div className="buttons">
+                        <button className="sumbit-entrada">
+                            <span className="btnText">Registrar Usuario</span>
+                            <i className="uil uil-navigator"></i>
+                        </button>
                     </div>
                 </div>
-            </div>
-
-
-            <div className="div-btn-container">
-                <button className='btn btn-success' type='submit'>Registrar</button>
-
-
             </div>
         </form>
     )

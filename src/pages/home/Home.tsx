@@ -32,6 +32,7 @@ const Home = () => {
 
   const rolesExternos = [
     'Especialista Trade',
+    'Chofer Camión',
     'Peoneta',
     'Gestor Trade',
     'Mantencion Cctv',
@@ -43,6 +44,7 @@ const Home = () => {
     'Otrosex'
   ];
   const rolesInternos = [
+    'Aseo',
     'Administrativo Existencias',
     'Administrativo de Distribución',
     'Administrativo Congelados',
@@ -57,9 +59,19 @@ const Home = () => {
     'Movilizador',
     'Gruero',
     'Despachador',
-    'Recepcionista'
+    'Recepcionista',
+    'Visita Carozzi',
+    'Vendedor'
   ];
-  const rolesCamiones = ['CAMION'];
+
+  const rolesCamiones = [
+    'CAMION',
+    'SEMIREMOLQUE',
+    'TRACTOCAMION',
+    'CHASIS CABINADO',
+    'REMOLQUE',
+    'OtrosCA'
+  ];
 
   const cantidadExterno = dataArray.filter((item: any) => rolesExternos.includes(item.ROL)).length;
   const cantidadInterno = dataArray.filter((item: any) => rolesInternos.includes(item.ROL)).length;

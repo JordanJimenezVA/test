@@ -2,14 +2,34 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import Axios from "axios";
+import { IconButton } from '@mui/material';
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
-  
+
 function AgregarNG() {
     const [RutNG, setRutNG] = useState("");
     const [EstadoNG, setEstadoNG] = useState("");
     const [rutValido, setRutValido] = React.useState(true);
 
+    const handleRutChange = (event) => {
+        const value = event.target.value.replace(/[^0-9kK]/g, '');
+        const formattedValue = formatRut(value);
+        setRutNG(formattedValue);
+        if (formattedValue.length > 1) {
+            setRutValido(validarRut(formattedValue));
+        } else {
+            setRutValido(true);
+        }
+    };
+    const formatRut = (rut) => {
+        if (rut.length <= 1) {
+            return rut;
+        }
+        const body = rut.slice(0, -1);
+        const dv = rut.slice(-1).toUpperCase();
+        return `${body}-${dv}`;
+    };
     const validarRut = (rut) => {
         if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
         let tmp = rut.split('-');
@@ -27,10 +47,6 @@ function AgregarNG() {
         return S ? S - 1 : 'k';
     }
 
-    const handleRutChange = (event, { newValue }) => {
-        setRutNG(newValue);
-        setRutValido(validarRut(newValue)); // Validar el RUT al cambiar
-    }
 
     const ingresoformdNG = () => {
         if (!validarRut(RutNG)) {
@@ -54,8 +70,8 @@ function AgregarNG() {
             })
         }).catch((error) => {
             console.error('Error:', error); // Agrega este log para ver el error en detalle
-            const errorMessage = error.response && error.response.data && error.response.data.message 
-                ? error.response.data.message 
+            const errorMessage = error.response && error.response.data && error.response.data.message
+                ? error.response.data.message
                 : 'Error desconocido';
             Swal.fire({
                 icon: "error",
@@ -80,68 +96,63 @@ function AgregarNG() {
 
     return (
 
-        <form onSubmit={(e) => {
+        <form className='form-ng' onSubmit={(e) => {
             e.preventDefault(); // Evita que se recargue la página
             ingresoformdNG();
         }}>
-            <h1 className='h1formd'>Reportar Persona</h1>
-            <div className="card shadow-none border my-4" data-component-card="data-component-card">
-                <div className="card-header border-bottom bg-body">
-                    <div className="row g-3 justify-content-between align-items-center">
-                        <div className="col-12 col-md">
-                            <h4 className="text-body mb-0" data-anchor="data-anchor" id="grid-auto-sizing">Datos Persona<a className="anchorjs-link " aria-label="Anchor" data-anchorjs-icon="#" href="#grid-auto-sizing"></a></h4>
+            
+            <div className="container-form">
+                <header>Reportar Persona</header>
+
+                <div className="form first" style={{ paddingRight: "30px" }}>
+                    <div className="details personal">
+                        <span className="title">Datos Personal</span>
+                        <div className="fields">
+
+                            <div className="input-field">
+                                <label>Rut</label>
+                                <div className="input-group">
+                                    <input required type="text" onChange={(event) => handleRutChange(event, { newValue: event.target.value })} value={RutNG} placeholder='Ingreso Rut' className={`form-control ${rutValido ? '' : 'is-invalid'}`} id="rutng-input" name={RutNG} />
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setRutNG)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+                                <label>Estado</label>
+                                <div className="input-group">
+                                    <select required onChange={(event) => { setEstadoNG(event.target.value); }} className='select-form-control' value={EstadoNG} id="rolpi-input" name={EstadoNG}>
+                                        <option value="">Seleccionar una opción</option>
+                                        <option value="PERMS1">Permiso con precaución</option>
+                                        <option value="PERMS2">Solicitar permiso</option>
+                                        <option value="NOACCESO">Prohibido el acceso</option>
+                                    </select>
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setRolPI)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+                            <div className="input-field">
+
+                                <div className="input-group">
+
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className="card-body ">
-
-                    <div className="row g-3 needs-validation">
-
-                        <div className="col-auto">
-
-
-                            <label htmlFor="rutpi-input">Rut {rutValido ? null : <span style={{ color: "red" }}>RUT inválido</span>}</label>
-                            <div className="input-group mb-3">
-
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    onChange={(event) => handleRutChange(event, { newValue: event.target.value })}
-                                    value={RutNG}
-                                    placeholder='Ingrese Rut'
-                                    id="rutpi-input"
-                                    name={RutNG}
-                                    required
-                                />
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setRutNG)}>X</button>
-                            </div>
-                        </div>
-
-                        <div className="col-md-3">
-                            <label htmlFor="rolpi-input">Estado</label>
-                            <div className="input-group mb-3">
-                                <select onChange={(event) => { setEstadoNG(event.target.value); }} required value={EstadoNG} className='form-select ' id="rolpi-input" name={EstadoNG}>
-                                    <option value="">Seleccionar una opción</option>
-                                    <option value="PERMS1">Permiso con precaución</option>
-                                    <option value="PERMS2">Solicitar permiso</option>
-                                    <option value="NOACCESO">Prohibido el acceso</option>
-                                </select>
-                                <button className="btn btn-danger" type="button" id="button-addon1" onClick={() => limpiarCampo(setEstadoNG)}>X</button>
-                            </div>
-                        </div>
-
-
+                    <div className="buttons">
+                        <button className="sumbit-entrada">
+                            <span className="btnText">Reportar Persona</span>
+                            <i className="uil uil-navigator"></i>
+                        </button>
                     </div>
                 </div>
             </div>
 
-
-            <div className="div-btn-container">
-                <button className='btn btn-success' type='submit'>Reportar</button>
-
-
-            </div>
         </form>
     )
 }

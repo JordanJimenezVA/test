@@ -3,6 +3,8 @@ import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 import DataTableNO from "../../components/dataTable/DataTableNO";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
@@ -10,13 +12,9 @@ const columns: GridColDef[] = [
   {
     field: 'HORANO',
     headerName: 'Fecha Ingreso',
-    width: 140,
+    width: 180,
     editable: false,
-    type: 'DATE',
-    valueFormatter: (params) => {
-      const date = new Date(params.value as string);
-      return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
-    },
+    type: 'DATE'
   },
   {
     field: 'GUARDIANO',
@@ -47,7 +45,7 @@ const TablaNovedad = () => {
     <div className="Camiones">
       <div className="info">
         <h1 className="h1d">NOVEDADES</h1>
-        <button onClick={handleIngresarNO}>Ingresar Novedad</button>
+        <Button onClick={handleIngresarNO} variant="contained" endIcon={<PersonAddIcon />} >Reportar Novedad </Button>
       </div>
       {isLoading ? (
         "Loading..."

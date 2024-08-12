@@ -3,6 +3,8 @@ import DataTablePE from "../../components/dataTable/DataTablePE";
 import { useNavigate } from "react-router-dom";
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
+import { Button } from "@mui/material";
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
@@ -86,7 +88,7 @@ const PersonalExterno = () => {
     <div className="PE">
       <div className="info">
         <h1 className="h1d">Personal Externo</h1>
-        <button onClick={handleIngresarPE}>Ingresar Personal Externo</button>
+        <Button onClick={handleIngresarPE} variant="contained" endIcon={<PersonAddIcon />} >Ingresar Personal </Button>
       </div>
       {isLoading ? (
         "Loading..."
