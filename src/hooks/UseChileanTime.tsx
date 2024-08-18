@@ -5,9 +5,9 @@ const useChileanTime = () => {
 
   const fetchChileanTime = async () => {
     try {
-      const response = await fetch('https://worldtimeapi.org/api/timezone/America/Santiago');
+      const response = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=America/Santiago');
       const data = await response.json();
-      const date = new Date(data.datetime);
+      const date = new Date(data.dateTime); // La propiedad es 'dateTime' en lugar de 'datetime'
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
