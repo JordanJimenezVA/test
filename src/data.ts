@@ -136,15 +136,18 @@ export const chartBoxProduct = {
   color: "skyblue",
   icon: "/productIcon.svg",
   title: "Personal Interno",
+  url: "/TablaIngresoRE"
 };
 export const chartBoxRevenue = {
   color: "teal",
   icon: "/revenueIcon.svg",
   title: "Personal Externo",
+  url: "/TablaIngresoRE"
 };
 export const chartBoxConversion = {
   color: "gold",
   icon: "/conversionIcon.svg",
   title: "Camiones",
+    url: "/TablaIngreso"
 };
 

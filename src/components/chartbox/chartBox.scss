@@ -7,12 +7,13 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    // padding: 35px;
     padding-top: 25px;
     padding-bottom: 25px;
+
     @include sm{
         flex-direction: column;
     }
+
     .cantidad {
         font-size: 40px;
         font-weight: bold;
@@ -35,4 +36,7 @@
         }
     }
 
+    .hidden-link {
+        visibility: hidden;
+    }
 }

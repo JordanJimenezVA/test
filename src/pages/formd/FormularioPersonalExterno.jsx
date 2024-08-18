@@ -22,6 +22,8 @@ function FormularioPersonalExterno() {
   const [EmpresaPE, setEmpresaPE] = useState("");
   const [RolPE, setRolPE] = useState("");
   const [ObservacionesPE, setObservacionesPE] = useState("");
+  const [GuiaDespachoPE, setGuiaDespachoPE] = useState("");
+  const [SelloPE, setSelloPE] = useState("");
   const [rutValido, setRutValido] = React.useState(true);
   const [mensajeEstado, setMensajeEstado] = useState('');
   const host_server = import.meta.env.VITE_SERVER_HOST;
@@ -148,7 +150,9 @@ function FormularioPersonalExterno() {
       RolPE: RolPE,
       ObservacionesPE: ObservacionesPE,
       fechaActualChile: chileanTime,
-      NombreUsuarioEX: nombreUsuario
+      NombreUsuarioEX: nombreUsuario,
+      SelloPE: SelloPE,
+      GuiaDespachoPE: GuiaDespachoPE,
     }).then(() => {
       limpiarcamposPE();
       Swal.fire({
@@ -185,6 +189,8 @@ function FormularioPersonalExterno() {
     setEmpresaPE("");
     setRolPE("");
     setObservacionesPE("");
+    setGuiaDespachoPE("");
+    setSelloPE("");
   }
   const limpiarCampo = (setState) => {
     setState("");
@@ -358,6 +364,26 @@ function FormularioPersonalExterno() {
                 <div className="input-group">
                   <input  type="text" onChange={(event) => { setColorPE(event.target.value); }} value={ColorPE} placeholder='Ingrese Color' className='form-control' id="colorpe-input" name={ColorPE} />
                   <IconButton color="primary" onClick={() => limpiarCampo(setColorPE)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Planilla Transporte</label>
+                <div className="input-group">
+                  <input required type="text" onChange={(event) => { setGuiaDespachoPE(event.target.value); }} value={GuiaDespachoPE} placeholder='Ingrese Planilla Transporte' className='form-control' id="guiape-input" name={GuiaDespachoPE} />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setGuiaDespachoPE)} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Sello</label>
+                <div className="input-group">
+                  <input type="text" onChange={(event) => { setSelloPE(event.target.value); }} value={SelloPE} placeholder='Ingrese Sello' className='form-control' id="selloca-input" name={SelloPE} />
+                  <IconButton color="primary" onClick={() => limpiarCampo(setSelloPE)} aria-label="directions">
                     <ClearOutlinedIcon />
                   </IconButton>
                 </div>

@@ -151,7 +151,7 @@ const handleRutChange = (event) => {
         text: 'Salida registrada correctamente',
         timer: 1500
       }).then(() => {
-        navigate('/TablaIngreso');
+        navigate('/TablaIngresoRE');
       });
     }).catch((error) => {
       console.error("Error al marcar salida:", error);
@@ -283,6 +283,26 @@ const handleRutChange = (event) => {
                 <div className="input-group">
                   <input  type="text" onChange={handleChange} value={formValues.COLOR} placeholder='Ingrese Color' className='form-control' id="colorpi-input" name={'COLOR'} />
                   <IconButton color="primary" onClick={() => limpiarCampo('COLOR')} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Sello</label>
+                <div className="input-group">
+                  <input  type="text" onChange={handleChange} value={formValues.SELLO} placeholder='Ingrese Sello' className='form-control' id="sellopi-input" name={'SELLO'} />
+                  <IconButton color="primary" onClick={() => limpiarCampo('SELLO')} aria-label="directions">
+                    <ClearOutlinedIcon />
+                  </IconButton>
+                </div>
+              </div>
+
+              <div className="input-field">
+                <label>Planilla Transporte</label>
+                <div className="input-group">
+                  <input  type="text" onChange={handleChange} value={formValues.GUIADESPACHO} placeholder='Ingrese Planilla Transporte' className='form-control' id="guiadespacho-input" name={'GUIADESPACHO'} />
+                  <IconButton color="primary" onClick={() => limpiarCampo('GUIADESPACHO')} aria-label="directions">
                     <ClearOutlinedIcon />
                   </IconButton>
                 </div>

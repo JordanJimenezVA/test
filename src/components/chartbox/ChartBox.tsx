@@ -5,7 +5,8 @@ type Props = {
   color: string;
   icon: string;
   title: string;
-  cantidad: number; 
+  cantidad: number;
+  url: string;
 };
 
 const ChartBox = (props: Props) => {
@@ -16,7 +17,11 @@ const ChartBox = (props: Props) => {
         <span>{props.title}</span>
       </div>
       <span className="cantidad">{props.cantidad}</span>
-      <Link to="/TablaIngreso" style={{ color: "#fga1" }}>
+      <Link
+        to={props.url}
+        className={props.title === "Total en Recinto" ? "hidden-link" : ""}
+        style={{ color: "#fga1" }}
+      >
         Ver todos
       </Link>
     </div>
