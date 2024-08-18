@@ -85,7 +85,7 @@ const Home = () => {
         <TopBox />
       </div>
       <div className="box box2">
-        <ChartBox {...chartBoxUser} cantidad={total} />
+        <ChartBox url={""} {...chartBoxUser} cantidad={total} />
       </div>
       <div className="box box3">
         <ChartBox {...chartBoxProduct} cantidad={cantidadInterno} />
