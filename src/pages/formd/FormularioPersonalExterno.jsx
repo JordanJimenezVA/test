@@ -372,7 +372,7 @@ function FormularioPersonalExterno() {
               <div className="input-field">
                 <label>Planilla Transporte</label>
                 <div className="input-group">
-                  <input required type="text" onChange={(event) => { setGuiaDespachoPE(event.target.value); }} value={GuiaDespachoPE} placeholder='Ingrese Planilla Transporte' className='form-control' id="guiape-input" name={GuiaDespachoPE} />
+                  <input type="text" onChange={(event) => { setGuiaDespachoPE(event.target.value); }} value={GuiaDespachoPE} placeholder='Ingrese Planilla Transporte' className='form-control' id="guiape-input" name={GuiaDespachoPE} />
                   <IconButton color="primary" onClick={() => limpiarCampo(setGuiaDespachoPE)} aria-label="directions">
                     <ClearOutlinedIcon />
                   </IconButton>
