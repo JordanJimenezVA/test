@@ -11,19 +11,18 @@ interface Row {
 
 type Props = {
     columns: GridColDef[],
-    rows: object[];
+    rows: Row[];  // Cambié el tipo a Row[] para mayor claridad
     slug: string;
 }
 
 const DataTableAll = (props: Props) => {
     const navigate = useNavigate();
-    const [rows, setRows] = useState(props.rows);
+    const [rows, setRows] = useState<Row[]>(props.rows || []); // Asegúrate de que sea un array
 
     const queryClient = useQueryClient();
 
     const mutation = useMutation({
         mutationFn: (IDR: number) => {
-
             return new Promise((resolve) => {
                 navigate(`/FormularioSalida/${IDR}`);
                 resolve(IDR);
@@ -41,7 +40,7 @@ const DataTableAll = (props: Props) => {
     }
 
     useEffect(() => {
-        setRows(props.rows);
+        setRows(props.rows || []); // Asegúrate de que sea un array
     }, [props.rows]);
 
     const actionColumn: GridColDef = {
@@ -63,6 +62,7 @@ const DataTableAll = (props: Props) => {
             );
         }
     }
+
     return (
         <div className="dataTable">
             <DataGrid className="dataGrid"

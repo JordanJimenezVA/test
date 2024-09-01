@@ -1,10 +1,11 @@
-import "./tablaNovedad.scss"
+import "./tablaNovedad.scss";
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 import DataTableNO from "../../components/dataTable/DataTableNO";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import GuardiaID from "../../hooks/GuardiaID";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
@@ -14,7 +15,7 @@ const columns: GridColDef[] = [
     headerName: 'Fecha Ingreso',
     width: 180,
     editable: false,
-    type: 'DATE'
+    type: 'DATE',
   },
   {
     field: 'GUARDIANO',
@@ -24,15 +25,20 @@ const columns: GridColDef[] = [
     type: 'string',
   }
 ];
+
 const TablaNovedad = () => {
-  const { isLoading, data } = useQuery({
-    queryKey: ['Novedades'],
+  const IDINST = GuardiaID();
+
+  const { isLoading, data, error } = useQuery({
+    queryKey: ['Novedades', IDINST],
     queryFn: () =>
-      fetch(`${host_server}/TablaNovedad`).then((res) =>
-        res.json(),
-
-      ),
-
+      fetch(`${host_server}/TablaNovedad?IDINST=${IDINST}`).then((res) => {
+        if (!res.ok) {
+          throw new Error('Error en la consulta');
+        }
+        return res.json();
+      }),
+    enabled: !!IDINST,
   });
 
   const navigate = useNavigate();
@@ -40,6 +46,17 @@ const TablaNovedad = () => {
   const handleIngresarNO = () => {
     navigate("/AgregarNo");
   }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  // Asegurarse de que `data` es un array y verificar si está vacío
+  const rows = Array.isArray(data) ? data : [];
 
   return (
     <div className="Camiones">
@@ -50,7 +67,7 @@ const TablaNovedad = () => {
       {isLoading ? (
         "Loading..."
       ) : (
-        < DataTableNO slug="Novedades" columns={columns} rows={data} />
+        < DataTableNO slug="Novedades" columns={columns} rows={rows} />
       )}
     </div>
   )

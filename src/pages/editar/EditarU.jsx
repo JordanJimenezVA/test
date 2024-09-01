@@ -18,6 +18,7 @@ function EditarU() {
         NOMBREU: '',
         TIPOU: '',
         PASSWORDU: '',
+        IDINST: '',
     });
 
     useEffect(() => {
@@ -85,12 +86,13 @@ function EditarU() {
     const getUsuarios = (IDU) => {
         Axios.get(`${host_server}/EditarUsuarios/${IDU}`)
             .then((res) => {
-                const { RUTU, NOMBREU, TIPOU, PASSWORDU } = res.data[0];
+                const { RUTU, NOMBREU, TIPOU, PASSWORDU, IDINST } = res.data[0];
                 setFormValues({
                     RUTU: RUTU || '',
                     NOMBREU: NOMBREU || '',
                     TIPOU: TIPOU || '',
                     PASSWORDU: PASSWORDU || '',
+                    IDINST: IDINST || '',
                 });
             })
             .catch((error) => {
@@ -118,6 +120,7 @@ function EditarU() {
             NOMBREU: '',
             TIPOU: '',
             PASSWORDU: '',
+            IDINST: '',
         });
     };
 
@@ -209,12 +212,27 @@ function EditarU() {
                             </div>
 
                             <div className="input-field">
-
+                                <label>Instalacion</label>
                                 <div className="input-group">
-
+                                    <select required onChange={handleChange} className='select-form-control' value={formValues.IDINST} id="idinst-input" name={'IDINST'}>
+                                        <option value="">Seleccionar una opción</option>
+                                        <option value="1">La Cantera</option>
+                                        <option value="2">Tierras Blancas</option>
+                                    </select>
+                                    <IconButton color="primary" onClick={() => limpiarCampo('IDINST')} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
                                 </div>
-
                             </div>
+
+
+                            <div className="input-field">
+                                
+                                <div className="input-group">
+             
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 

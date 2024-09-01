@@ -63,26 +63,26 @@ export const menu = [
       },
     ],
   },
-  {
-    id: 3,
-    title: "Revision",
-    icon: "ti ti-file-description",
-    role: ["Administrador", "Supervisor"],
-    listItems: [
-      {
-        id: 1,
-        title: "Revisión Camiones",
-        url: "/Revision",
-        icon: "lni lni-delivery",
-      },
-      {
-        id: 2,
-        title: "Informe Camiones",
-        url: "/InformeCamion",
-        icon: "ti ti-file-description",
-      }
-    ],
-  },
+  // {
+  //   id: 3,
+  //   title: "Revision",
+  //   icon: "ti ti-file-description",
+  //   role: ["Administrador", "Supervisor"],
+  //   listItems: [
+  //     {
+  //       id: 1,
+  //       title: "Revisión Camiones",
+  //       url: "/Revision",
+  //       icon: "lni lni-delivery",
+  //     },
+  //     {
+  //       id: 2,
+  //       title: "Informe Camiones",
+  //       url: "/InformeCamion",
+  //       icon: "ti ti-file-description",
+  //     }
+  //   ],
+  // },
   {
     id: 4,
     title: "Marcar Salida",

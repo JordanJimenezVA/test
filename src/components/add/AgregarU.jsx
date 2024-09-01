@@ -12,6 +12,7 @@ function AgregarU() {
     const [NombreU, setNombreU] = useState("");
     const [TipoU, setTipoU] = useState("");
     const [PasswordU, setPasswordU] = useState("");
+    const [IDINST, setIDINST] = useState("");
     const [rutValido, setRutValido] = React.useState(true);
     const [showPassword, setShowPassword] = useState(false);
 
@@ -66,6 +67,7 @@ function AgregarU() {
             NombreU: NombreU,
             TipoU: TipoU,
             PasswordU: PasswordU,
+            IDINST: IDINST,
         }).then((response) => {
             limpiarcamposU();
             Swal.fire({
@@ -92,6 +94,7 @@ function AgregarU() {
         setNombreU("");
         setTipoU("");
         setPasswordU("");
+        setIDINST("");
 
     }
 
@@ -157,6 +160,21 @@ function AgregarU() {
                                 <div className="input-group">
                                     <input required type="text" className="form-control" onChange={(event) => { setPasswordU(event.target.value); }} value={PasswordU} placeholder='Ingrese Password' id="passwordu-input" name={PasswordU} ></input>
                                     <IconButton color="primary" onClick={() => limpiarCampo(setPasswordU)} aria-label="directions">
+                                        <ClearOutlinedIcon />
+                                    </IconButton>
+                                </div>
+                            </div>
+
+
+                            <div className="input-field">
+                                <label>Instalacion</label>
+                                <div className="input-group">
+                                    <select required  onChange={(event) => { setIDINST(event.target.value); }} className='select-form-control' value={IDINST} id="idinst-input" name={IDINST}>
+                                        <option value="">Seleccionar una opción</option>
+                                        <option value="1">Instalacion 1</option>
+                                        <option value="2">Instalacion 2</option>
+                                    </select>
+                                    <IconButton color="primary" onClick={() => limpiarCampo(setIDINST)} aria-label="directions">
                                         <ClearOutlinedIcon />
                                     </IconButton>
                                 </div>

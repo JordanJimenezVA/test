@@ -11,9 +11,7 @@ type OpenItems = {
   [key: number]: boolean;
 };
 
-
 export const Menu = () => {
-
   const { userType } = useAuth();
   const [openItems, setOpenItems] = useState<OpenItems>({});
   const hamBurgerRef = useRef<HTMLButtonElement>(null);
@@ -22,9 +20,9 @@ export const Menu = () => {
   const handleLogout = () => {
     Axios.get(`${host_server}/Logout`)
       .then(() => {
-        window.location.href = '/';
+        window.location.href = "/";
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   };
 
   const handleToggle = (id: number) => {
@@ -32,7 +30,7 @@ export const Menu = () => {
       ...Object.keys(prevState).reduce((acc, key) => {
         acc[parseInt(key)] = parseInt(key) === id ? !prevState[id] : false;
         return acc;
-      }, {} as OpenItems)
+      }, {} as OpenItems),
     }));
   };
 
@@ -44,7 +42,6 @@ export const Menu = () => {
           <li className={`sidebar-item ${isOpen ? "open" : ""}`} key={item.id}>
             {item.listItems.length === 0 ? (
               <span className="sidebar-link">
-
                 <span>{item.title}</span>
               </span>
             ) : (
@@ -92,6 +89,7 @@ export const Menu = () => {
       document.querySelector("#sidebar")?.classList.toggle("expand");
     };
 
+    // Añadimos el evento de toggle solo al hacer clic
     hamBurger?.addEventListener("click", toggleSidebar);
 
     return () => {
@@ -101,7 +99,7 @@ export const Menu = () => {
 
   return (
     <div className="wrapper">
-      <aside id="sidebar">
+      <aside id="sidebar" className="expand"> {/* Aquí se añade la clase "expand" por defecto */}
         <div className="d-flex">
           <button className="toggle-btn" type="button" ref={hamBurgerRef}>
             <i className="ti ti-menu-2"></i>
@@ -123,7 +121,6 @@ export const Menu = () => {
         <div className="sidebar-footer">
           <i className="lni lni-home"></i>
           <span className="sidebar-span">{nombreUsuario}</span>
-
 
           <a className="sidebar-link" onClick={handleLogout}>
             <i className="lni lni-exit"></i>

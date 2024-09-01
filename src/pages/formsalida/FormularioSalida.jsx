@@ -8,6 +8,7 @@ import { useAuth } from '../../hooks/Auth';
 import { useNavigate } from 'react-router-dom';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import { IconButton } from '@mui/material';
+import GuardiaID from "../../hooks/GuardiaID";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
@@ -17,6 +18,7 @@ function FormularioSalida() {
   const [rutValido, setRutValido] = React.useState(true);
   const chileanTime = useChileanTime();
   const navigate = useNavigate();
+  const IDINST = GuardiaID();
   const [formValues, setFormValues] = useState({
     PERSONAL: '',
     APELLIDO: '',
@@ -32,7 +34,7 @@ function FormularioSalida() {
     MARCA: '',
 
   });
-
+  console.log("id salida" + IDINST);
   useEffect(() => {
     getRegistros(IDR);
   }, [IDR]);
@@ -144,8 +146,8 @@ function FormularioSalida() {
     Axios.post(`${host_server}/FormularioSalida/${IDR}`, {
       ...formValues,
       FECHASALIDA: chileanTime,
-      NombreUsuario: nombreUsuario
-
+      NombreUsuario: nombreUsuario,
+      IDINST: IDINST
     }).then(() => {
       limpiarCampos();
       Swal.fire({
@@ -344,7 +346,7 @@ function FormularioSalida() {
 
               <div className="input-field-obs">
                 <label>Observaciones</label>
-                <textarea type="text" required
+                <textarea type="text"
                   onChange={handleChange}
                   value={formValues.OBSERVACIONES}
                   placeholder='INGRESE OBSERVACIONES'

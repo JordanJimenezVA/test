@@ -1,7 +1,7 @@
 import "./topbox.scss";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-
+import GuardiaID from "../../hooks/GuardiaID";
 interface Log {
   IDL: number;
   PERSONAL: string;
@@ -12,14 +12,18 @@ interface Log {
 }
 
 const TopBox = () => {
+  const idInst = GuardiaID(); 
   const [logs, setLogs] = useState<Log[]>([]);
   const host_server = import.meta.env.VITE_SERVER_HOST;
+
+
   const { data } = useQuery({
-    queryKey: ['logs'],
+    queryKey: ['logs', idInst],
     queryFn: () =>
-      fetch(`${host_server}/TopBox`).then((res) =>
+      fetch(`${host_server}/TopBox?idInst=${idInst}`).then((res) =>
         res.json(),
-      )
+      ),
+    enabled: !!idInst,
   });
 
   useEffect(() => {

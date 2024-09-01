@@ -1,9 +1,9 @@
-// import { useState } from "react"
-import "./tablaIngreso.scss"
-// import AddR from "../../components/add/AddR"
+import "./tablaIngreso.scss";
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 import DataTableAll from "../../components/dataTable/DataTableAll";
+import GuardiaID from "../../hooks/GuardiaID";
+
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
@@ -61,17 +61,19 @@ const columns: GridColDef[] = [
     width: 140,
     editable: false,
     type: 'string',
-}
+  }
 ];
+
 const TablaIngreso = () => {
+  const IDINST = GuardiaID();
+
   const { isLoading, data } = useQuery({
-    queryKey: ['registros'],
+    queryKey: ['registros', IDINST],
     queryFn: () =>
-      fetch(`${host_server}/TablaIngreso`).then((res) =>
+      fetch(`${host_server}/TablaIngreso?IDINST=${IDINST}`).then((res) =>
         res.json(),
-
       ),
-
+    enabled: !!IDINST, // Solo ejecuta la consulta si IDINST está disponible
   });
 
   return (
@@ -82,11 +84,10 @@ const TablaIngreso = () => {
       {isLoading ? (
         "Loading..."
       ) : (
-        < DataTableAll slug="registros" columns={columns} rows={data} />
+        <DataTableAll slug="registros" columns={columns} rows={data} />
       )}
-
     </div>
-  )
-}
+  );
+};
 
-export default TablaIngreso
+export default TablaIngreso;

@@ -72,7 +72,7 @@ import InformeCamion from './pages/informes/Informecamion';
 // @ts-ignore
 import VerInforme from './pages/viewinforme/VerInforme';
 
-
+import Footer from './components/footer/Footer';
 
 
 const queryClient = new QueryClient();
@@ -92,6 +92,7 @@ function App() {
               <Outlet />
             </QueryClientProvider>
           </div>
+          <Footer/>
         </div>
 
       </div>

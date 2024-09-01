@@ -3,21 +3,24 @@ import TopBox from "../../components/topBox/TopBox";
 import ChartBox from "../../components/chartbox/ChartBox";
 import { chartBoxConversion, chartBoxProduct, chartBoxRevenue, chartBoxUser } from "../../data";
 import { useQuery } from "@tanstack/react-query";
-
+import GuardiaID from "../../hooks/GuardiaID";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
-const fetchChartData = async () => {
-  const response = await fetch(`${host_server}/ChartBox`);
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.json();
-};
-
 const Home = () => {
-  const { data, error, isLoading } = useQuery({
-    queryKey: ['chartData'],
+  const idInst = GuardiaID(); 
+
+  const fetchChartData = async () => {
+    const response = await fetch(`${host_server}/ChartBox?idinst=${idInst}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  };
+
+  const { isLoading, data, error } = useQuery({
+    queryKey: ['ChartBox', idInst],
     queryFn: fetchChartData,
+    enabled: !!idInst, // Solo ejecuta la consulta si IDINST está disponible
   });
 
   if (isLoading) {
@@ -28,7 +31,7 @@ const Home = () => {
     return <div>Error: {error.message}</div>;
   }
 
-  const dataArray = data[0]; // Accedemos al primer array de datos
+  const dataArray = Array.isArray(data) ? data : [];
 
   const rolesExternos = [
     'Especialista Trade',
@@ -43,6 +46,7 @@ const Home = () => {
     'Tecnico Fumigación',
     'OtrosEx'
   ];
+
   const rolesInternos = [
     'Aseo',
     'Administrativo Existencias',
@@ -53,7 +57,7 @@ const Home = () => {
     'Jefe de Distribución',
     'Coordinador Trade Marketing',
     'Supervisor de Distribución',
-    'Supevisor Ventas',
+    'Supervisor Ventas',
     'Cajero',
     'Secretaria',
     'Movilizador',
@@ -101,4 +105,3 @@ const Home = () => {
 }
 
 export default Home;
-

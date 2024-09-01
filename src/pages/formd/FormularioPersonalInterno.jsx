@@ -7,6 +7,7 @@ import useChileanTime from "../../hooks/UseChileanTime";
 import { useAuth } from '../../hooks/Auth';
 import { IconButton } from '@mui/material';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import GuardiaID from "../../hooks/GuardiaID";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 function FormularioPersonalInterno() {
@@ -24,7 +25,7 @@ function FormularioPersonalInterno() {
   const [ObservacionesPI, setObservacionesPI] = useState("");
   const [mensajeEstado, setMensajeEstado] = useState('');
   const [rutValido, setRutValido] = React.useState(true);
-
+  const IDINST = GuardiaID();
   const validarRut = (rut) => {
     if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
     let tmp = rut.split('-');
@@ -119,28 +120,90 @@ function FormularioPersonalInterno() {
       OBSERVACIONESPI: ObservacionesPI,
       ROLPI: RolPI,
       fechaActualChile: chileanTime,
-      NombreUsuarioI: nombreUsuario
+      NombreUsuarioI: nombreUsuario,
+      idinst: IDINST,
 
+    }).then(async (response) => {
+        
+      if (response.data.warning) {
+        const result = await Swal.fire({
+          title: "Advertencia",
+          text: response.data.warning,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Sí, continuar",
+          cancelButtonText: "No, cancelar",
+        });
 
-    }).then(() => {
-      limpiarcamposPI();
-      Swal.fire({
-        title: 'Ingreso Exitoso!',
-        icon: 'success',
-        text: 'Personal Interno ingresado con Exito',
-        timer: 1500
-      })
-    }).catch(function (error) {
-      const errorMsg = error.response && error.response.data && error.response.data.error
-        ? error.response.data.error
-        : 'Error desconocido. Intente más tarde';
-      Swal.fire({
-        icon: "error",
-        title: "Cuidado...",
-        text: errorMsg
-      });
+        if (result.isConfirmed) {
+
+          Axios.post(`${host_server}/FormularioPersonalInterno`, {
+            RUTPI: RutPI,
+            NOMBREPI: NombrePI,
+            APELLIDOPI: ApellidoPI,
+            VEHICULOPI: VehiculoPI,
+            MODELOPI: ModeloPI,
+            COLORPI: ColorPI,
+            PATENTEPI: PatentePI,
+            OBSERVACIONESPI: ObservacionesPI,
+            ROLPI: RolPI,
+            fechaActualChile: chileanTime,
+            NombreUsuarioI: nombreUsuario,
+            idinst: IDINST,
+            ignoreWarning: true,  
+          })
+            .then(() => {
+              limpiarcamposPI();
+              Swal.fire({
+                title: 'Ingreso Exitoso!',
+                icon: 'success',
+                text: 'Personal Interno ingresado con Exito',
+                timer: 1500,
+              });
+            })
+            .catch((error) => {
+              console.error("Error al registrar ingreso:", error);
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Intente más tarde",
+              });
+            });
+        } else {
+          Swal.fire({
+            title: "Operación cancelada",
+            text: "No se realizó ningún registro.",
+            icon: "info",
+            timer: 1500,
+          });
+        }
+      } else {
+        limpiarcamposPI();
+        Swal.fire({
+          title: 'Ingreso Exitoso!',
+          icon: 'success',
+          text: 'Personal Interno ingresado con Exito',
+          timer: 1500,
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error en la solicitud:", error);
+      if (error.response && error.response.data && error.response.data.error) {
+        Swal.fire({
+          icon: "error",
+          title: "Cuidado",
+          text: error.response.data.error,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Intente más tarde",
+        });
+      }
     });
-  }
+};
 
 
   const limpiarcamposPI = () => {

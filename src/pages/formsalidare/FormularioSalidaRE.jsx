@@ -8,6 +8,7 @@ import { useAuth } from '../../hooks/Auth';
 import { useNavigate } from 'react-router-dom';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import { IconButton } from '@mui/material';
+import GuardiaID from "../../hooks/GuardiaID";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 
@@ -17,6 +18,7 @@ function FormularioSalidaRE() {
   const [rutValido, setRutValido] = React.useState(true);
   const chileanTime = useChileanTime();
   const navigate = useNavigate();
+  const IDINST = GuardiaID();
   const [formValues, setFormValues] = useState({
     PERSONAL: '',
     APELLIDO: '',
@@ -137,12 +139,13 @@ const handleRutChange = (event) => {
       [campo]: '',
     }));
   };
+  
   const salidaCA = () => {
     Axios.post(`${host_server}/FormularioSalidaRE/${IDR}`, {
       ...formValues,
       FECHASALIDA: chileanTime,
-      NombreUsuario: nombreUsuario
-
+      NombreUsuario: nombreUsuario,
+      IDINST: IDINST
     }).then(() => {
       limpiarCampos();
       Swal.fire({

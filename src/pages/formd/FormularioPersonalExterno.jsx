@@ -7,6 +7,7 @@ import useChileanTime from "../../hooks/UseChileanTime";
 import { useAuth } from '../../hooks/Auth';
 import { IconButton } from '@mui/material';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import GuardiaID from "../../hooks/GuardiaID";
 
 function FormularioPersonalExterno() {
   const { nombreUsuario } = useAuth();
@@ -27,6 +28,7 @@ function FormularioPersonalExterno() {
   const [rutValido, setRutValido] = React.useState(true);
   const [mensajeEstado, setMensajeEstado] = useState('');
   const host_server = import.meta.env.VITE_SERVER_HOST;
+  const IDINST = GuardiaID();
 
   const validarRut = (rut) => {
     if (!/^[0-9]+[-|‐]{1}[0-9kK]{1}$/.test(rut)) return false;
@@ -137,7 +139,7 @@ function FormularioPersonalExterno() {
       });
       return;
     }
-
+  
     Axios.post(`${host_server}/FormularioPersonalExterno`, {
       rutPE: RutPE,
       NombrePE: NombrePE,
@@ -153,30 +155,94 @@ function FormularioPersonalExterno() {
       NombreUsuarioEX: nombreUsuario,
       SelloPE: SelloPE,
       GuiaDespachoPE: GuiaDespachoPE,
-    }).then(() => {
-      limpiarcamposPE();
-      Swal.fire({
-        title: 'Ingreso Exitoso!',
-        icon: 'success',
-        text: 'Personal Externo ingresado con Exito',
-        timer: 1500
+      idinst: IDINST,
+    })
+      .then(async (response) => {
+        
+        if (response.data.warning) {
+          const result = await Swal.fire({
+            title: "Advertencia",
+            text: response.data.warning,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, continuar",
+            cancelButtonText: "No, cancelar",
+          });
+  
+          if (result.isConfirmed) {
+            // Enviar todos los datos de nuevo junto con `ignoreWarning`
+            Axios.post(`${host_server}/FormularioPersonalExterno`, {
+              rutPE: RutPE,
+              NombrePE: NombrePE,
+              ApellidoPE: ApellidoPE,
+              VehiculoPE: VehiculoPE,
+              ModeloPE: ModeloPE,
+              ColorPE: ColorPE,
+              PatentePE: PatentePE,
+              EmpresaPE: EmpresaPE,
+              RolPE: RolPE,
+              ObservacionesPE: ObservacionesPE,
+              fechaActualChile: chileanTime,
+              NombreUsuarioEX: nombreUsuario,
+              SelloPE: SelloPE,
+              GuiaDespachoPE: GuiaDespachoPE,
+              idinst: IDINST,
+              ignoreWarning: true,  // Aquí el parámetro que permite ignorar la advertencia
+            })
+              .then(() => {
+                limpiarcamposPE();
+                Swal.fire({
+                  title: 'Ingreso Exitoso!',
+                  icon: 'success',
+                  text: 'Personal Externo ingresado con Exito',
+                  timer: 1500,
+                });
+              })
+              .catch((error) => {
+                console.error("Error al registrar ingreso:", error);
+                Swal.fire({
+                  icon: "error",
+                  title: "Oops...",
+                  text: "Intente más tarde",
+                });
+              });
+          } else {
+            Swal.fire({
+              title: "Operación cancelada",
+              text: "No se realizó ningún registro.",
+              icon: "info",
+              timer: 1500,
+            });
+          }
+        } else {
+          limpiarcamposPE();
+          Swal.fire({
+            title: 'Ingreso Exitoso!',
+            icon: 'success',
+            text: 'Personal Externo ingresado con Exito',
+            timer: 1500,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error en la solicitud:", error);
+        if (error.response && error.response.data && error.response.data.error) {
+          Swal.fire({
+            icon: "error",
+            title: "Cuidado",
+            text: error.response.data.error,
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Intente más tarde",
+          });
+        }
       });
-    }).catch(function (error) {
-      if (error.response && error.response.data && error.response.data.error) {
-        Swal.fire({
-          icon: "error",
-          title: "Cuidado",
-          text: error.response.data.error,
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Intente mas tarde",
-        });
-      }
-    });
-  }
+  };
+    
+  
 
   const limpiarcamposPE = () => {
     setRutPE("");

@@ -7,6 +7,7 @@ import useChileanTime from "../../hooks/UseChileanTime";
 import { useAuth } from '../../hooks/Auth';
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import { IconButton } from '@mui/material';
+import GuardiaID from "../../hooks/GuardiaID";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 function FormularioCamiones() {
@@ -29,7 +30,7 @@ function FormularioCamiones() {
   const [SelloCA, setSelloCA] = useState("");
   const [mensajeEstado, setMensajeEstado] = useState('');
   const [rutValido, setRutValido] = useState(true);
-
+  const IDINST = GuardiaID();
 
 
   const handleRutChange = (event) => {
@@ -144,26 +145,91 @@ function FormularioCamiones() {
       GuiaDespachoCA: GuiaDespachoCA,
       SelloCA: SelloCA,
       fechaActualChile: chileanTime,
-      NombreUsuarioCA: nombreUsuario
-    }).then(() => {
-      limpiarcamposCA();
-      Swal.fire({
-        title: 'Ingreso Exitoso!',
-        icon: 'success',
-        text: 'Camion ingresado con Exito',
-        timer: 1500
-      })
-    }).catch(function (error) {
-      const errorMsg = error.response && error.response.data && error.response.data.error
-        ? error.response.data.error
-        : 'Error desconocido. Intente más tarde';
-      Swal.fire({
-        icon: "error",
-        title: "Cuidado...",
-        text: errorMsg
-      });
+      NombreUsuarioCA: nombreUsuario,
+      idinst: IDINST,
+    }).then(async (response) => {
+        
+      if (response.data.warning) {
+        const result = await Swal.fire({
+          title: "Advertencia",
+          text: response.data.warning,
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Sí, continuar",
+          cancelButtonText: "No, cancelar",
+        });
+
+        if (result.isConfirmed) {
+          Axios.post(`${host_server}/FormularioCamiones`, {
+            rutPE: RutPE,
+            NombrePE: NombrePE,
+            ApellidoPE: ApellidoPE,
+            VehiculoPE: VehiculoPE,
+            ModeloPE: ModeloPE,
+            ColorPE: ColorPE,
+            PatentePE: PatentePE,
+            EmpresaPE: EmpresaPE,
+            RolPE: RolPE,
+            ObservacionesPE: ObservacionesPE,
+            fechaActualChile: chileanTime,
+            NombreUsuarioEX: nombreUsuario,
+            SelloPE: SelloPE,
+            GuiaDespachoPE: GuiaDespachoPE,
+            idinst: IDINST,
+            ignoreWarning: true, 
+          })
+            .then(() => {
+              limpiarcamposCA();
+              Swal.fire({
+                title: 'Ingreso Exitoso!',
+                icon: 'success',
+                text: 'Camion ingresado con Exito',
+                timer: 1500,
+              });
+            })
+            .catch((error) => {
+              console.error("Error al registrar ingreso:", error);
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Intente más tarde",
+              });
+            });
+        } else {
+          Swal.fire({
+            title: "Operación cancelada",
+            text: "No se realizó ningún registro.",
+            icon: "info",
+            timer: 1500,
+          });
+        }
+      } else {
+        limpiarcamposCA();
+        Swal.fire({
+          title: 'Ingreso Exitoso!',
+          icon: 'success',
+          text: 'Camion ingresado con Exito',
+          timer: 1500,
+        });
+      }
+    })
+    .catch((error) => {
+      console.error("Error en la solicitud:", error);
+      if (error.response && error.response.data && error.response.data.error) {
+        Swal.fire({
+          icon: "error",
+          title: "Cuidado",
+          text: error.response.data.error,
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Intente más tarde",
+        });
+      }
     });
-  }
+};
 
 
   const limpiarcamposCA = () => {

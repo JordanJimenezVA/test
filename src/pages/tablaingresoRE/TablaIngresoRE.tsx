@@ -2,6 +2,7 @@ import "./tablaingresoRE.scss"
 import { GridColDef } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
 import DataTableRE from "../../components/dataTable/DataTableRE";
+import useGuardiaID from "../../hooks/GuardiaID";
 const host_server = import.meta.env.VITE_SERVER_HOST;
 
 const columns: GridColDef[] = [
@@ -54,16 +55,23 @@ const columns: GridColDef[] = [
     type: 'string',
   }
 ];
+
 const TablaIngresoRE = () => {
+  const IDINST = useGuardiaID();
+
+
   const { isLoading, data } = useQuery({
-    queryKey: ['registros'],
+    queryKey: ['registros', IDINST],
     queryFn: () =>
-      fetch(`${host_server}/TablaIngresoRE`).then((res) =>
+      fetch(`${host_server}/TablaIngresoRE?IDINST=${IDINST}`).then((res) =>
         res.json(),
-
       ),
-
+    enabled: !!IDINST,
   });
+
+  if (IDINST === null) {
+    return <div>Loading IDINST...</div>; 
+  }
 
   return (
     <div className="Camiones">

@@ -6,6 +6,7 @@ import useChileanTime from "../../hooks/UseChileanTime";
 import { useAuth } from '../../hooks/Auth';
 import { Button } from '@mui/material';
 const host_server = import.meta.env.VITE_SERVER_HOST;
+import GuardiaID from "../../hooks/GuardiaID";
 
 function AgregarNO() {
     const { nombreUsuario } = useAuth();
@@ -14,12 +15,14 @@ function AgregarNO() {
     const [GuardiaNO, setGuardiaNO] = useState("");
     const [HoraNO, setHoraNO] = useState("");
     const [FOTOSNO, setFOTOSNO] = useState([]);
+    const IDINST = GuardiaID();
 
     const ingresoformdNO = () => {
         const formData = new FormData();
         formData.append("NotaNO", NotaNO);
         formData.append("GuardiaNO", nombreUsuario);
         formData.append("HoraNO", chileanTime);
+        formData.append("IDINST", IDINST);
 
         FOTOSNO.forEach((file, index) => {
             formData.append(`FOTOSNO`, file);
@@ -82,12 +85,12 @@ function AgregarNO() {
                             <span className="title">Datos Novedad</span>
                             <div className="fields">
 
-                                <div className="input-field" style={{ width: "100%" }}>
+                                {/* <div className="input-field" style={{ width: "100%" }}>
                                     <label>Fotos</label>
                                     <div className="input-group">
                                         <input type="file" onChange={handleFileChange} placeholder='INGRESE FOTOS' style={{ alignContent: "center" }} multiple accept=".jpg, .jpeg, .png" className='form-control' id="fotos-input" name={'FOTOS'} />
                                     </div>
-                                </div>
+                                </div> */}
 
                                 <div className="input-field-obs">
                                     <label>Descripcion Novedad</label>
